@@ -8,7 +8,7 @@
         "about-us": "About Us",
         "project-team": "Project team",
         "john-doe": "John Doe",
-        "jane-doe": "Jane Doe",
+        "marcus-ng": "Marcus Ng",
         "johnny-doe": "Johnny Doe",
         "hao-yi": "Hao Yi",
         "seah-min-ren": "Seah Min-Ren"
@@ -149,7 +149,20 @@
       "headingKeywords": {}
     },
     {
+      "src": "team/lzkkuan.md",
+      "title": "John Doe's Project Portfolio Page",
+      "headings": {
+        "project-addressbook-level-3": "Project: AddressBook Level 3"
+      },
+      "headingKeywords": {}
+    },
+    {
       "src": "team/miinren.md",
+      "headings": {},
+      "headingKeywords": {}
+    },
+    {
+      "src": "team/peanutbutter1212.md",
       "headings": {},
       "headingKeywords": {}
     }
