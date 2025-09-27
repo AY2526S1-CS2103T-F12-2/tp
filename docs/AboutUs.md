@@ -40,7 +40,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 * Responsibilities: Eat & Sleep
 
 
-### Hao Yi
+### Teoh Hao Yi
 
 <img src="images/haobuhaoo.png" width="200px">
 
