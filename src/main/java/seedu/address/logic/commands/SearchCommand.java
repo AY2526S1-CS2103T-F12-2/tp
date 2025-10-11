@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_KEYWORD;
 
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class SearchCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Searches for students.\n"
             + "Purpose: Search for students\n"
-            + "Command format: search-student k/keyword\n"
-            + "Example: " + COMMAND_WORD + " k/marcus\n"
+            + "Command format: " + COMMAND_WORD + " " + PREFIX_KEYWORD + "keyword\n"
+            + "Example: " + COMMAND_WORD + " " + PREFIX_KEYWORD + "marcus\n"
             + "Parameters and validation:\n"
             + "  - Keyword: letters/digits; must be ≥1 char; case-insensitive; trims/collapses spaces.\n"
             + "Error message: \"Invalid search keyword.\"";

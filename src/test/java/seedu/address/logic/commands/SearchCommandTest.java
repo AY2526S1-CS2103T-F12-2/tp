@@ -19,7 +19,6 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.StudentFieldsContainsKeywordsPredicate;
 
-
 /**
  * Contains integration tests (interaction with the Model) for {@code FindCommand}.
  */
@@ -34,24 +33,24 @@ public class SearchCommandTest {
         StudentFieldsContainsKeywordsPredicate secondPredicate =
                 new StudentFieldsContainsKeywordsPredicate(Collections.singletonList("second"));
 
-        SearchCommand searchFirstComman = new SearchCommand(firstPredicate);
+        SearchCommand searchFirstCommand = new SearchCommand(firstPredicate);
         SearchCommand searchSecondCommand = new SearchCommand(secondPredicate);
 
         // same object -> returns true
-        assertTrue(searchFirstComman.equals(searchFirstComman));
+        assertTrue(searchFirstCommand.equals(searchFirstCommand));
 
         // same values -> returns true
         SearchCommand findFirstCommandCopy = new SearchCommand(firstPredicate);
-        assertTrue(searchFirstComman.equals(findFirstCommandCopy));
+        assertTrue(searchFirstCommand.equals(findFirstCommandCopy));
 
         // different types -> returns false
-        assertFalse(searchFirstComman.equals(1));
+        assertFalse(searchFirstCommand.equals(1));
 
         // null -> returns false
-        assertFalse(searchFirstComman.equals(null));
+        assertFalse(searchFirstCommand.equals(null));
 
         // different person -> returns false
-        assertFalse(searchFirstComman.equals(searchSecondCommand));
+        assertFalse(searchFirstCommand.equals(searchSecondCommand));
     }
 
     @Test
