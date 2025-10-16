@@ -107,11 +107,12 @@
         "quick-start": "Quick start",
         "features": "Features",
         "viewing-help-help": "Viewing help : help",
-        "adding-a-person-add": "Adding a person: add",
-        "listing-all-persons-list": "Listing all persons : list",
-        "editing-a-person-edit": "Editing a person : edit",
-        "locating-persons-by-name-find": "Locating persons by name: find",
-        "deleting-a-person-delete": "Deleting a person : delete",
+        "adding-a-student-add-student": "Adding a student: add-student",
+        "listing-all-students-list": "Listing all students : list",
+        "editing-a-student-edit-student": "Editing a student : edit-student",
+        "locating-students-search-student": "Locating students: search-student",
+        "marking-attendance-attendance": "Marking attendance : attendance",
+        "deleting-a-student-delete-student": "Deleting a student : delete-student",
         "clearing-all-entries-clear": "Clearing all entries : clear",
         "exiting-the-program-exit": "Exiting the program : exit",
         "saving-the-data": "Saving the data",
@@ -127,7 +128,7 @@
       "src": "index.md",
       "title": "",
       "headings": {
-        "addressbook-level-3": "AddressBook Level-3"
+        "classconnect": "ClassConnect"
       },
       "headingKeywords": {}
     },
