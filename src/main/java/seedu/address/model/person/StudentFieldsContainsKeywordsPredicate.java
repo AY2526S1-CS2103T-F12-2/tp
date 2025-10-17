@@ -66,6 +66,15 @@ public class StudentFieldsContainsKeywordsPredicate implements Predicate<Person>
         return s == null ? "" : s.trim().replaceAll("\\s+", " ").toLowerCase(Locale.ROOT);
     }
 
+    /**
+     * Gets the keywords used in the predicate
+     *
+     * @return keywords used in the predicate as a list
+     */
+    public List<String> getKeywords() {
+        return keywords;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).add("keywords", keywords).toString();

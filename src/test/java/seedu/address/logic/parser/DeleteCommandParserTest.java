@@ -31,4 +31,34 @@ public class DeleteCommandParserTest {
     public void parse_invalidArgs_throwsParseException() {
         assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
     }
+
+    @Test
+    public void parse_extraArgsAfterIndex_throwsParseException() {
+        assertParseFailure(parser, " " + PREFIX_INDEX + "1 extra",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_invalidPrefix_throwsParseException() {
+        assertParseFailure(parser, " x/1",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_zeroIndex_throwsParseException() {
+        assertParseFailure(parser, " " + PREFIX_INDEX + "0",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_negativeIndex_throwsParseException() {
+        assertParseFailure(parser, " " + PREFIX_INDEX + "-5",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_whitespaceHandling_validArgs() {
+        assertParseSuccess(parser, "   " + PREFIX_INDEX + "  1  ",
+                new DeleteCommand(INDEX_FIRST_PERSON));
+    }
 }

@@ -2,12 +2,19 @@ package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_INDEX;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_KEYWORD;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.StudentFieldsContainsKeywordsPredicate;
+
 
 /**
  * Parses input arguments and creates a new DeleteCommand object
@@ -17,6 +24,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
  * in the displayed list that should be deleted.
  */
 public class DeleteCommandParser implements Parser<DeleteCommand> {
+    private static final Pattern VALID_KEYWORDS = Pattern.compile("[A-Za-z0-9 ':]+");
 
     /**
      * Parses the given {@code String} of arguments in the context of the DeleteCommand
@@ -26,22 +34,39 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
      */
     public DeleteCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_INDEX);
-        if (!arePrefixesPresent(argMultimap, PREFIX_INDEX)
-                || !argMultimap.getPreamble().isEmpty()) {
+                ArgumentTokenizer.tokenize(args, PREFIX_INDEX, PREFIX_KEYWORD);
+
+        boolean hasIndex = argMultimap.getValue(PREFIX_INDEX).isPresent();
+        boolean hasKeyword = argMultimap.getValue(PREFIX_KEYWORD).isPresent();
+
+        if (hasIndex == hasKeyword) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
         }
-        try {
-            // Ensure the user only specifies one index prefix (e.g., no "i/1 i/2")
-            argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_INDEX);
-            Index index = ParserUtil.parseIndex(argMultimap.getValue(PREFIX_INDEX).get());
-            return new DeleteCommand(index);
-        } catch (ParseException pe) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE), pe);
-        }
-    }
 
+        if (hasIndex) {
+            argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_INDEX);
+            try {
+                Index index = ParserUtil.parseIndex(argMultimap.getValue(PREFIX_INDEX).get());
+                return new DeleteCommand(index);
+            } catch (ParseException pe) {
+                throw new ParseException(
+                        String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE), pe);
+            }
+        }
+
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_KEYWORD);
+        String raw = argMultimap.getValue(PREFIX_KEYWORD).get().trim().replaceAll("\\s+", " ");
+        if (raw.isEmpty() || !VALID_KEYWORDS.matcher(raw).matches()) {
+            throw new ParseException("Invalid search keyword.");
+        }
+
+        List<String> tokens = Arrays.stream(raw.split(" "))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        return new DeleteCommand(new StudentFieldsContainsKeywordsPredicate(tokens));
+    }
 
     /**
      * Returns {@code true} if all specified prefixes are present in the given {@link ArgumentMultimap},

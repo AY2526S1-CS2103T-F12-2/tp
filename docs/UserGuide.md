@@ -114,24 +114,44 @@ Format: `search-student k/KEYWORD [MORE_KEYWORDS]`
   e.g. `Marcus 9876` will return `Marcus Ng (9876 1111)`, `John Tan (9876 5432)`
 
 Examples:
-* `search-student k/marcus` Returns `Marcus Ng` and `Marcus Tan`.
-* `search-student k/9876` Returns all students whose phone number contains 9876.
-* `search-student k/10:00` Returns all students with lesson time 10:00.
+* `search-student k/marcus` returns `Marcus Ng` and `Marcus Tan`
+* `search-student k/9876` returns all students whose phone number contains 9876
+* `search-student k/10:00` returns all students with lesson time 10:00
+
 
 ### Deleting a student : `delete-student`
 
-Deletes the specified student from the address book.
+Deletes the specified student from the student list.
 
-Format: `delete-student i/INDEX`
+Format: `delete-student i/INDEX` or
+`delete-student k/KEYWORD`
 
-* Deletes the student at the specified `INDEX`.
-* The index refers to the index number shown in the displayed student list.
-* The index **must be a positive integer** 1, 2, 3, …​
-* The list cannot be empty.
+You can delete a student in two ways:
+1. By index
+   * Deletes the student at the specified `INDEX`.
+   * The index refers to the index number shown in the displayed student list.
+   * The index **must be a positive integer** 1, 2, 3, …​
+   * The list cannot be empty.
+   
+2. By keyword
+   * Deletes the student whose name, phone number or lesson time matches the given keyword.
+   * If multiple students match the keyword, the app will list all possible matches and ask you to refine your search.
+   * Matching is case-insensitive and partial matches are allowed (marc matches Marcus).
 
 Examples:
-* `list` followed by `delete i/2` deletes the 2nd person in the address book.
-* `search-student k/Marcus` followed by `delete i/1` deletes the 1st person in the results of the `search-student` command.
+1. Deleting by index
+   * `list` followed by `delete i/2` deletes the 2nd person in the student list.
+   * `search-student k/Marcus` followed by `delete i/1` deletes the 1st person in the results of the `search-student` command.
+
+2. Deleting by keyword
+   * `delete-student k/marcus` deletes the student named "marcus" if only one match is found.
+   * If multiple matches are found, the app will show possible matches `Multiple students match the given keyword(s). Please refine your search: marcus tan; Phone: 98765432; Lesson Time: 10:00 am marcus ng; Phone: 98765423; Lesson Time: 10:00 am`
+   * You can then refine your search by including full name, phone number or lesson time `delete-student k/98765432`
+   * If no matches are found, the app will display `No students match the given keyword(s).`
+
+Notes:
+* You cannot use `i/` and `k/` in the same command
+* The command is not case-sensitive
 
 ### Recording attendance : `attendance`
 
