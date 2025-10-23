@@ -119,6 +119,8 @@
         "adding-students-to-a-group-group-add": "Adding students to a group : group-add",
         "removing-students-from-a-group-group-remove": "Removing students from a group : group-remove",
         "deleting-a-group-group-delete": "Deleting a group : group-delete",
+        "marking-paid-mark-paid": "Marking paid : mark-paid",
+        "marking-unpaid-mark-unpaid": "Marking unpaid : mark-unpaid",
         "clearing-all-entries-clear": "Clearing all entries : clear",
         "exiting-the-program-exit": "Exiting the program : exit",
         "saving-the-data": "Saving the data",
