@@ -1,0 +1,119 @@
+@startuml
+title Grouping Feature – Class Diagram (straight lines)
+
+skinparam linetype ortho
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+hide stereotypes
+hide fields
+show methods
+left to right direction
+
+
+package "logic" <<abstract>> {
+  abstract class Command {
+    + execute()
+  }
+
+  class GroupCreateCommand extends Command
+  class GroupDeleteCommand extends Command
+  class GroupAddCommand extends Command
+  class GroupRemoveCommand extends Command
+
+  class GroupCreateCommandParser {
+    + parse()
+  }
+  class GroupDeleteCommandParser {
+    + parse()
+  }
+  class GroupAddCommandParser {
+    + parse()
+  }
+  class GroupRemoveCommandParser {
+    + parse()
+  }
+}
+
+package "model" <<abstract>> {
+  interface Model {
+    + hasGroup()
+    + createGroup()
+    + deleteGroup()
+    + addToGroup()
+    + removeFromGroup()
+    + getGroupList()
+    + getGroupsOf()
+  }
+
+  class ModelManager implements Model
+
+  class AddressBook {
+    + hasGroup()
+    + createGroup()
+    + deleteGroup()
+    + addMembers()
+    + removeMembers()
+    + getGroups()
+    + getGroupsOf()
+    + clearGroupsAndMemberships()
+  }
+
+  class UniqueGroupList {
+    + contains()
+    + add()
+    + remove()
+    + getByName()
+    + asUnmodifiableObservableList()
+  }
+
+  ' Place these BEFORE Group so they appear to its left
+  class GroupName {
+    + of()
+    + toString()
+  }
+  class Person
+
+  class Group {
+    + getName()
+    + addMembers()
+    + removeMembers()
+    + hasMember()
+    + getMembers()
+  }
+}
+
+package "ui" <<abstract>> {
+  class UiGroupAccess {
+    + install()
+    + groupsOf()
+  }
+}
+
+GroupCreateCommandParser --> GroupCreateCommand : creates
+GroupDeleteCommandParser --> GroupDeleteCommand : creates
+GroupAddCommandParser    --> GroupAddCommand    : creates
+GroupRemoveCommandParser --> GroupRemoveCommand : creates
+
+GroupCreateCommand --> Model : execute()
+GroupDeleteCommand --> Model : execute()
+GroupAddCommand    --> Model : execute()
+GroupRemoveCommand --> Model : execute()
+
+ModelManager -|> Model
+ModelManager o-- AddressBook
+
+AddressBook o-- UniqueGroupList
+UniqueGroupList *-- Group
+
+' Layout hint: keep to the left of Group
+GroupName -[hidden]-> Group
+Person   -[hidden]-> Group
+
+Group *-- GroupName
+Group o-- Person
+
+UiGroupAccess ..> Person
+UiGroupAccess ..> GroupName
+
+@enduml
