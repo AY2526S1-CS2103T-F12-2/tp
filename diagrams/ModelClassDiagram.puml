@@ -13,12 +13,16 @@ Class ModelManager
 Class UserPrefs
 
 Class UniquePersonList
+Class UniqueReminderList
 Class Person
-Class Address
-Class Email
+Class Reminder
 Class Name
 Class Phone
-Class Tag
+Class LessonTime
+Class PaymentStatus
+Class Participation
+Class DueDate
+Class Description
 
 Class I #FFFFFF
 }
@@ -37,18 +41,29 @@ UserPrefs .up.|> ReadOnlyUserPrefs
 
 AddressBook *--> "1" UniquePersonList
 UniquePersonList --> "~* all" Person
-Person *--> Name
-Person *--> Phone
-Person *--> Email
-Person *--> Address
-Person *--> "*" Tag
+Person *--> "1" Name
+Person *--> "1" Phone
+Person *--> "1..*" LessonTime
+Person *--> PaymentStatus
+Person *--> Participation
 
-Person -[hidden]up--> I
-UniquePersonList -[hidden]right-> I
+AddressBook *--> "1" UniqueReminderList
+UniqueReminderList --> "~* all" Reminder
+Reminder *--> "1" DueDate
+Reminder *--> "1" Description
+
+Person -[hidden]left--> Reminder
+Reminder -[hidden]up--> I
+UniquePersonList -[hidden]left-> UniqueReminderList
+UniqueReminderList -[hidden]right-> I
 
 Name -[hidden]right-> Phone
-Phone -[hidden]right-> Address
-Address -[hidden]right-> Email
+Phone -[hidden]right-> LessonTime
+LessonTime -[hidden]right-> PaymentStatus
+PaymentStatus -[hidden]right-> Participation
+
+DueDate -[hidden]right-> Description
 
 ModelManager --> "~* filtered" Person
+ModelManager --> "~* filtered" Reminder
 @enduml
