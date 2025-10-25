@@ -13,6 +13,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import seedu.address.model.group.GroupName;
@@ -48,7 +49,7 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private AnchorPane homeworkPlaceholder;
     @FXML
-    private Label paymentStatus;
+    private VBox paymentStatusContainer;
 
     // Participation UI
     @FXML
@@ -73,6 +74,7 @@ public class PersonCard extends UiPart<Region> {
         homeworkPlaceholder.getChildren().setAll(panel.getRoot());
         renderGroupBadges(person);
         renderParticipation(person.getParticipation());
+        renderPaymentStatus(person);
     }
 
     private void renderGroupBadges(Person p) {
@@ -129,7 +131,22 @@ public class PersonCard extends UiPart<Region> {
             cell.getChildren().addAll(rect, t);
             boxes.getChildren().add(cell);
         }
+    }
 
-        paymentStatus.setText(person.getPaymentStatusDisplay());
+    /**
+     * Renders the payment status using JavaFX Rectangles.
+     */
+    private void renderPaymentStatus(Person person) {
+        if (paymentStatusContainer == null) {
+            return;
+        }
+        paymentStatusContainer.getChildren().clear();
+
+        Label title = new Label("Payment Status:");
+        title.getStyleClass().add("payment-status-title");
+        paymentStatusContainer.getChildren().add(title);
+
+        HBox rectangles = person.getPaymentStatusRectangles();
+        paymentStatusContainer.getChildren().add(rectangles);
     }
 }

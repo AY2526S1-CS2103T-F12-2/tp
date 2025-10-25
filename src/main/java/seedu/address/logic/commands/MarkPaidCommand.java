@@ -58,7 +58,12 @@ public class MarkPaidCommand extends Command {
 
         boolean currentStatus = personToUpdate.isPaidForMonth(month);
 
-        personToUpdate.setPaymentStatus(month, !currentStatus);
+        if (currentStatus) {
+            throw new CommandException(
+                    String.format(MESSAGE_ALREADY_PAID, personToUpdate.getName(), getMonthName(month)));
+        }
+
+        personToUpdate.setPaymentStatus(month, true);
 
         model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
 

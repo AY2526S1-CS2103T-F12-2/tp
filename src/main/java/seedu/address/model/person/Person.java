@@ -11,6 +11,12 @@ import java.util.Set;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.homework.Homework;
 
@@ -20,6 +26,12 @@ import seedu.address.model.homework.Homework;
  * Guarantees: details are present and not null, field values are validated, immutable.
  */
 public class Person {
+
+    private static final String[] MONTH_NAMES = {
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    };
+
     // Identity fields
     private final Name name;
     private final Phone phone;
@@ -32,7 +44,6 @@ public class Person {
 
     // Participation (mutable history of last 5 records)
     private final ParticipationHistory participation = new ParticipationHistory();
-
     /**
      * Every field must be present and not null.
      */
@@ -169,18 +180,51 @@ public class Person {
      */
     public String getPaymentStatusDisplay() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Payment Status: ");
+        sb.append("Payment Status:\n");
         for (int i = 0; i < 12; i++) {
+            sb.append(MONTH_NAMES[i]).append(": ");
             if (paymentStatus.get(i)) {
-                sb.append("\uD83D\uDFE9");
+                sb.append("✓ Paid");
             } else {
-                sb.append("\uD83D\uDFE5");
+                sb.append("✗ Unpaid");
             }
             if (i < 11) {
-                sb.append(" ");
+                sb.append("\n");
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * Creates a JavaFX VBox containing visual representation of payment status using Rectangles.
+     * Displays month labels on top row and colored rectangles on bottom row (green for paid, red for unpaid).
+     *
+     * @return VBox containing payment status visualization
+     */
+    public HBox getPaymentStatusRectangles() {
+        HBox container = new HBox(4);
+
+        for (int i = 0; i < 12; i++) {
+            VBox monthColumn = new VBox(3);
+            monthColumn.setAlignment(Pos.CENTER);
+
+            Text monthLabel = new Text(MONTH_NAMES[i]);
+            monthLabel.setStyle("-fx-font-size: 10px; -fx-font-weight: bold;");
+
+            Rectangle rect = new Rectangle(24, 24);
+            if (paymentStatus.get(i)) {
+                rect.setFill(Color.GREEN);
+            } else {
+                rect.setFill(Color.RED);
+            }
+            rect.setStroke(Color.BLACK);
+            rect.setStrokeWidth(1);
+
+            monthColumn.getChildren().addAll(monthLabel, rect);
+            container.getChildren().add(monthColumn);
+        }
+
+        return container;
     }
 
     public BitSet getPaymentStatusBitSet() {

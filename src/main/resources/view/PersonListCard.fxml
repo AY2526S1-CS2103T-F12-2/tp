@@ -46,7 +46,7 @@
                 <FlowPane fx:id="lessonTime" prefHeight="17.0" prefWidth="265.0" HBox.hgrow="ALWAYS"/>
             </HBox>
             <Region prefHeight="4" />
-            <Label fx:id="paymentStatus" styleClass="cell_small_label" text="\$paymentStatus" />
+            <VBox fx:id="paymentStatusContainer" spacing="2" styleClass="cell_small_label" />
             <Region prefHeight="4" />
         </VBox>
 
