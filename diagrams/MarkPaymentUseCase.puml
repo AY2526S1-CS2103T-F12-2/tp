@@ -1,0 +1,30 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor Tutor as T
+
+rectangle "ClassConnect" {
+    usecase "Mark Student as Paid" as UC1
+    usecase "Mark Student as Unpaid" as UC2
+    usecase "View Payment Status" as UC3
+    usecase "Select Student" as UC4
+    usecase "Select Month" as UC5
+    usecase "Check Payment Status" as UC6
+}
+
+T --> UC1
+T --> UC2
+T --> UC3
+
+UC1 ..> UC4 : <<include>>
+UC1 ..> UC5 : <<include>>
+UC1 ..> UC6 : <<include>>
+
+UC2 ..> UC4 : <<include>>
+UC2 ..> UC5 : <<include>>
+UC2 ..> UC6 : <<include>>
+
+UC3 ..> UC4 : <<include>>
+
+@enduml
