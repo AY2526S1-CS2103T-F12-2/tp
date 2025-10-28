@@ -1,5 +1,5 @@
 @startuml
-title Attendance / Participation Command (UG)
+title Participation Command (UG)
 
 skinparam sequence {
   ArrowThickness 1
@@ -21,7 +21,7 @@ participant "AttendanceIndex" as AI
 participant "UI (PersonCard)" as UI
 
 == Enter command ==
-User -> ABP : "attendance n/NAME d/YYYY-MM-DD s/0..5"
+User -> ABP : "attendance n/NAME d/DATE s/SCORE"
 
 == Parse ==
 ABP -> ACP : parse(args)
