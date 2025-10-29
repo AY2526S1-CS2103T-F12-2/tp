@@ -13,9 +13,9 @@ rectangle "ClassConnect" {
     usecase "Check Payment Status" as UC6
 }
 
-T --> UC1
-T --> UC2
-T --> UC3
+T -- UC1
+T -- UC2
+T -- UC3
 
 UC1 ..> UC4 : <<include>>
 UC1 ..> UC5 : <<include>>
