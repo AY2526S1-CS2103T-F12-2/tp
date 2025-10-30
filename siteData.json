@@ -62,7 +62,10 @@
         "user-stories": "User stories",
         "use-cases": "Use cases",
         "non-functional-requirements": "Non-Functional Requirements",
-        "glossary": "Glossary"
+        "glossary": "Glossary",
+        "appendix-instructions": "Appendix: Instructions",
+        "appendix-effort": "Appendix: Effort",
+        "appendix-planned-enhancements": "Appendix: Planned Enhancements"
       },
       "headingKeywords": {}
     },
