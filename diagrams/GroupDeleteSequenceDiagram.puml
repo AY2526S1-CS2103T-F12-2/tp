@@ -1,0 +1,39 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic for Group Delete LOGIC_COLOR_T1
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":GroupDeleteCommandParser" as GroupDeleteCommandParser LOGIC_COLOR
+participant "<<class>>\nGroupName" as GroupName LOGIC_COLOR
+participant "delete:GroupDeleteCommand" as GroupDeleteCommand LOGIC_COLOR
+end box
+
+[-> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create GroupDeleteCommandParser
+AddressBookParser -> GroupDeleteCommandParser
+activate GroupDeleteCommandParser
+GroupDeleteCommandParser --> AddressBookParser
+deactivate GroupDeleteCommandParser
+
+AddressBookParser -> GroupDeleteCommandParser : parse(arguments)
+activate GroupDeleteCommandParser
+
+GroupDeleteCommandParser -> GroupName : of(raw)
+activate GroupName
+GroupName --> GroupDeleteCommandParser : name
+deactivate GroupName
+
+create GroupDeleteCommand
+GroupDeleteCommandParser -> GroupDeleteCommand
+activate GroupDeleteCommand
+GroupDeleteCommand --> GroupDeleteCommandParser
+deactivate GroupDeleteCommand
+
+GroupDeleteCommandParser --> AddressBookParser : groupDelete
+deactivate GroupDeleteCommandParser
+[<-- AddressBookParser : groupDelete
+deactivate AddressBookParser
+@enduml

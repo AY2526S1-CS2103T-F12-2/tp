@@ -1,0 +1,34 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic for Group Delete LOGIC_COLOR_T1
+participant "delete:GroupDeleteCommand" as GroupDeleteCommand LOGIC_COLOR
+participant "result:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model for Model MODEL_COLOR_T1
+participant "model:Model" as Model MODEL_COLOR
+end box
+
+[-> GroupDeleteCommand : execute(model)
+activate GroupDeleteCommand
+
+alt !model.hasGroup(name)
+  GroupDeleteCommand --> GroupDeleteCommand : throw CommandException(group not found)
+else
+  GroupDeleteCommand -> Model : deleteGroup(name)
+
+  create CommandResult
+  GroupDeleteCommand -> CommandResult
+  activate CommandResult
+  CommandResult --> GroupDeleteCommand
+  deactivate CommandResult
+
+  [<-- GroupDeleteCommand : result
+end alt
+
+deactivate GroupDeleteCommand
+[<-[hidden]- GroupDeleteCommand
+destroy GroupDeleteCommand
+@enduml

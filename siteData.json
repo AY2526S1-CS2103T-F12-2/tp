@@ -52,6 +52,7 @@
         "common-classes": "Common classes",
         "implementation": "Implementation",
         "grouping-feature": "Grouping feature",
+        "grouping-command-behaviour": "Grouping Command Behaviour",
         "participation-feature": "Participation feature",
         "reminder-feature": "Reminder feature",
         "delete-student-feature": "Delete student feature",

@@ -1,0 +1,40 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic for Group Create LOGIC_COLOR_T1
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":GroupCreateCommandParser" as GroupCreateCommandParser LOGIC_COLOR
+participant "<<class>>\nGroupName" as GroupName LOGIC_COLOR
+participant "create:GroupCreateCommand" as GroupCreateCommand LOGIC_COLOR
+end box
+
+[-> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create GroupCreateCommandParser
+AddressBookParser -> GroupCreateCommandParser
+activate GroupCreateCommandParser
+
+GroupCreateCommandParser --> AddressBookParser
+deactivate GroupCreateCommandParser
+
+AddressBookParser -> GroupCreateCommandParser : parse(arguments)
+activate GroupCreateCommandParser
+
+GroupCreateCommandParser -> GroupName : of(raw)
+activate GroupName
+GroupName --> GroupCreateCommandParser : name
+deactivate GroupName
+
+create GroupCreateCommand
+GroupCreateCommandParser -> GroupCreateCommand
+activate GroupCreateCommand
+GroupCreateCommand --> GroupCreateCommandParser
+deactivate GroupCreateCommand
+
+GroupCreateCommandParser --> AddressBookParser : createGroup
+deactivate GroupCreateCommandParser
+AddressBookParser <-- AddressBookParser : createGroup
+deactivate AddressBookParser
+@enduml
