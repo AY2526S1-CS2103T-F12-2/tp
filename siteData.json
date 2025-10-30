@@ -52,8 +52,7 @@
         "common-classes": "Common classes",
         "implementation": "Implementation",
         "grouping-feature": "Grouping feature",
-        "attendance-participation-command-overview": "Attendance / Participation Command (overview)",
-        "add-homework": "Add Homework",
+        "participation-feature": "Participation feature",
         "add-student-feature": "Add student feature",
         "proposed-undo-redo-feature": "[Proposed] Undo/redo feature",
         "proposed-data-archiving": "[Proposed] Data archiving",
@@ -67,8 +66,7 @@
         "appendix-instructions": "Appendix: Instructions",
         "homework-feature": "Homework Feature",
         "appendix-effort": "Appendix: Effort",
-        "marcus-ng-peanutbutter1212": "Marcus Ng (PeanutButter1212)",
-        "appendix-planned-enhancements": "Appendix: Planned Enhancements"
+        "marcus-ng-peanutbutter1212": "Marcus Ng (PeanutButter1212)"
       },
       "headingKeywords": {}
     },
