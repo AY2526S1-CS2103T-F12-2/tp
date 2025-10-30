@@ -54,6 +54,8 @@
         "grouping-feature": "Grouping feature",
         "participation-feature": "Participation feature",
         "reminder-feature": "Reminder feature",
+        "delete-student-feature": "Delete student feature",
+        "mark-payment-feature": "Mark payment feature",
         "proposed-undo-redo-feature": "[Proposed] Undo/redo feature",
         "proposed-data-archiving": "[Proposed] Data archiving",
         "documentation-logging-testing-configuration-dev-ops": "Documentation, logging, testing, configuration, dev-ops",
@@ -64,10 +66,12 @@
         "non-functional-requirements": "Non-Functional Requirements",
         "glossary": "Glossary",
         "appendix-instructions": "Appendix: Instructions",
+        "payment-feature": "Payment Feature",
         "homework-feature": "Homework Feature",
         "appendix-effort": "Appendix: Effort",
         "marcus-ng-peanutbutter1212": "Marcus Ng (PeanutButter1212)",
-        "appendix-planned-enhancements": "Appendix: Planned Enhancements"
+        "appendix-planned-enhancements": "Appendix: Planned Enhancements",
+        "min-ren-seah-miinren": "Min-Ren Seah (miinren)"
       },
       "headingKeywords": {}
     },
