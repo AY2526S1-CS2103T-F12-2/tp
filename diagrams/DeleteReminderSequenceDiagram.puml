@@ -1,0 +1,63 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic for Delete Reminder LOGIC_COLOR_T1
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":DeleteReminderCommandParser" as DeleteReminderCommandParser LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant "deleteReminder:DeleteReminderCommand" as DeleteReminderCommand LOGIC_COLOR
+participant ":ReminderFieldsContainsKeywordsPredicate" as ReminderFieldsContainsKeywordsPredicate LOGIC_COLOR
+end box
+
+[-> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create DeleteReminderCommandParser
+AddressBookParser -> DeleteReminderCommandParser
+activate DeleteReminderCommandParser
+
+DeleteReminderCommandParser --> AddressBookParser
+deactivate DeleteReminderCommandParser
+
+AddressBookParser -> DeleteReminderCommandParser : parse(arguments)
+activate DeleteReminderCommandParser
+
+alt getValue(PREFIX_INDEX).isPresent()
+    DeleteReminderCommandParser -> ParserUtil : parseIndex()
+    activate ParserUtil
+
+    ParserUtil -> DeleteReminderCommandParser : index
+    deactivate ParserUtil
+
+    create DeleteReminderCommand
+    DeleteReminderCommandParser -> DeleteReminderCommand
+    activate DeleteReminderCommand
+
+    DeleteReminderCommand --> DeleteReminderCommandParser
+    deactivate DeleteReminderCommand
+else argMultimap.getValue(PREFIX_KEYWORD).isPresent()
+    create ReminderFieldsContainsKeywordsPredicate
+    DeleteReminderCommandParser -> ReminderFieldsContainsKeywordsPredicate
+    activate ReminderFieldsContainsKeywordsPredicate
+
+    ReminderFieldsContainsKeywordsPredicate --> DeleteReminderCommandParser
+    deactivate ReminderFieldsContainsKeywordsPredicate
+
+    create DeleteReminderCommand
+    DeleteReminderCommandParser -> DeleteReminderCommand
+    activate DeleteReminderCommand
+
+    DeleteReminderCommand --> DeleteReminderCommandParser
+    deactivate DeleteReminderCommand
+end alt
+
+DeleteReminderCommandParser --> AddressBookParser : deleteReminder
+deactivate DeleteReminderCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+DeleteReminderCommandParser -[hidden]-> AddressBookParser
+destroy DeleteReminderCommandParser
+
+[<-- AddressBookParser : deleteReminder
+deactivate AddressBookParser
+@enduml

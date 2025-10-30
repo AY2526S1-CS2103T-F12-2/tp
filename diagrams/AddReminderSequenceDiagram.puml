@@ -1,0 +1,60 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic for Add Reminder LOGIC_COLOR_T1
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":AddReminderCommandParser" as AddReminderCommandParser LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant ":Reminder" as Reminder LOGIC_COLOR
+participant "addReminder:AddReminderCommand" as AddReminderCommand LOGIC_COLOR
+end box
+
+[-> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create AddReminderCommandParser
+AddressBookParser -> AddReminderCommandParser
+activate AddReminderCommandParser
+
+AddReminderCommandParser --> AddressBookParser
+deactivate AddReminderCommandParser
+
+AddressBookParser -> AddReminderCommandParser : parse(arguments)
+activate AddReminderCommandParser
+
+AddReminderCommandParser -> ParserUtil : parseDueDate()
+activate ParserUtil
+
+ParserUtil --> AddReminderCommandParser : dueDate
+deactivate ParserUtil
+
+AddReminderCommandParser -> ParserUtil : parseReminderDescription()
+activate ParserUtil
+
+ParserUtil --> AddReminderCommandParser : description
+deactivate ParserUtil
+
+create Reminder
+AddReminderCommandParser -> Reminder
+activate Reminder
+
+Reminder --> AddReminderCommandParser
+deactivate Reminder
+
+create AddReminderCommand
+AddReminderCommandParser -> AddReminderCommand
+activate AddReminderCommand
+
+AddReminderCommand --> AddReminderCommandParser
+deactivate AddReminderCommand
+
+AddReminderCommandParser --> AddressBookParser : addReminder
+deactivate AddReminderCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+AddReminderCommandParser -[hidden]-> AddressBookParser
+destroy AddReminderCommandParser
+
+[<-- AddressBookParser : addReminder
+deactivate AddressBookParser
+@enduml
