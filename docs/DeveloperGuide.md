@@ -22,6 +22,10 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 --------------------------------------------------------------------------------------------------------------------
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ## **Design**
 
 ### Architecture
@@ -47,6 +51,10 @@ The bulk of the app's work is done by the following four components:
 
 [**`Commons`**](#common-classes) represents a collection of classes used by multiple other components.
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 **How the architecture components interact with each other**
 
 The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete-student i/1`.
@@ -63,6 +71,10 @@ For example, the `Logic` component defines its API in the `Logic.java` interface
 <puml src="diagrams/ComponentManagers.puml" width="300" />
 
 The sections below give more details of each component.
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 ### UI component
 
@@ -86,6 +98,10 @@ The `UI` component,
 - Dates are shown on the top row (`MM-dd`), scores inside the boxes on the bottom row.
 - When a date appears multiple times in history, only the latest score is displayed.
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ### Logic component
 
 **API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
@@ -97,6 +113,10 @@ Here's a (partial) class diagram of the `Logic` component:
 The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete-student i/1")` API call as an example.
 
 <puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete-student i/1` Command" />
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 <box type="info" seamless>
 
@@ -125,6 +145,10 @@ How the parsing works:
   calls `model.setPerson(person, person)` to trigger persistence, updates `AttendanceIndex`,
   and returns a success message.
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
 
@@ -146,6 +170,9 @@ The `Model` component,
 
 </box>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 ### Storage component
 
@@ -166,6 +193,10 @@ The `Storage` component,
 ### Common classes
 
 Classes used by multiple components are in the `seedu.address.commons` package.
+
+--------------------------------------------------------------------------------------------------------------------
+
+<div style="page-break-after: always;"></div>
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -193,6 +224,10 @@ Key ideas
 
 <puml src="diagrams/Grouping.puml" alt="Class Diagram for Grouping" />
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ### Grouping Command Behaviour
 #### Create group 
 
@@ -206,6 +241,10 @@ Key ideas
 
 <puml src="diagrams/GroupCreateCommandSequenceDiagram.puml" />
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 #### Add members to group
 
 * Step 1. User enters: group-add g/Group A i/1 i/3. AddressBookParser invokes GroupAddCommandParser#parse(...).
@@ -218,11 +257,19 @@ Key ideas
 
 <puml src="diagrams/GroupAddCommandSequenceDiagram.puml" />
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 #### Remove members from group
 
 Parser and execution mirror group-add, except the model op is removeFromGroup(...). The command succeeds for valid indices; persons not in the group are skipped.
 
 <puml src="diagrams/GroupRemoveSequenceDiagram.puml" /> <puml src="diagrams/GroupRemoveCommandSequenceDiagram.puml" />
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 #### Delete group
 
@@ -240,8 +287,9 @@ Parser and execution mirror group-add, except the model op is removeFromGroup(..
 
 - UI badges. UiGroupAccess is installed by MainWindow#fillInnerParts() and maps Person → Set<GroupName> to render chips in PersonCard.
 
----
-<puml src="diagrams/Grouping.puml" alt="Class Diagram for Grouping" />
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 ### Participation feature
 
@@ -276,6 +324,10 @@ The Participation feature lets tutors record a per-class participation score for
   - If multiple records share the **same date**, only the **latest** score is shown.
 - Styling comes from `participation.css` (e.g., `.participation-box`, `.date-mini`).
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 #### Storage
 - `JsonAdaptedPerson` persists a `participation` array:
 
@@ -288,9 +340,6 @@ The Participation feature lets tutors record a per-class participation score for
 
 * Older files without this field load as empty histories.
 * Invalid rows (e.g., score out of range) are **skipped** during load so one bad row doesn’t corrupt the file.
-
-<puml src="diagrams/ParticipationCommand.puml" alt="Participation Command Diagram"/>
-#### Error messages
 
 * `Invalid student name: name cannot be empty.`
 * `Invalid student name: no matching student found.`
@@ -319,6 +368,10 @@ There are 2 types of reminders: `Reminder` and `UnmodfiableReminder`.
 
 <puml src="diagrams/ReminderClassDiagram.puml" width="550"/>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 #### Command Behaviour
 
 ##### Add reminder
@@ -345,6 +398,10 @@ Step 3: `AddReminderCommand#execute()` is called, and adds the reminder to the r
 
 <puml src="diagrams/AddReminderCommandSequenceDiagram.puml" />
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 <box type="info" seamless>
 
 **Note:** The lifeline for `AddReminderCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
@@ -367,6 +424,10 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 * In Step 3, the reminder to edit is copied and injected with the new fields. This new reminder is then set to replace the old reminder in the reminder list. After a successful edit, the reminder is list is updated to show all reminders and a success message is also returned via an instance of `CommandResult`.
 
 <box type="warning" seamless>
@@ -387,6 +448,10 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ##### Delete reminder
 
 Similar to add reminder command as above, except the following:
@@ -403,6 +468,10 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 * In Step 3, if the deletion is by keyword, `DeleteReminderCommand#execute()` will search for all reminders in the list and successfully deletes if only one reminder is found. If no or multiple reminders are found, the command will still succeed but without any deletion. A message is returned via an instance of `CommandResult` indicating if no or multiple reminders are found.
 
 <box type="warning" seamless>
@@ -415,8 +484,6 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
-</box>
-
 <puml src="diagrams/DeleteReminderCommandSequenceDiagram.puml" />
 
 <box type="info" seamless>
@@ -425,13 +492,21 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
-<puml src="diagrams/AddSequenceDiagram.puml" width="550" />
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
+<puml src="diagrams/DeleteReminderReferenceSequenceDiagram.puml"/>
 
 ### Delete student feature
 
 This features deletes a student form the students list. This feature is facilitated by the `LogicManger`, `AddressBookParser`, `DeleteCommandParser`, `DeleteCommand`, `CommandResult` and `Model` classes. Given below is a high level overview of how a student is being deleted from the students list.
 
-<puml src="diagrams/DeleteSequenceDiagram.puml" width="550" />
+<puml src="diagrams/DeleteSequenceDiagram.puml" />
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 ### Mark payment feature
 
@@ -454,9 +529,47 @@ The diagram above illustrates the **Payment Management** use cases in ClassConne
 
 Each of these features interacts with the `paymentStatus` field stored within every `Person` object.
 
-<puml src="diagrams/DeleteReminderReferenceSequenceDiagram.puml"/>
+### Add Homework
 
-### [Proposed] Undo/redo feature
+The add-homework feature lets tutors record homework tasks for individual students. Each homework entry contains a **description**, **due date**, and completion status (default: not done).
+
+**Key ideas**
+- A `Homework` stores its description, due date, and done status.
+- Each `Person` maintains a list of `Homework` objects.
+- The command operates through the `Model` interface and updates storage via the `AddressBook`.
+- The UI displays homework items under each student card, showing description, due date, and status badges.
+- Duplicate entries (same description and date) are prevented.
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
+<img src="diagrams/HomeworkUseCase.png"/>
+
+The diagram above illustrates the **Homework Management** use cases in ClassConnect.  
+Tutors can **add**, **view**, **delete**, and **mark homework as done or undone** for each student.
+
+- **Add Homework**: Creates a new homework entry with a description and due date for a selected student.
+- **Delete Homework**: Removes a homework entry from the student’s list when it is no longer needed.
+- **Mark Homework as Done / Undone**: Updates the completion status of an existing homework task, helping tutors keep track of student progress.
+- **View Homework List**: Displays all homework items for each student, including their deadlines and status badges.
+
+Each of these features interacts with the same underlying `Homework` model and `HomeworkList` stored within every `Person` object.
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
+### Search
+<puml src="diagrams/SearchSequence.puml"/>
+
+* The activity diagram above illustrates the flow of the search-student command.  
+* When the tutor enters a search query (e.g., `search-student k/10:00`), the command parser extracts the keyword and creates a predicate that checks whether any student’s fields (such as name, phone number, lesson time, or subject) contain the keyword.  
+* The model then updates its filtered student list based on this predicate.  
+* If one or more matches are found, the system displays a success message showing the number of students found; otherwise, it shows a message indicating that no students match the search keyword.
+ this the text
+
+### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
 
@@ -473,6 +586,10 @@ Given below is an example usage scenario and how the undo/redo mechanism behaves
 Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
 
 <puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
 
@@ -499,6 +616,10 @@ than attempting to perform the undo.
 
 </box>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 The following sequence diagram shows how an undo operation goes through the `Logic` component:
 
 <puml src="diagrams/UndoSequenceDiagram-Logic.puml" alt="UndoSequenceDiagram-Logic" />
@@ -524,6 +645,10 @@ The `redo` command does the opposite — it calls `Model#redoAddressBook()`,
 Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
 
 <puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
 
@@ -555,6 +680,10 @@ The following activity diagram summarizes what happens when a user executes a ne
 *{Explain here how the data archiving feature will be implemented}*
 
 ---
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
 
@@ -602,6 +731,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ---
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ### Use cases
 
 (For all use cases below, the **System** is `ClassConnect` and the **Actor** is the `tutor`)
@@ -621,20 +754,65 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   → System shows error and requests re-entry.
 
 ---
+**Use case 4: Add Homework**
 
-**Use case 2: Record Homework**
+**MSS**
+1. Tutor enters `add-homework n/Marcus desc/Math Assignment 3 by/2025-11-15`.
+2. System validates the input.
+3. System adds the homework to the specified student.
+4. System displays success message:  Added homework for Marcus: Math Assignment 3 (due 2025-11-15)
+
+**Extensions**
+- 2a. Input is invalid (e.g., missing or wrong prefixes).  
+  → System shows an error message with the corresponding correct input format
+- 2b. Student name not found.  
+  → System displays "No student with given name" and aborts the operation.
+- 2c. Due date format is invalid.  
+  → System displays “Invalid date format!” with corresponding correct date format
+- 2d. Homework already in list
+  → System displays “This student has already been assigned this homework” and aborts operation
+
+**Use case 5: Mark Homework as Done**
+
+**MSS**
+1. Tutor enters `mark-done n/Marcus Yeoh i/1`.
+2. System validates the input.
+3. System marks the specified homework as done.
+4. System displays success message: Marked homework as done for Marcus: <description>
+
+**Extensions**
+- 2a. Input is invalid (e.g., missing or wrong prefixes).  
+  → System shows an error message with the correct input format.
+- 2b. Student name not found.  
+  → System displays "No student with given name" and aborts the operation.
+- 2c. Homework index out of range.  
+  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
+- 2d. Homework is already marked as done.  
+  → System displays same success message
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
+**Use case 6: Mark Homework as Undone**
 
 **MSS**
 
-1. Tutor enters `add-homework sid/1 d/Finish Ch.3 problems due/2025-10-05`.
-2. System validates and links homework to student.
-3. System confirms creation.
+1. Tutor enters `mark-undone n/Marcus Yeoh i/1`.
+2. System validates the input.
+3. System marks the specified homework as undone.
+4. System displays success message: Marked homework as undone for Marcus: <description>
 
 **Extensions**
 
-* 2a. Student ID not found.
-  → System shows error and suggests checking student list.
-
+- 2a. Input is invalid (e.g., missing or wrong prefixes).  
+  → System shows an error message with the correct input format.
+- 2b. Student name not found.  
+  → System displays "No student with given name" and aborts the operation.
+- 2c. Homework index out of range.  
+  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
+- 2d. Homework is already marked as undone.  
+  → System displays same success message.
 ---
 
 **Use case 7: Mark Student as Paid**
@@ -672,6 +850,10 @@ Jul: ✗ Unpaid Aug: ✗ Unpaid Sep: ✗ Unpaid Oct: ✗ Unpaid Nov: ✗ Unpaid 
   - Use case ends.
 
 ---
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 **Use case 8: Mark Student as Unpaid**
 
@@ -722,73 +904,96 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 - 2a. No students in the list.
   - 2a1. System displays empty list.
   - Use case ends.
-1. Tutor enters `record-payment sid/1 amt/240 notes/Sep tuition`.
-2. System stores payment as **UNPAID**.
-3. Tutor later enters `pay 3`.
-4. System updates status and confirms.
-
-**Extensions**
-
-* 1a. Invalid amount format entered.
-  → System rejects input and shows correct format.
 
 ---
 
-**Use case 4: Add Homework**
+<div style="page-break-after: always;"></div>
 
-**MSS**
-1. Tutor enters `add-homework n/Marcus desc/Math Assignment 3 by/2025-11-15`.
-2. System validates the input.
-3. System adds the homework to the specified student.
-4. System displays success message:  Added homework for Marcus: Math Assignment 3 (due 2025-11-15)
+--------------------------------------------------------------------------------------------------------------------
 
-**Extensions**
-- 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the corresponding correct input format
-- 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
-- 2c. Due date format is invalid.  
-  → System displays “Invalid date format!” with corresponding correct date format
-- 2d. Homework already in list
-  → System displays “This student has already been assigned this homework” and aborts operation
+**Use case 10: Add Reminder**
 
-**Use case 5: Mark Homework as Done**
+**MSS:**
 
-**MSS**
-1. Tutor enters `mark-done n/Marcus Yeoh i/1`.
-2. System validates the input.
-3. System marks the specified homework as done.
-4. System displays success message: Marked homework as done for Marcus: <description>
+1. System displays reminder list.
+2. Tutor enters add reminder input command.
+3. System creates a reminder.
+4. System adds it to the reminder list.
+5. System displays success message.
+6. System re-displays the reminder list.
 
-**Extensions**
-- 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the correct input format.
-- 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
-- 2c. Homework index out of range.  
-  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
-- 2d. Homework is already marked as done.  
-  → System displays same success message 
+Use case ends.
 
-**Use case 6: Mark Homework as Undone**
+**Extensions:**
 
-**MSS**
-1. Tutor enters `mark-undone n/Marcus Yeoh i/1`.
-2. System validates the input.
-3. System marks the specified homework as undone.
-4. System displays success message: Marked homework as undone for Marcus: <description>
+- 2a. System detects invalid date format.
+  - 2a1. System shows error message.
+  - Use case ends.
+- 2b. System detects invalid description.
+  - 2b1. System shows error message.
+  - Use case ends.
+- 2c. System detects missing add reminder prefixes.
+  - 2c1. System shows error message.
+  - Use case ends.
+- 3a. System found out duplicate reminder exists.
+  - 3a1. System shows error message.
+  - Use case ends.
 
-**Extensions**
-- 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the correct input format.
-- 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
-- 2c. Homework index out of range.  
-  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
-- 2d. Homework is already marked as undone.  
-  → System displays same success message.
+---
 
+**Use case 11: Edit Reminder**
 
+**Preconditions:** Target reminder exists and it is modifiable.
+
+**MSS:**
+
+Similar to <u>add reminder (Use Case 10)</u> except for Step 4.
+
+4. System replaces existing reminder.
+
+**Extensions:**
+
+Similar to <u>add reminder (Use Case 10)</u>.
+
+- 3a. System detects reminder to edit is unmodifiable.
+  - 3a1. System shows error message.
+  - Use case ends.
+
+---
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
+**Use case 12: Delete Reminder**
+
+**Preconditions:** Target reminder exists and it is modifiable.
+
+**MSS:**
+
+Similar to <u>add reminder (Use Case 10)</u>.
+
+**Extensions:**
+
+Similar to <u>add reminder (Use Case 10)</u>.
+
+- 2a. System detects reminder to delete is unmodifiable.
+  - 2a1. System shows error message.
+  - Use case ends.
+- 2b. System detects duplicate valid prefixes.
+  - 2b1. System shows error message.
+  - Use case ends.
+- 2c. System detects invalid index.
+  - 2c1. System shows error message.
+  - Use case ends.
+- 2d. System found no matching reminder to delete.
+  - 2d1. System shows no reminder to delete message.
+  - Use case ends.
+- 2e. System found multiple similar reminder to delete.
+  - 2e1. System shows multiple reminder found message.
+  - Use case ends.
+
+---
 
 ### Non-Functional Requirements
 
@@ -823,6 +1028,10 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 
 ---
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ### Glossary
 
 - **CLI (Command-Line Interface)**: Text-based input system for commands.
@@ -833,7 +1042,8 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 - **Feedback**:  Either an error message or command successfully executed message
 - **Centralised** : Defined in one single place within the codebase
 
-## Appendix: Instructions
+## Appendix: Instructions for manual testing
+
 ### Payment Feature
 
 #### Marking as paid
@@ -879,6 +1089,10 @@ Dec: ✓ Paid`
    `Student marcus ng is already marked as paid for January.`
 
 ---
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 #### Marking as unpaid
 
@@ -957,6 +1171,10 @@ Dec: ✓ Paid`
 
 ---
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 #### Marking homework as done
 
 1. Marking an existing homework as done
@@ -1011,13 +1229,25 @@ Dec: ✓ Paid`
 I was primarily responsible for implementing and testing the **Search feature** and the entire **Homework management system**, which includes:
 
 - **Search Feature**
-  - Implemented the `search-student` command that allows tutors to search for students by name, subject, or level.
-  - Designed a flexible parser to handle multiple prefixes and partial keyword matching.
+    - Implemented the `search-student` command that allows tutors to search for students by name, subject, or level.
+    - Designed a flexible parser to handle multiple prefixes and partial keyword matching.
+    - 
+- **Homework Feature Set**
+    - Designed and implemented all homework-related commands:
+        - `add-homework` — to assign new homework to a student.
+        - `mark-done` and `mark-undone` — to update homework completion status.
+        - `delete-homework` — to remove homework entries.
+    - Extended the `Person` and `AddressBook` models to include homework lists and handled data persistence through JSON storage.
+    - Updated the UI (`PersonCard`) to display homework details with due dates and status badges.
+    - Created `JsonAdaptedHomework` for saving of homework data
+      git pull origin
 
+<div style="page-break-after: always;"></div>
 
-## Appendix: Planned Enhancements
+--------------------------------------------------------------------------------------------------------------------
 
 ### Min-Ren Seah (miinren)
+
 I was primarily responsible for updating the delete feature and implementing the payment tracking system.
 
 - **Delete Feature**
@@ -1029,6 +1259,23 @@ I was primarily responsible for updating the delete feature and implementing the
         - `mark-unpaid` and `mark-undone` — to mark a month as unpaid for a student.
     - Extended the `Person` and `AddressBook` models to include the payment system using a `bitset` and handled data persistence through JSON storage.
     - Updated the UI (`PersonCard`) to display payment details with the month using colour coded boxes.
-    - Created `JsonAdaptedPerson` for saving of payment data 
+    - Created `JsonAdaptedPerson` for saving of payment data
 
+### Teoh Hao Yi (haobuhaoo)
 
+I was primarily responsible for updating the add, edit feature and implementing the entire reminders feature.
+
+- **Add, Edit Feature**
+  - Modified the `add-student` and `edit-student` command to allow of adding and editing of students.
+
+- **Reminders Feature**
+  - Implemented all the reminder related commands and logic integration:
+    - `add-reminder` adds a reminder to the list.
+    - `edit-reminder` edits an existing reminder from the list.
+    - `delete-reminder` deletes an existing reminder from the list.
+  - Extended `AddressBook` models to manage and include the list of reminders.
+  - Created `JsonAdaptedReminders` for saving of reminders data.
+  - Modified the UI to show the list of reminders.
+
+## Appendix: Planned Enhancements
+_[To be added in the future...]_
