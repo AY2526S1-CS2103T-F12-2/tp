@@ -34,14 +34,14 @@ With ClassConnect, you can focus more on teaching and less on administrative wor
 Follow the steps below to set up and start using ClassConnect:
 
 1. **Check your Java version**<br>
-   * Ensure you have Java `17` or above installed in your Computer. You can verify this by running the following command in your terminal or command prompt:`java -version`.
+   * Ensure you have Java `17` installed in your Computer. You can verify this by running the following command in your terminal or command prompt:`java -version`.
    * **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
    * If you do not have Java installed, download it from the [official Oracle website](https://www.oracle.com/java/technologies/downloads/#java17?er=221886).
 
-1. **Download ClassConnect**<br>
+2. **Download ClassConnect**<br>
    * Download the latest `classconnect.jar` file from [the releases page](https://github.com/AY2526S1-CS2103T-F12-2/tp/releases).
 
-1. **Run the application**
+3. **Run the application**
    * Choose a folder on your computer where you want to keep ClassConnect. This can be any folder you are comfortable with, such as `Documents/ClassConnect`.
    * Copy the `classconnect.jar` file you downloaded into that folder.
    * Open the terminal / command prompt:
@@ -52,15 +52,26 @@ Follow the steps below to set up and start using ClassConnect:
      * For example, if you saved it in Documents/ClassConnect, type `cd Documents/ClassConnect` in the terminal and press `Enter`.
    * Run the application by typing `java -jar classconnect.jar` into the terminal and press `Enter`.
 
-1. **Familiarize yourself with the interface**
+<box type="important" seamless>
+
+**Note:** You may see warnings in your terminal or command prompt, similar to:
+```
+Nov 02, 2025 2:31:35 AM javafx.fxml.FXMLLoader$ValueElement processValue
+WARNING: Loading FXML document with JavaFX API of version 17.0.12 by JavaFX runtime of version 17.0.7
+```
+This is safe to ignore. It occurs because ClassConnect's JavaFX version differs slightly from the runtime version. Functionality is **not affected**, and you can safely continue using the app as per normal.
+
+</box>
+
+4. **Familiarize yourself with the interface**
    * When ClassConnect launches, you will see both the command line panel (for typing commands) and the main display panel (showing your students, lessons, and reminders).
    ![Ui](images/Ui.png)
 
-1. **Start managing your data**
+5. **Start managing your data**
    * Try entering your first command to add a student: `add-student n/John Doe p/98765432 t/1000 Wed`.
    * The student `John Doe` will appear at the bottom of the main panel immediately after the command is executed.
 
-1. **Explore more commands**
+6. **Explore more commands**
    * Refer to the [Features](#features) section for a full list of commands and usage examples.
 
 --------------------------------------------------------------------------------------------------------------------
