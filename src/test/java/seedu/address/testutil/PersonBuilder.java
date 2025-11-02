@@ -1,11 +1,13 @@
 package seedu.address.testutil;
 
+import java.time.LocalDate;
 import java.util.BitSet;
 import java.util.HashSet;
 import java.util.Set;
 
 import seedu.address.model.person.LessonTime;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.ParticipationHistory;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.util.SampleDataUtil;
@@ -22,6 +24,7 @@ public class PersonBuilder {
     private Phone phone;
     private Set<LessonTime> lessonTime = new HashSet<>();
     private BitSet paymentStatus = new BitSet(12);
+    private ParticipationHistory participation = new ParticipationHistory();
 
     /**
      * Creates a {@code PersonBuilder} with the default details.
@@ -77,6 +80,14 @@ public class PersonBuilder {
             }
         }
         this.paymentStatus = bits;
+        return this;
+    }
+
+    /**
+     * Sets the {@code Participation} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withParticipation(String date, int score) {
+        participation.add(LocalDate.parse(date), score);
         return this;
     }
 
