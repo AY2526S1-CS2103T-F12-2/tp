@@ -56,6 +56,16 @@ public class AddHomeworkParserTest {
         assertEquals(expected, parser.parse(input));
     }
 
+    @Test
+    public void parse_descriptionTooLong_throwsParseException() {
+        String longDesc = "a".repeat(51); // 51 characters
+        String input = " n/Alex Yeoh desc/" + longDesc + " by/2025-10-27";
+
+        ParseException ex = assertThrows(ParseException.class, () -> parser.parse(input));
+        assertEquals(AddHomeworkCommand.MESSAGE_DESC_TOO_LONG, ex.getMessage());
+    }
+
+
 
 
     @Test
