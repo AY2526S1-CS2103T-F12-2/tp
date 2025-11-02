@@ -1003,7 +1003,7 @@ Similar to <u>add reminder (Use Case 10)</u>.
 4. **Usability**
 
 * Every command entered will print out either a success message or a specific error message
-* Help command will print out a list to the user guide 
+* Help command will print out a link to the user guide 
 * A user with above average typing speed for regular English text should be able to accomplish most of the tasks faster
   using commands than using the mouse.
 
