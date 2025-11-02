@@ -529,47 +529,49 @@ The diagram above illustrates the **Payment Management** use cases in ClassConne
 
 Each of these features interacts with the `paymentStatus` field stored within every `Person` object.
 
-### Add Homework
-
-The add-homework feature lets tutors record homework tasks for individual students. Each homework entry contains a **description**, **due date**, and completion status (default: not done).
-
-**Key ideas**
-- A `Homework` stores its description, due date, and done status.
-- Each `Person` maintains a list of `Homework` objects.
-- The command operates through the `Model` interface and updates storage via the `AddressBook`.
-- The UI displays homework items under each student card, showing description, due date, and status badges.
-- Duplicate entries (same description and date) are prevented.
 
 <div style="page-break-after: always;"></div>
 
---------------------------------------------------------------------------------------------------------------------
 
-<img src="diagrams/HomeworkUseCase.png"/>
-
-The diagram above illustrates the **Homework Management** use cases in ClassConnect.  
-Tutors can **add**, **view**, **delete**, and **mark homework as done or undone** for each student.
-
-- **Add Homework**: Creates a new homework entry with a description and due date for a selected student.
-- **Delete Homework**: Removes a homework entry from the student’s list when it is no longer needed.
-- **Mark Homework as Done / Undone**: Updates the completion status of an existing homework task, helping tutors keep track of student progress.
-- **View Homework List**: Displays all homework items for each student, including their deadlines and status badges.
-
-Each of these features interacts with the same underlying `Homework` model and `HomeworkList` stored within every `Person` object.
-
-<div style="page-break-after: always;"></div>
 
 --------------------------------------------------------------------------------------------------------------------
 
 ### Search
 <puml src="diagrams/SearchSequence.puml"/>
 
-* The activity diagram above illustrates the flow of the search-student command.  
-* When the tutor enters a search query (e.g., `search-student k/10:00`), the command parser extracts the keyword and creates a predicate that checks whether any student’s fields (such as name, phone number, lesson time, or subject) contain the keyword.  
-* The model then updates its filtered student list based on this predicate.  
-* If one or more matches are found, the system displays a success message showing the number of students found; otherwise, it shows a message indicating that no students match the search keyword.
- this the text
 
-### \[Proposed\] Undo/redo feature
+* The activity diagram above illustrates the flow of the search-student command.
+* When the tutor enters a search query (e.g., `search-student k/10:00`), the command parser extracts the keyword and creates a predicate that checks whether any student’s fields (such as name, phone number, lesson time, or subject) contain the keyword.
+* The model then updates its filtered student list based on this predicate.
+* If one or more matches are found, the system displays a success message showing the number of students found; otherwise, it shows a message indicating that no students match the search keyword.
+  this the text
+
+
+
+### Homework Feature
+
+The homework feature lets tutors record homework tasks for individual students via the `add-homework` command. 
+Each homework entry contains a **description**, **due date**, and completion status (default: not done).
+
+**Key ideas**
+- A `Homework` stores its description, due date, and done status.
+- Each `Person` maintains a list of `Homework` objects.
+- The command operates through the `Model` interface and updates storage via the `AddressBook`.
+- The UI displays homework items under each student card, showing description, due date, and status badges.
+
+  <img src="diagrams/HomeworkUseCase.png"/>
+  
+
+  The diagram above illustrates the **Homework Management** use cases in ClassConnect.  
+  Tutors can **add**, **view**, **delete**, and **mark homework as done or undone** for each student.
+- **Add Homework**: Creates a new homework entry with a description and due date for a selected student.
+- **Delete Homework**: Removes a homework entry from the student’s list when it is no longer needed.
+- **Mark Homework as Done / Undone**: Updates the completion status of an existing homework task, helping tutors keep track of student progress.
+- **View Homework List**: Displays all homework items for each student, including their deadlines and status badges.
+  Each of these features interacts with the same underlying `Homework` model and `HomeworkList` stored within every `Person` object.
+
+
+### [Proposed] Undo/redo feature
 
 #### Proposed Implementation
 
@@ -737,83 +739,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 (For all use cases below, the **System** is `ClassConnect` and the **Actor** is the `tutor`)
 
-**Use case 1: Add Student**
 
-**MSS**
-
-1. Tutor enters `add-student n/Marcus p/98765432 t/Mon 1900 lvl/Sec3 sub/Math`.
-2. System validates the input.
-3. System stores the student record.
-4. System confirms addition.
-
-**Extensions**
-
-* 2a. Input is invalid (e.g., wrong phone format).
-  → System shows error and requests re-entry.
-
----
-**Use case 4: Add Homework**
-
-**MSS**
-1. Tutor enters `add-homework n/Marcus desc/Math Assignment 3 by/2025-11-15`.
-2. System validates the input.
-3. System adds the homework to the specified student.
-4. System displays success message:  Added homework for Marcus: Math Assignment 3 (due 2025-11-15)
-
-**Extensions**
-- 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the corresponding correct input format
-- 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
-- 2c. Due date format is invalid.  
-  → System displays “Invalid date format!” with corresponding correct date format
-- 2d. Homework already in list
-  → System displays “This student has already been assigned this homework” and aborts operation
-
-**Use case 5: Mark Homework as Done**
-
-**MSS**
-1. Tutor enters `mark-done n/Marcus Yeoh i/1`.
-2. System validates the input.
-3. System marks the specified homework as done.
-4. System displays success message: Marked homework as done for Marcus: <description>
-
-**Extensions**
-- 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the correct input format.
-- 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
-- 2c. Homework index out of range.  
-  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
-- 2d. Homework is already marked as done.  
-  → System displays same success message
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
-**Use case 6: Mark Homework as Undone**
-
-**MSS**
-
-1. Tutor enters `mark-undone n/Marcus Yeoh i/1`.
-2. System validates the input.
-3. System marks the specified homework as undone.
-4. System displays success message: Marked homework as undone for Marcus: <description>
-
-**Extensions**
-
-- 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the correct input format.
-- 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
-- 2c. Homework index out of range.  
-  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
-- 2d. Homework is already marked as undone.  
-  → System displays same success message.
----
-
-**Use case 7: Mark Student as Paid**
+**Use case 1: Mark Student as Paid**
 
 **MSS**
 
@@ -849,11 +776,7 @@ Jul: ✗ Unpaid Aug: ✗ Unpaid Sep: ✗ Unpaid Oct: ✗ Unpaid Nov: ✗ Unpaid 
 
 ---
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
-**Use case 8: Mark Student as Unpaid**
+**Use case 2: Mark Student as Unpaid**
 
 **MSS**
 
@@ -889,7 +812,7 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 
 ---
 
-**Use case 9: View Payment Status**
+**Use case 3: View Payment Status**
 
 **MSS**
 
@@ -905,11 +828,67 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 
 ---
 
+**Use case 4: Add Homework**
+
+**MSS**
+1. Tutor enters `add-homework n/Marcus desc/Math Assignment 3 by/2025-11-15`.
+2. System validates the input.
+3. System adds the homework to the specified student.
+4. System displays success message:  Added homework for Marcus: Math Assignment 3 (due 2025-11-15)
+
+**Extensions**
+- 2a. Input is invalid (e.g., missing or wrong prefixes).  
+  → System shows an error message with the corresponding correct input format
+- 2b. Student name not found.  
+  → System displays "No student with given name" and aborts the operation.
+- 2c. Due date format is invalid.  
+  → System displays “Invalid date format!” with corresponding correct date format
+- 2d. Homework already in list
+  → System displays “This student has already been assigned this homework” and aborts operation
+- 2f. Due date has already passed
+  → System displays success message with warning: "Due date is in the past"
+
+**Use case 5: Mark Homework as Done**
+
+**MSS**
+1. Tutor enters `mark-done n/Marcus Yeoh i/1`.
+2. System validates the input.
+3. System marks the specified homework as done.
+4. System displays success message: Marked homework as done for Marcus: <description>
+
+**Extensions**
+- 2a. Input is invalid (e.g., missing or wrong prefixes).  
+  → System shows an error message with the correct input format.
+- 2b. Student name not found.  
+  → System displays "No student with given name" and aborts the operation.
+- 2c. Homework index out of range.  
+  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
+- 2d. Homework is already marked as done.  
+  → System displays same success message
+
+**Use case 6: Mark Homework as Undone**
+
+**MSS**
+1. Tutor enters `mark-undone n/Marcus Yeoh i/1`.
+2. System validates the input.
+3. System marks the specified homework as undone.
+4. System displays success message: Marked homework as undone for Marcus: <description>
+
+**Extensions**
+- 2a. Input is invalid (e.g., missing or wrong prefixes).  
+  → System shows an error message with the correct input format.
+- 2b. Student name not found.  
+  → System displays "No student with given name" and aborts the operation.
+- 2c. Homework index out of range.  
+  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
+- 2d. Homework is already marked as undone.  
+  → System displays same success message.
+
 <div style="page-break-after: always;"></div>
 
 --------------------------------------------------------------------------------------------------------------------
 
-**Use case 10: Add Reminder**
+**Use case 7: Add Reminder**
 
 **MSS:**
 
@@ -939,11 +918,21 @@ Use case ends.
 
 ---
 
-**Use case 11: Edit Reminder**
+**Use case 8: Edit Reminder**
 
 **Preconditions:** Target reminder exists and it is modifiable.
 
-**MSS:**
+**Extensions**
+- 2a. Input is invalid (e.g., missing or wrong prefixes).  
+  → System shows an error message with the corresponding correct input format
+- 2b. Student name not found.  
+  → System displays "No student with given name" and aborts the operation.
+- 2c. Due date format is invalid.  
+  → System displays “Invalid date format!” with corresponding correct date format
+- 2d. Homework already in list
+  → System displays “This student has already been assigned this homework” and aborts operation
+- 2f. Due date has already passed
+  → System displays success message with warning: "Due date is in the past"
 
 Similar to <u>add reminder (Use Case 10)</u> except for Step 4.
 
@@ -963,7 +952,7 @@ Similar to <u>add reminder (Use Case 10)</u>.
 
 --------------------------------------------------------------------------------------------------------------------
 
-**Use case 12: Delete Reminder**
+**Use case 9: Delete Reminder**
 
 **Preconditions:** Target reminder exists and it is modifiable.
 
@@ -1014,7 +1003,7 @@ Similar to <u>add reminder (Use Case 10)</u>.
 4. **Usability**
 
 * Every command entered will print out either a success message or a specific error message
-* Help command will print out clear list of commands with their respective usage examples
+* Help command will print out a link to the user guide 
 * A user with above average typing speed for regular English text should be able to accomplish most of the tasks faster
   using commands than using the mouse.
 
@@ -1042,7 +1031,7 @@ Similar to <u>add reminder (Use Case 10)</u>.
 - **Feedback**:  Either an error message or command successfully executed message
 - **Centralised** : Defined in one single place within the codebase
 
-## Appendix: Instructions for manual testing
+## Appendix: Instructions
 
 ### Payment Feature
 
@@ -1225,26 +1214,21 @@ Dec: ✓ Paid`
 ## Appendix: Effort
 
 ### Marcus Ng (PeanutButter1212)
-
 I was primarily responsible for implementing and testing the **Search feature** and the entire **Homework management system**, which includes:
-
 - **Search Feature**
-    - Implemented the `search-student` command that allows tutors to search for students by name, subject, or level.
-    - Designed a flexible parser to handle multiple prefixes and partial keyword matching.
-    - 
+  - Implemented the `search-student` command that allows tutors to search for students by name, subject, or level.
+  - Designed a flexible parser to handle multiple prefixes and partial keyword matching.
+  -
 - **Homework Feature Set**
-    - Designed and implemented all homework-related commands:
-        - `add-homework` — to assign new homework to a student.
-        - `mark-done` and `mark-undone` — to update homework completion status.
-        - `delete-homework` — to remove homework entries.
-    - Extended the `Person` and `AddressBook` models to include homework lists and handled data persistence through JSON storage.
-    - Updated the UI (`PersonCard`) to display homework details with due dates and status badges.
-    - Created `JsonAdaptedHomework` for saving of homework data
-      git pull origin
+  - Designed and implemented all homework-related commands:
+    - `add-homework` — to assign new homework to a student.
+    - `mark-done` and `mark-undone` — to update homework completion status.
+    - `delete-homework` — to remove homework entries.
+  - Extended the `Person` and `AddressBook` models to include homework lists and handled data persistence through JSON storage.
+  - Updated the UI (`PersonCard`) to display homework details with due dates and status badges.
+  - Created `JsonAdaptedHomework` for saving of homework data
 
-<div style="page-break-after: always;"></div>
 
---------------------------------------------------------------------------------------------------------------------
 
 ### Min-Ren Seah (miinren)
 

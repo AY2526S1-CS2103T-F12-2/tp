@@ -408,9 +408,11 @@ Adds a homework entry to the specified student.
 Format: `add-homework n/NAME desc/DESCRIPTION by/DEADLINE`
 
 * Adds a homework with the given `DESCRIPTION` and `DEADLINE` to the student with the specified `NAME`.
-* `NAME` refers to the name of the student in the displayed student list. It must match the full name of the student in the list.
-* `DESCRIPTION` refers to the details of the homework.
+* `NAME` refers to the name of the student in the displayed student list.
+* **⚠️ Warning:** `NAME` must match the full name of the student in the list or else error message: "No student with given name" will be displayed
+* `DESCRIPTION` refers to the details of the homework (Maximum of 50 Characters)
 * `DEADLINE` refers to the due date of the homework. It is in the `YYYY-MM-DD` format.
+* If `DEADLINE` is before current date, a warning message: `⚠️ Warning: Deadline is before current date` will be shown below success message with homework still being successfully added to list
 
 Examples:
 * `add-homework n/Marcus desc/Math Worksheet 1 by/2025-10-27` Assigns the homework `Math Worksheet 1` and its due date `2025-10-27` to the student `Marcus`.
@@ -427,6 +429,7 @@ Format: `delete-homework n/NAME i/INDEX`
 * Deletes the homework with the given `INDEX` from the student with the specified `NAME`.
 * `NAME` refers to the name of the student in the displayed student list. It must match the full name of the student in the list.
 * `INDEX` refers to the number shown beside the homework.
+* **⚠️ Warning:** This command will not work if the student is not visible in the current list view.
 
 Examples:
 * `delete-homework n/Marcus i/1` Deletes the homework at index 1 that is assigned to the student `Marcus`.
@@ -448,6 +451,7 @@ Format: `mark-done n/NAME i/INDEX`
 * `NAME` refers to the name of the student in the displayed student list. It must match the full name of the student in the list.
 * `INDEX` refers to the number shown beside the homework.
 * Marking a homework that is already marked will not result in any error
+* **⚠️ Warning:** This command will not work if the student is not visible in the current list view.
 
 Examples:
 * `mark-done n/Marcus i/1` Marks the homework at index 1 that is assigned to the student `Marcus` as done.
@@ -465,6 +469,7 @@ Format: `mark-undone n/NAME i/INDEX`
 * `NAME` refers to the name of the student in the displayed student list. It must match the full name of the student in the list.
 * `INDEX` refers to the number shown beside the homework.
 * Unmarking a homework that is already unmarked will not result in any error
+* **⚠️ Warning:** This command will not work if the student is not visible in the current list view.
 
 Examples:
 * `mark-undone n/Marcus i/1` Marks the homework at index 1 that is assigned to the student `Marcus` as undone.
