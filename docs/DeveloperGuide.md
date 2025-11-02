@@ -855,11 +855,67 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 
 ---
 
+**Use case 4: Add Homework**
+
+**MSS**
+1. Tutor enters `add-homework n/Marcus desc/Math Assignment 3 by/2025-11-15`.
+2. System validates the input.
+3. System adds the homework to the specified student.
+4. System displays success message:  Added homework for Marcus: Math Assignment 3 (due 2025-11-15)
+
+**Extensions**
+- 2a. Input is invalid (e.g., missing or wrong prefixes).  
+  → System shows an error message with the corresponding correct input format
+- 2b. Student name not found.  
+  → System displays "No student with given name" and aborts the operation.
+- 2c. Due date format is invalid.  
+  → System displays “Invalid date format!” with corresponding correct date format
+- 2d. Homework already in list
+  → System displays “This student has already been assigned this homework” and aborts operation
+- 2f. Due date has already passed
+  → System displays success message with warning: "Due date is in the past"
+
+**Use case 5: Mark Homework as Done**
+
+**MSS**
+1. Tutor enters `mark-done n/Marcus Yeoh i/1`.
+2. System validates the input.
+3. System marks the specified homework as done.
+4. System displays success message: Marked homework as done for Marcus: <description>
+
+**Extensions**
+- 2a. Input is invalid (e.g., missing or wrong prefixes).  
+  → System shows an error message with the correct input format.
+- 2b. Student name not found.  
+  → System displays "No student with given name" and aborts the operation.
+- 2c. Homework index out of range.  
+  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
+- 2d. Homework is already marked as done.  
+  → System displays same success message
+
+**Use case 6: Mark Homework as Undone**
+
+**MSS**
+1. Tutor enters `mark-undone n/Marcus Yeoh i/1`.
+2. System validates the input.
+3. System marks the specified homework as undone.
+4. System displays success message: Marked homework as undone for Marcus: <description>
+
+**Extensions**
+- 2a. Input is invalid (e.g., missing or wrong prefixes).  
+  → System shows an error message with the correct input format.
+- 2b. Student name not found.  
+  → System displays "No student with given name" and aborts the operation.
+- 2c. Homework index out of range.  
+  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
+- 2d. Homework is already marked as undone.  
+  → System displays same success message.
+
 <div style="page-break-after: always;"></div>
 
 --------------------------------------------------------------------------------------------------------------------
 
-**Use case 10: Add Reminder**
+**Use case 7: Add Reminder**
 
 **MSS:**
 
@@ -889,7 +945,7 @@ Use case ends.
 
 ---
 
-**Use case 11: Edit Reminder**
+**Use case 8: Edit Reminder**
 
 **Preconditions:** Target reminder exists and it is modifiable.
 
@@ -923,7 +979,7 @@ Similar to <u>add reminder (Use Case 10)</u>.
 
 --------------------------------------------------------------------------------------------------------------------
 
-**Use case 12: Delete Reminder**
+**Use case 9: Delete Reminder**
 
 **Preconditions:** Target reminder exists and it is modifiable.
 
