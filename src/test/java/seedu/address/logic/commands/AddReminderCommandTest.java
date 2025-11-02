@@ -65,8 +65,8 @@ public class AddReminderCommandTest {
         ModelStubAcceptingReminderAdded modelStub = new ModelStubAcceptingReminderAdded();
         Reminder reminder = new ReminderBuilder().withDueDate("2020-11-11").build();
         AddReminderCommand addCommand = new AddReminderCommand(reminder);
-        assertThrows(CommandException.class, AddReminderCommand.MESSAGE_OVERDUE_REMINDER,
-                () -> addCommand.execute(modelStub));
+        assertThrows(CommandException.class, AddReminderCommand.MESSAGE_OVERDUE_REMINDER, ()
+                -> addCommand.execute(modelStub));
     }
 
     @Test
