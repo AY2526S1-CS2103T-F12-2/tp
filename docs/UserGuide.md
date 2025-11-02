@@ -513,6 +513,10 @@ Examples:
 Reminder added. Due: 27 Oct 2025 03:00 pm; Description: Tuition later at 3pm;
 ```
 
+Note:
+* If a reminder is due in 3 days time, a `Due Soon!` text in red will be shown beside the due date of the reminder.
+* If a reminder that was previously added has past the due date, the reminder will be greyed out.
+
 ### Editing reminder: `edit-reminder`
 
 Edits an existing reminder in the reminder list.
