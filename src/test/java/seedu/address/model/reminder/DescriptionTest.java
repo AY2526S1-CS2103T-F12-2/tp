@@ -26,10 +26,20 @@ public class DescriptionTest {
         assertFalse(Description.isValidDescription(null));
         assertFalse(Description.isValidDescription("")); // empty string
         assertFalse(Description.isValidDescription(" ")); // whitespace only
+        assertFalse(Description.isValidDescription("!@#$%^&*-_+=(){}[]|/,.?<>:;`~")); // special characters only
+        assertFalse(Description.isValidDescription(
+                "A character can be any letter, number, punctuation, special character, or space. Each of "
+                     + "these characters takes up one byte of space in a computer's memory. Some Unicode "
+                     + "characters is 200 characters is")); // 201 characters
 
         // valid description
         assertTrue(Description.isValidDescription("valid"));
-        assertTrue(Description.isValidDescription("!@#$%^&*-_+=(){}[]|/,.?<>:;`~")); // special characters
+        assertTrue(Description.isValidDescription("a+")); // at least one letter
+        assertTrue(Description.isValidDescription("1+")); // at least one letter
+        assertTrue(Description.isValidDescription(
+                "A character can be any letter, number, punctuation, special character, or space. Each of "
+                        + "these characters takes up one byte of space in a computer's memory. Some Unicode "
+                        + "characters is 200 characters i")); // 200 characters
     }
 
     @Test

@@ -124,15 +124,16 @@ Adds a student to the student list.
 
 Format: `add-student n/NAME p/PHONE t/LESSON_TIME...`
 
-* `NAME` should not be blank and should only contain letters, spaces, comma, brackets, hyphens, apostrophes, slash, at sign, full stop, with a maximum length of 50 characters. It is also case-insensitive. e.g. `john doe` is the same as `John Doe`.
+* `NAME` should not be blank and should only contain letters, spaces, comma, round brackets, hyphens, apostrophes, slash, at sign, full stop.
+* It must contain at least one letter, with a maximum length of 50 characters. It is also case-insensitive. e.g. `john doe` is the same as `John Doe`.
 * `PHONE` should only contain numbers, and should be 8 digits long starting with 8 or 9, following Singapore's phone number format.
-* `LESSON_TIME` should be in 24-hour format without a colon, followed by a 3-letter day abbreviation.
-  e.g. `0900 Sun` for 9am Sunday, `1530 Thu` for 3:30pm Thursday. The time should be between `0000` and `2359`.
+* `LESSON_TIME` should be in 24-hour format without a colon, followed by a 3-letter day abbreviation. The time should be between `0000` and `2359`. e.g. `0900 Sun` for 9am Sunday, `1530 Thu` for 3:30pm Thursday. 
+* Duplicated lesson times will be treated as a single `LESSON_TIME`.
 
 Examples:
-* `add-student t/1330 Fri p/81234567 n/Betsy Crowe t/1100 Sat` Adds a student named `Betsy Crowe`, with phone number `81234567` and lesson times `01:30 pm Fri`, `11:00 am Sat`.
+* `add-student n/Betsy Crower p/81234567 t/1330 Fri t/1100 Sat` Adds a student named `Betsy Crower`, with phone number `81234567` and lesson times `01:30 pm Fri`, `11:00 am Sat`.
 ```
-Student added: Betsy Crowe; Phone Number: 81234567; Lesson Time: 01:30 pm Fri, 11:00 am Sat;
+Student added: Betsy Crower; Phone Number: 81234567; Lesson Time: 01:30 pm Fri, 11:00 am Sat;
 ```
 
 ### Listing all students : `list`
@@ -169,6 +170,7 @@ Format: `edit-student i/INDEX [n/NAME] [p/PHONE] [t/LESSON_TIME...]` or `edit-st
 * `INDEX` refers to the index number shown in the displayed student list.
 * The `INDEX` must be a positive integer 1, 2, 3, ...
 * At least one of the optional fields must be provided.
+* Duplicated lesson times will be treated as a single `LESSON_TIME`.
 
 <box type="warning" seamless>
 
@@ -180,6 +182,10 @@ Examples:
 *  `edit-student i/2 n/Betsy Crower t/0930 Tue` Edits the name of the 2nd student to be `Betsy Crower` and lesson time to be `09:30 am Tue`.
 ```
 Edited Student: Betsy Crower; Phone Number: 98234492; Lesson Time: 09:30 am Tue;
+```
+* `edit-student i/2 t+/1000 Tue t+/1800 Fri t-/0930 Tue` Adds a lesson time `10:00 am Tue` and `06:00 pm Fri` to the 2nd student and removes the lesson time `09:30 am Tue` (if the lesson time exists).
+```
+Edited Student: Betsy Crower; Phone Number: 98234492; Lesson Time: 10:00 am Tue, 06:00 pm Fri;
 ```
 
 Note:
@@ -504,13 +510,18 @@ Format: `add-reminder d/DUE_DATE desc/DESCRIPTION`
 
 * Adds a reminder with the given `DUE_DATE` and `DESCRIPTION` to the reminder list.
 * `DUE_DATE` refers to the due date of the reminder. It could either be in the `YYYY-MM-DD HHMM` format or `YYYY-MM-DD` format. e.g. `2025-10-27 1400` or `2025-10-27`.
-* `DESCRIPTION` refers to the details of the reminder.
+* It should be set for a future date or time.
+* `DESCRIPTION` refers to the details of the reminder. It should not be empty and must contain at least one letter or number. It must not exceed 200 characters.
 
 Examples:
 * `add-reminder d/2025-10-27 1500 desc/Tuition later at 3pm` Adds a reminder with due date `27 Oct 2025 03:00 pm` and description `Tuition later at 3pm`.
 ```
 Reminder added. Due: 27 Oct 2025 03:00 pm; Description: Tuition later at 3pm;
 ```
+
+Note:
+* If a reminder is due in 3 days time, a `Due Soon!` text in red will be shown beside the due date of the reminder.
+* If a reminder that was previously added has past the due date, the reminder will be greyed out.
 
 ### Editing reminder: `edit-reminder`
 
@@ -535,7 +546,7 @@ Examples:
 Edited Reminder: Due: 01 Nov 2025 03:00 pm; Description: Tuition later at 3pm;
 ```
 
-<box type="warning" seamless>
+<box type="important" seamless>
 
 **Take Note:**<br>
 
@@ -590,7 +601,7 @@ Notes:
 * You cannot use `i/` and `k/` in the same command.
 * The command is case-insensitive.
 
-<box type="warning" seamless>
+<box type="important" seamless>
 
 **Take Note:**<br>
 

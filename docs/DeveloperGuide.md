@@ -1278,4 +1278,28 @@ I was primarily responsible for updating the add, edit feature and implementing 
   - Modified the UI to show the list of reminders.
 
 ## Appendix: Planned Enhancements
-_[To be added in the future...]_
+
+Team Size: 5
+
+1. **Improve Prefix Validation in Command Parsing**
+
+- Problem:
+  - The parser currently only recognizes prefixes explicitly registered for a command. Any unrecognized prefix is treated as part of the preceding argument’s value.
+  - This can lead to misleading errors. For example, in `edit-student i/1 -t/1000 Sun`, the invalid prefix `-t/` is absorbed into the `i/` argument value, causing the index parser to fail with the generic error: `Index is not a non-zero unsigned integer.`.
+  - Users are not informed that an invalid prefix was entered.
+  - Input containing special characters (e.g., `-` or `/`) in legitimate fields (like names) can complicate detection of invalid prefixes, increasing the likelihood of false positives.
+
+- Proposed Enhancement:
+  - Implement a prefix validation method in the parser that scans all detected prefixes after tokenization.
+  - If any unrecognized prefix is found, the parser should throw a clear and specific error message. e.g. `Invalid prefix detected: -t/`.
+  - Update the tokenizer to correctly differentiate between legitimate input values and actual prefixes, ensuring that valid text containing special characters (e.g., `/`, `+`, `-`) is not incorrectly flagged.
+
+1. **Improve the uniqueness of Students**
+
+- Problem:
+  - Currently, unmodifiable reminders' description are generated using student's name (e.g. `Alex Yeoh has yet to pay for the month of November`), and other commands also uses student's name in their parsing.
+  - If the design were to change to allow multiple students with the same name but different phone numbers, duplicate reminders would show up that results in an error, and commands that uses the student's name would only act on the first instance that the student's name matches.
+
+- Proposed Enhancement:
+  - Modify the reminder generation logic to include a unique student identifier (such as phone number or internal ID) in the reminder description or uniqueness check. e.g. `Alex Yeoh (98712356) has yet to pay for the month of November`.
+  - Modify those commands that uses student's name to use the displayed student index instead of their names to distinguish between students. e.g. `participation i/1 d/2025-10-10 s/3`.

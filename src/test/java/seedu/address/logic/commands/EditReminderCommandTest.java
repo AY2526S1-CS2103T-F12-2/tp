@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_REMINDER_1;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_REMINDER_2;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_DESCRIPTION_1;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_DUEDATE_1;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_DUEDATE_2;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showReminderAtIndex;
@@ -77,11 +77,9 @@ public class EditReminderCommandTest {
 
     @Test
     public void execute_noFieldSpecifiedUnfilteredList_success() {
-        ObservableList<Reminder> list = model.getFilteredReminderList();
-        Index index = Index.fromOneBased(list.size());
-        EditReminderCommand editCommand = new EditReminderCommand(index,
+        EditReminderCommand editCommand = new EditReminderCommand(INDEX_FIRST_REMINDER,
                 new EditReminderDescriptor());
-        Reminder editedReminder = model.getFilteredReminderList().get(index.getZeroBased());
+        Reminder editedReminder = model.getFilteredReminderList().get(0);
 
         String expectedMessage = String.format(EditReminderCommand.MESSAGE_EDIT_REMINDER_SUCCESS,
                 Messages.format(editedReminder));
@@ -99,9 +97,9 @@ public class EditReminderCommandTest {
 
         Reminder reminderInFilteredList = model.getFilteredReminderList().get(INDEX_FIRST_REMINDER.getZeroBased());
         Reminder editedReminder = new ReminderBuilder(reminderInFilteredList)
-                .withDescription(VALID_DESCRIPTION_1).build();
+                .withDueDate(VALID_DUEDATE_2).build();
         EditReminderCommand editCommand = new EditReminderCommand(INDEX_FIRST_REMINDER,
-                new EditReminderDescriptorBuilder().withDescription(VALID_DESCRIPTION_1).build());
+                new EditReminderDescriptorBuilder().withDueDate(VALID_DUEDATE_2).build());
 
         String expectedMessage = String.format(EditReminderCommand.MESSAGE_EDIT_REMINDER_SUCCESS,
                 Messages.format(editedReminder));
@@ -117,8 +115,7 @@ public class EditReminderCommandTest {
     public void execute_duplicateReminderUnfilteredList_failure() {
         Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         ObservableList<Reminder> list = model.getFilteredReminderList();
-        Index index = Index.fromOneBased(list.size());
-        Reminder firstReminder = model.getFilteredReminderList().get(index.getZeroBased());
+        Reminder firstReminder = model.getFilteredReminderList().get(0);
         EditReminderDescriptor descriptor = new EditReminderDescriptorBuilder(firstReminder).build();
         EditReminderCommand editCommand = new EditReminderCommand(
                 Index.fromOneBased(list.size() - 1), descriptor);
@@ -133,7 +130,7 @@ public class EditReminderCommandTest {
         showReminderAtIndex(model, index);
 
         // edit reminder in filtered list into a duplicate in reminder list
-        Reminder reminderInList = model.getAddressBook().getReminderList().get(INDEX_SECOND_REMINDER.getZeroBased());
+        Reminder reminderInList = model.getAddressBook().getReminderList().get(INDEX_FIRST_REMINDER.getZeroBased());
         EditReminderCommand editCommand = new EditReminderCommand(INDEX_FIRST_REMINDER,
                 new EditReminderDescriptorBuilder(reminderInList).build());
 
@@ -180,6 +177,16 @@ public class EditReminderCommandTest {
 
         String expectedMessage = Messages.MESSAGE_UNMODIFIABLE_REMINDER + "\n" + reminder.getModifyMessage();
         assertCommandFailure(command, model, expectedMessage);
+    }
+
+    @Test
+    public void execute_editedReminderIsOverdue_throwsCommandException() {
+        Index indexLastReminder = Index.fromOneBased(model.getFilteredReminderList().size());
+        EditReminderDescriptor descriptor = new EditReminderDescriptorBuilder()
+                .withDueDate("2020-11-11").build();
+        EditReminderCommand editCommand = new EditReminderCommand(indexLastReminder, descriptor);
+
+        assertCommandFailure(editCommand, model, AddReminderCommand.MESSAGE_OVERDUE_REMINDER);
     }
 
     @Test

@@ -29,6 +29,7 @@ public class NameTest {
         assertFalse(Name.isValidName("^")); // only non-alphanumeric characters
         assertFalse(Name.isValidName("peter*")); // contains non-alphanumeric characters
         assertFalse(Name.isValidName("peter12345")); // contains numbers
+        assertFalse(Name.isValidName("@-/")); // contains only allowed special characters
         assertFalse(Name.isValidName(
                 "a very very long name that is longer than 50 characters")); // longer than 50 characters
 
