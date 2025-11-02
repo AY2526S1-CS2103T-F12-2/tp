@@ -529,43 +529,16 @@ The diagram above illustrates the **Payment Management** use cases in ClassConne
 
 Each of these features interacts with the `paymentStatus` field stored within every `Person` object.
 
-### Add Homework
-
-The add-homework feature lets tutors record homework tasks for individual students. Each homework entry contains a **description**, **due date**, and completion status (default: not done).
-
-**Key ideas**
-- A `Homework` stores its description, due date, and done status.
-- Each `Person` maintains a list of `Homework` objects.
-- The command operates through the `Model` interface and updates storage via the `AddressBook`.
-- The UI displays homework items under each student card, showing description, due date, and status badges.
-- Duplicate entries (same description and date) are prevented.
 
 <div style="page-break-after: always;"></div>
 
---------------------------------------------------------------------------------------------------------------------
 
-<img src="diagrams/HomeworkUseCase.png"/>
-
-The diagram above illustrates the **Homework Management** use cases in ClassConnect.  
-Tutors can **add**, **view**, **delete**, and **mark homework as done or undone** for each student.
-
-- **Add Homework**: Creates a new homework entry with a description and due date for a selected student.
-- **Delete Homework**: Removes a homework entry from the student’s list when it is no longer needed.
-- **Mark Homework as Done / Undone**: Updates the completion status of an existing homework task, helping tutors keep track of student progress.
-- **View Homework List**: Displays all homework items for each student, including their deadlines and status badges.
-
-Each of these features interacts with the same underlying `Homework` model and `HomeworkList` stored within every `Person` object.
-
-<div style="page-break-after: always;"></div>
 
 --------------------------------------------------------------------------------------------------------------------
 
 ### Search
 <puml src="diagrams/SearchSequence.puml"/>
 
-
-### Search
-<puml src="diagrams/SearchSequence.puml"/>
 
 * The activity diagram above illustrates the flow of the search-student command.
 * When the tutor enters a search query (e.g., `search-student k/10:00`), the command parser extracts the keyword and creates a predicate that checks whether any student’s fields (such as name, phone number, lesson time, or subject) contain the keyword.
