@@ -1,0 +1,17 @@
+@startuml SearchStudentSequence
+actor Tutor
+participant "UI (CommandBox)" as UI
+participant "Logic (Parser)" as Parser
+participant "SearchCommand" as Cmd
+participant "Model" as Model
+collections "Filtered Person List" as List
+
+Tutor -> UI : enter "search-student k/10:00"
+UI -> Parser : parse(commandText)
+Parser -> Cmd : new SearchCommand(predicate)
+Cmd -> Model : updateFilteredPersonList(predicate)
+Model --> List : filtered persons
+Model --> Cmd : getFilteredPersonList()
+Cmd --> UI : CommandResult\n"Found N students" / "No students match…"
+UI --> Tutor : show results in list panel
+@enduml

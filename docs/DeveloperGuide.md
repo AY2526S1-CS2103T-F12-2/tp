@@ -456,6 +456,41 @@ Each of these features interacts with the `paymentStatus` field stored within ev
 
 <puml src="diagrams/DeleteReminderReferenceSequenceDiagram.puml"/>
 
+
+### Search
+<puml src="diagrams/SearchSequence.puml"/>
+
+* The activity diagram above illustrates the flow of the search-student command.
+* When the tutor enters a search query (e.g., `search-student k/10:00`), the command parser extracts the keyword and creates a predicate that checks whether any student’s fields (such as name, phone number, lesson time, or subject) contain the keyword.
+* The model then updates its filtered student list based on this predicate.
+* If one or more matches are found, the system displays a success message showing the number of students found; otherwise, it shows a message indicating that no students match the search keyword.
+  this the text
+
+
+
+### Homework Feature
+
+The homework feature lets tutors record homework tasks for individual students via the `add-homework` command. 
+Each homework entry contains a **description**, **due date**, and completion status (default: not done).
+
+**Key ideas**
+- A `Homework` stores its description, due date, and done status.
+- Each `Person` maintains a list of `Homework` objects.
+- The command operates through the `Model` interface and updates storage via the `AddressBook`.
+- The UI displays homework items under each student card, showing description, due date, and status badges.
+
+  <img src="diagrams/HomeworkUseCase.png"/>
+  
+
+  The diagram above illustrates the **Homework Management** use cases in ClassConnect.  
+  Tutors can **add**, **view**, **delete**, and **mark homework as done or undone** for each student.
+- **Add Homework**: Creates a new homework entry with a description and due date for a selected student.
+- **Delete Homework**: Removes a homework entry from the student’s list when it is no longer needed.
+- **Mark Homework as Done / Undone**: Updates the completion status of an existing homework task, helping tutors keep track of student progress.
+- **View Homework List**: Displays all homework items for each student, including their deadlines and status badges.
+  Each of these features interacts with the same underlying `Homework` model and `HomeworkList` stored within every `Person` object.
+
+
 ### [Proposed] Undo/redo feature
 
 #### Proposed Implementation
@@ -606,38 +641,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 (For all use cases below, the **System** is `ClassConnect` and the **Actor** is the `tutor`)
 
-**Use case 1: Add Student**
 
-**MSS**
-
-1. Tutor enters `add-student n/Marcus p/98765432 t/Mon 1900 lvl/Sec3 sub/Math`.
-2. System validates the input.
-3. System stores the student record.
-4. System confirms addition.
-
-**Extensions**
-
-* 2a. Input is invalid (e.g., wrong phone format).
-  → System shows error and requests re-entry.
-
----
-
-**Use case 2: Record Homework**
-
-**MSS**
-
-1. Tutor enters `add-homework sid/1 d/Finish Ch.3 problems due/2025-10-05`.
-2. System validates and links homework to student.
-3. System confirms creation.
-
-**Extensions**
-
-* 2a. Student ID not found.
-  → System shows error and suggests checking student list.
-
----
-
-**Use case 7: Mark Student as Paid**
+**Use case 1: Mark Student as Paid**
 
 **MSS**
 
@@ -673,7 +678,7 @@ Jul: ✗ Unpaid Aug: ✗ Unpaid Sep: ✗ Unpaid Oct: ✗ Unpaid Nov: ✗ Unpaid 
 
 ---
 
-**Use case 8: Mark Student as Unpaid**
+**Use case 2: Mark Student as Unpaid**
 
 **MSS**
 
@@ -709,7 +714,7 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 
 ---
 
-**Use case 9: View Payment Status**
+**Use case 3: View Payment Status**
 
 **MSS**
 
@@ -751,6 +756,8 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
   → System displays “Invalid date format!” with corresponding correct date format
 - 2d. Homework already in list
   → System displays “This student has already been assigned this homework” and aborts operation
+- 2f. Due date has already passed
+  → System displays success message with warning: "Due date is in the past"
 
 **Use case 5: Mark Homework as Done**
 
@@ -811,7 +818,7 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 4. **Usability**
 
 * Every command entered will print out either a success message or a specific error message
-* Help command will print out clear list of commands with their respective usage examples
+* Help command will print out a list to the user guide 
 * A user with above average typing speed for regular English text should be able to accomplish most of the tasks faster
   using commands than using the mouse.
 
@@ -834,6 +841,7 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 - **Centralised** : Defined in one single place within the codebase
 
 ## Appendix: Instructions
+
 ### Payment Feature
 
 #### Marking as paid
@@ -1007,15 +1015,21 @@ Dec: ✓ Paid`
 ## Appendix: Effort
 
 ### Marcus Ng (PeanutButter1212)
-
 I was primarily responsible for implementing and testing the **Search feature** and the entire **Homework management system**, which includes:
-
 - **Search Feature**
   - Implemented the `search-student` command that allows tutors to search for students by name, subject, or level.
   - Designed a flexible parser to handle multiple prefixes and partial keyword matching.
+  -
+- **Homework Feature Set**
+  - Designed and implemented all homework-related commands:
+    - `add-homework` — to assign new homework to a student.
+    - `mark-done` and `mark-undone` — to update homework completion status.
+    - `delete-homework` — to remove homework entries.
+  - Extended the `Person` and `AddressBook` models to include homework lists and handled data persistence through JSON storage.
+  - Updated the UI (`PersonCard`) to display homework details with due dates and status badges.
+  - Created `JsonAdaptedHomework` for saving of homework data
 
 
-## Appendix: Planned Enhancements
 
 ### Min-Ren Seah (miinren)
 I was primarily responsible for updating the delete feature and implementing the payment tracking system.
@@ -1030,5 +1044,22 @@ I was primarily responsible for updating the delete feature and implementing the
     - Extended the `Person` and `AddressBook` models to include the payment system using a `bitset` and handled data persistence through JSON storage.
     - Updated the UI (`PersonCard`) to display payment details with the month using colour coded boxes.
     - Created `JsonAdaptedPerson` for saving of payment data 
+
+
+### Teoh Hao Yi (haobuhaoo)
+I was primarily responsible for updating the add, edit feature and implementing the entire reminders feature.
+- Add, Edit Feature
+  - Modified the `add-student` and `edit-student` command to allow of adding and editing of students.
+- Reminders Feature
+  - Implemented all the reminder related commands and logic integration:
+    - `add-reminder` adds a reminder to the list.
+    - `edit-reminder` edits an existing reminder from the list.
+    - `delete-reminder` deletes an existing reminder from the list.
+  - Extended `AddressBook` models to manage and include the list of reminders.
+  - Created `JsonAdaptedReminders` for saving of reminders data.
+  - Modified the UI to show the list of reminders.
+
+
+## Appendix: Planned Enhancements
 
 
