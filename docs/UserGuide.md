@@ -504,6 +504,7 @@ Format: `add-reminder d/DUE_DATE desc/DESCRIPTION`
 
 * Adds a reminder with the given `DUE_DATE` and `DESCRIPTION` to the reminder list.
 * `DUE_DATE` refers to the due date of the reminder. It could either be in the `YYYY-MM-DD HHMM` format or `YYYY-MM-DD` format. e.g. `2025-10-27 1400` or `2025-10-27`.
+* It should be set for a future date or time.
 * `DESCRIPTION` refers to the details of the reminder. It should not be empty and must contain at least one letter or number. It must not exceed 200 characters.
 
 Examples:
@@ -535,7 +536,7 @@ Examples:
 Edited Reminder: Due: 01 Nov 2025 03:00 pm; Description: Tuition later at 3pm;
 ```
 
-<box type="warning" seamless>
+<box type="important" seamless>
 
 **Take Note:**<br>
 
@@ -590,7 +591,7 @@ Notes:
 * You cannot use `i/` and `k/` in the same command.
 * The command is case-insensitive.
 
-<box type="warning" seamless>
+<box type="important" seamless>
 
 **Take Note:**<br>
 
