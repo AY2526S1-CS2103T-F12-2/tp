@@ -922,18 +922,6 @@ Use case ends.
 
 **Preconditions:** Target reminder exists and it is modifiable.
 
-**Extensions**
-- 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the corresponding correct input format
-- 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
-- 2c. Due date format is invalid.  
-  → System displays “Invalid date format!” with corresponding correct date format
-- 2d. Homework already in list
-  → System displays “This student has already been assigned this homework” and aborts operation
-- 2f. Due date has already passed
-  → System displays success message with warning: "Due date is in the past"
-
 Similar to <u>add reminder (Use Case 10)</u> except for Step 4.
 
 4. System replaces existing reminder.
@@ -1031,7 +1019,7 @@ Similar to <u>add reminder (Use Case 10)</u>.
 - **Feedback**:  Either an error message or command successfully executed message
 - **Centralised** : Defined in one single place within the codebase
 
-## Appendix: Instructions
+## Appendix: Instructions for testing
 
 ### Payment Feature
 
@@ -1211,6 +1199,84 @@ Dec: ✓ Paid`
 
 ---
 
+### Reminder Feature
+
+#### Adding a Reminder
+
+1. Adding a reminder to the reminder list
+
+   1. Prerequisites:
+      - The reminder to be added does not exist in the reminder list.
+   
+   1. Test case:
+      `add-reminder d/2025-11-08 desc/Test reminder`
+      Expected: Successful addition of reminder. Success message shows:
+      `Reminder added. Due: 08 Nov 2025; Description: Test reminder;`
+
+   1. Test case:
+      `add-reminder d/2025-11-09 1330 desc/Reminder 2`
+      Expected: Successful addition of reminder. Success message shows:
+      `Reminder added. Due: 09 Nov 2025 01:30 pm; Description: Reminder 2;`
+
+   1. Test case:
+      `add-reminder d/12 Nov 25 desc/reminder 3`
+      Expected: Addition failure. Error message displayed:
+      ```
+      Due date should be in either these formats:
+      1. YYYY-MM-DD (for date only)
+      2. YYYY-MM-DD HHMM (for date and time in 24h format)
+      ```
+
+   1. Test case:
+      `add-reminder d/2025-11-12 1200 desc/----`
+      Expected: Addition failure. Error message displayed:
+      `Description should not be empty, must contain at least one letter or number, and with a maximum length of 200 characters`
+
+---
+
+#### Editing a Reminder
+
+1. Editing a reminder in the reminder list
+
+    1. Prerequisites:
+        - The reminder to be edited exists in the reminder list.
+
+    1. Test case:
+       `edit-reminder i/1 d/2025-11-09 1200 desc/Test reminder`
+       Expected: Successful edit of reminder. Success message shows:
+       `Edited Reminder: Due: 09 Nov 2025 12:00 pm; Description: Test reminder;`
+
+    1. Test case:
+       `edit-reminder i/99 desc/out of range`
+       Expected: Edit failure. Error message displayed:
+       `The reminder index provided is invalid`
+
+    1. Test case:
+       `edit-reminder i/1 d/2020-11-11 desc/past`
+       Expected: Edit failure. Error message displayed:
+       `Reminders must be set for a future date or time`
+
+---
+
+#### Deleting a Reminder
+
+1. Deleting a reminder in the reminder list
+
+    1. Prerequisites:
+        - The reminder to be deleted exists in the reminder list.
+
+    1. Test case:
+       `delete-reminder i/1`
+       Expected: Successful deletion of reminder. Success message shows:
+       `Reminder Deleted: Due: 09 Nov 2025 12:00 pm; Description: Test reminder;`
+
+    1. Test case:
+       `delete-reminder k/reminder`
+       Expected: Edit failure. Error message displayed:
+       `Reminder Deleted: Due: 08 Nov 2025; Description: Reminder 2;`
+
+---
+
 ## Appendix: Effort
 
 ### Marcus Ng (PeanutButter1212)
@@ -1227,8 +1293,6 @@ I was primarily responsible for implementing and testing the **Search feature** 
   - Extended the `Person` and `AddressBook` models to include homework lists and handled data persistence through JSON storage.
   - Updated the UI (`PersonCard`) to display homework details with due dates and status badges.
   - Created `JsonAdaptedHomework` for saving of homework data
-
-
 
 ### Min-Ren Seah (miinren)
 
