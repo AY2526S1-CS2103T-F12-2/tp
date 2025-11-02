@@ -22,6 +22,10 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 --------------------------------------------------------------------------------------------------------------------
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ## **Design**
 
 ### Architecture
@@ -34,7 +38,7 @@ Given below is a quick overview of main components and how they interact with ea
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S1-CS2103T-F12-2/tp/blob/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S1-CS2103T-F12-2/tp/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -46,6 +50,10 @@ The bulk of the app's work is done by the following four components:
 * [**`Storage`**](#storage-component): Reads data from, and writes data to, the hard disk.
 
 [**`Commons`**](#common-classes) represents a collection of classes used by multiple other components.
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 **How the architecture components interact with each other**
 
@@ -64,31 +72,39 @@ For example, the `Logic` component defines its API in the `Logic.java` interface
 
 The sections below give more details of each component.
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ### UI component
 
-The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
+The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S1-CS2103T-F12-2/tp/blob/master/src/main/java/seedu/address/ui/Ui.java)
 
 <puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component"/>
 
 The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S1-CS2103T-F12-2/tp/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S1-CS2103T-F12-2/tp/tree/master/src/main/resources/view/MainWindow.fxml)
 
 The `UI` component,
 
 * executes user commands using the `Logic` component.
 * listens for changes to `Model` data so that the UI can be updated with the modified data.
 * keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
-* depends on some classes in the `Model` component, as it displays `Person` object residing in the `Model`.
+* depends on some classes in the `Model` component, as it displays `Person` and `Reminder` object residing in the `Model`.
 
 **Participation panel on Person cards**
 - The 5-slot participation view is computed by `ParticipationViewModel.computeSlots(...)` (pure helper for easy testing) and rendered in `PersonCard`.
 - Dates are shown on the top row (`MM-dd`), scores inside the boxes on the bottom row.
 - When a date appears multiple times in history, only the latest score is displayed.
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/AY2526S1-CS2103T-F12-2/tp/blob/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
@@ -97,6 +113,10 @@ Here's a (partial) class diagram of the `Logic` component:
 The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete-student i/1")` API call as an example.
 
 <puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete-student i/1` Command" />
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 <box type="info" seamless>
 
@@ -125,36 +145,43 @@ How the parsing works:
   calls `model.setPerson(person, person)` to trigger persistence, updates `AttendanceIndex`,
   and returns a success message.
 
-### Model component
-**API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
+<div style="page-break-after: always;"></div>
 
-<puml src="diagrams/ModelClassDiagram.puml" width="450" />
+--------------------------------------------------------------------------------------------------------------------
+
+### Model component
+**API** : [`Model.java`](https://github.com/AY2526S1-CS2103T-F12-2/tp/tree/master/src/main/java/seedu/address/model/Model.java)
+
+<puml src="diagrams/ModelClassDiagram.puml" />
 
 
 The `Model` component,
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
-* stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
+* stores the ClassConnect data i.e., all `Person` objects (which are contained in a `UniquePersonList` object) and all `Reminder` objects (which are contained in a `UniqueReminderList` object).
+* stores the currently 'selected' `Person` and `Reminder` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` and `ObservableList<Reminder>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
 * stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
 <box type="info" seamless>
 
-**Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
+**Note:** An alternative (arguably, a more OOP) model is given below. It has a `LessonTime` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `LessonTime` object per unique lesson time, instead of each `Person` needing their own `LessonTime` objects.<br>
 
-<puml src="diagrams/BetterModelClassDiagram.puml" width="450" />
+<puml src="diagrams/BetterModelClassDiagram.puml" />
 
 </box>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/AY2526S1-CS2103T-F12-2/tp/tree/master/src/main/java/seedu/address/storage/Storage.java)
 
-<puml src="diagrams/StorageClassDiagram.puml" width="550" />
+<puml src="diagrams/StorageClassDiagram.puml" />
 
 The `Storage` component,
-* can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
+* can save both ClassConnect data and user preference data in JSON format, and read them back into corresponding objects.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
@@ -166,6 +193,10 @@ The `Storage` component,
 ### Common classes
 
 Classes used by multiple components are in the `seedu.address.commons` package.
+
+--------------------------------------------------------------------------------------------------------------------
+
+<div style="page-break-after: always;"></div>
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -193,6 +224,10 @@ Key ideas
 
 <puml src="diagrams/Grouping.puml" alt="Class Diagram for Grouping" />
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ### Grouping Command Behaviour
 #### Create group 
 
@@ -206,6 +241,10 @@ Key ideas
 
 <puml src="diagrams/GroupCreateCommandSequenceDiagram.puml" />
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 #### Add members to group
 
 * Step 1. User enters: group-add g/Group A i/1 i/3. AddressBookParser invokes GroupAddCommandParser#parse(...).
@@ -218,11 +257,19 @@ Key ideas
 
 <puml src="diagrams/GroupAddCommandSequenceDiagram.puml" />
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 #### Remove members from group
 
 Parser and execution mirror group-add, except the model op is removeFromGroup(...). The command succeeds for valid indices; persons not in the group are skipped.
 
 <puml src="diagrams/GroupRemoveSequenceDiagram.puml" /> <puml src="diagrams/GroupRemoveCommandSequenceDiagram.puml" />
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 #### Delete group
 
@@ -240,8 +287,9 @@ Parser and execution mirror group-add, except the model op is removeFromGroup(..
 
 - UI badges. UiGroupAccess is installed by MainWindow#fillInnerParts() and maps Person → Set<GroupName> to render chips in PersonCard.
 
----
-<puml src="diagrams/Grouping.puml" alt="Class Diagram for Grouping" />
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 ### Participation feature
 
@@ -276,6 +324,10 @@ The Participation feature lets tutors record a per-class participation score for
   - If multiple records share the **same date**, only the **latest** score is shown.
 - Styling comes from `participation.css` (e.g., `.participation-box`, `.date-mini`).
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 #### Storage
 - `JsonAdaptedPerson` persists a `participation` array:
 
@@ -288,9 +340,6 @@ The Participation feature lets tutors record a per-class participation score for
 
 * Older files without this field load as empty histories.
 * Invalid rows (e.g., score out of range) are **skipped** during load so one bad row doesn’t corrupt the file.
-
-<puml src="diagrams/ParticipationCommand.puml" alt="Participation Command Diagram"/>
-#### Error messages
 
 * `Invalid student name: name cannot be empty.`
 * `Invalid student name: no matching student found.`
@@ -319,6 +368,10 @@ There are 2 types of reminders: `Reminder` and `UnmodfiableReminder`.
 
 <puml src="diagrams/ReminderClassDiagram.puml" width="550"/>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 #### Command Behaviour
 
 ##### Add reminder
@@ -345,6 +398,10 @@ Step 3: `AddReminderCommand#execute()` is called, and adds the reminder to the r
 
 <puml src="diagrams/AddReminderCommandSequenceDiagram.puml" />
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 <box type="info" seamless>
 
 **Note:** The lifeline for `AddReminderCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
@@ -367,6 +424,10 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 * In Step 3, the reminder to edit is copied and injected with the new fields. This new reminder is then set to replace the old reminder in the reminder list. After a successful edit, the reminder is list is updated to show all reminders and a success message is also returned via an instance of `CommandResult`.
 
 <box type="warning" seamless>
@@ -387,6 +448,10 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ##### Delete reminder
 
 Similar to add reminder command as above, except the following:
@@ -403,6 +468,10 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 * In Step 3, if the deletion is by keyword, `DeleteReminderCommand#execute()` will search for all reminders in the list and successfully deletes if only one reminder is found. If no or multiple reminders are found, the command will still succeed but without any deletion. A message is returned via an instance of `CommandResult` indicating if no or multiple reminders are found.
 
 <box type="warning" seamless>
@@ -415,8 +484,6 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
-</box>
-
 <puml src="diagrams/DeleteReminderCommandSequenceDiagram.puml" />
 
 <box type="info" seamless>
@@ -425,13 +492,21 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
-<puml src="diagrams/AddSequenceDiagram.puml" width="550" />
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
+<puml src="diagrams/DeleteReminderReferenceSequenceDiagram.puml"/>
 
 ### Delete student feature
 
 This features deletes a student form the students list. This feature is facilitated by the `LogicManger`, `AddressBookParser`, `DeleteCommandParser`, `DeleteCommand`, `CommandResult` and `Model` classes. Given below is a high level overview of how a student is being deleted from the students list.
 
-<puml src="diagrams/DeleteSequenceDiagram.puml" width="550" />
+<puml src="diagrams/DeleteSequenceDiagram.puml" />
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 ### Mark payment feature
 
@@ -454,7 +529,39 @@ The diagram above illustrates the **Payment Management** use cases in ClassConne
 
 Each of these features interacts with the `paymentStatus` field stored within every `Person` object.
 
-<puml src="diagrams/DeleteReminderReferenceSequenceDiagram.puml"/>
+### Add Homework
+
+The add-homework feature lets tutors record homework tasks for individual students. Each homework entry contains a **description**, **due date**, and completion status (default: not done).
+
+**Key ideas**
+- A `Homework` stores its description, due date, and done status.
+- Each `Person` maintains a list of `Homework` objects.
+- The command operates through the `Model` interface and updates storage via the `AddressBook`.
+- The UI displays homework items under each student card, showing description, due date, and status badges.
+- Duplicate entries (same description and date) are prevented.
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
+<img src="diagrams/HomeworkUseCase.png"/>
+
+The diagram above illustrates the **Homework Management** use cases in ClassConnect.  
+Tutors can **add**, **view**, **delete**, and **mark homework as done or undone** for each student.
+
+- **Add Homework**: Creates a new homework entry with a description and due date for a selected student.
+- **Delete Homework**: Removes a homework entry from the student’s list when it is no longer needed.
+- **Mark Homework as Done / Undone**: Updates the completion status of an existing homework task, helping tutors keep track of student progress.
+- **View Homework List**: Displays all homework items for each student, including their deadlines and status badges.
+
+Each of these features interacts with the same underlying `Homework` model and `HomeworkList` stored within every `Person` object.
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
+### Search
+<puml src="diagrams/SearchSequence.puml"/>
 
 
 ### Search
@@ -497,42 +604,49 @@ Each homework entry contains a **description**, **due date**, and completion sta
 
 The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
 
-* `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-* `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
+* `VersionedAddressBook#commit()` — Saves the current ClassConnect state in its history.
+* `VersionedAddressBook#undo()` — Restores the previous ClassConnect state from its history.
+* `VersionedAddressBook#redo()` — Restores a previously undone ClassConnect state from its history.
 
 These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
 
 Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
+Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial ClassConnect state, and the `currentStatePointer` pointing to that single ClassConnect state.
 
 <puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
+Step 2. The user executes `delete 5` command to delete the 5th person in the student list. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of ClassConnect after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted ClassConnect state.
 
 <puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified ClassConnect state to be saved into the `addressBookStateList`.
 
 <puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
 
 <box type="info" seamless>
 
-**Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
+**Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the ClassConnect state will not be saved into the `addressBookStateList`.
 
 </box>
 
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
+Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous ClassConnect state, and restores ClassConnect to that state.
 
 <puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
 
 <box type="info" seamless>
 
-**Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
+**Note:** If the `currentStatePointer` is at index 0, pointing to the initial ClassConnect state, then there are no previous ClassConnect states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the undo.
 
 </box>
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 The following sequence diagram shows how an undo operation goes through the `Logic` component:
 
@@ -548,19 +662,23 @@ Similarly, how an undo operation goes through the `Model` component is shown bel
 
 <puml src="diagrams/UndoSequenceDiagram-Model.puml" alt="UndoSequenceDiagram-Model" />
 
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
+The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores ClassConnect to that state.
 
 <box type="info" seamless>
 
-**Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
+**Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest ClassConnect state, then there are no undone ClassConnect states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
 
 </box>
 
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
+Step 5. The user then decides to execute the command `list`. Commands that do not modify ClassConnect, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
 
 <puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
 
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
+Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all ClassConnect states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
 
 <puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
 
@@ -572,7 +690,7 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 **Aspect: How undo & redo executes:**
 
-* **Alternative 1 (current choice):** Saves the entire address book.
+* **Alternative 1 (current choice):** Saves the entire student and reminder list.
 
   * Pros: Easy to implement.
   * Cons: May have performance issues in terms of memory usage.
@@ -585,11 +703,11 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 *{more aspects and alternatives to be added}*
 
-### [Proposed] Data archiving
-
-*{Explain here how the data archiving feature will be implemented}*
-
 ---
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
 
@@ -623,19 +741,26 @@ The Participation feature includes unit tests for command validation, model capp
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​  | I want to …​                            | So that I can…​                                   |
-|----------|----------|-----------------------------------------|---------------------------------------------------|
-| `* * *`  | tutor    | add a student                           | start tracking their details and progress         |
-| `* * *`  | tutor    | delete a student                        | remove those who have stopped lessons             |
-| `* * *`  | tutor    | record homework with deadlines          | remind students and follow up on time             |
-| `* * *`  | tutor    | mark homework as done                   | keep track of students homework status           
-| `* * *`  | tutor    | record tuition payments                 | know which students have overdue fees             |
-| `* *`    | tutor    | archive old students                    | keep my active list uncluttered                   |
-| `* *`    | tutor    | filter/search students by subject/level | quickly find relevant students                    |
-| `*`      | tutor    | export data into a report               | share with parents or keep records offline        |
-| `*`      | tutor    | set exam reminders                      | notify me ahead of students’ important dates      |
+| Priority | As a …​  | I want to …​                            | So that I can…​                            |
+|--------|----------|-----------------------------------------|--------------------------------------------|
+| `* * *` | tutor    | add a student                           | start tracking their details and progress  |
+| `* * *` | tutor    | delete a student                        | remove those who have stopped lessons      |
+| `* * *` | tutor    | record homework with deadlines          | remind students and follow up on time      |
+| `* * *` | tutor    | mark homework as done                   | keep track of students homework status     
+| `* * *` | tutor    | record tuition payments                 | know which students have overdue fees      |
+| `* *`  | tutor    | archive old students                    | keep my active list uncluttered            |
+| `* *`  | tutor    | filter/search students by subject/level | quickly find relevant students             |
+| `*`    | tutor    | edit a student                          | keep student's records up to date          |
+| `*`    | tutor    | export data into a report               | share with parents or keep records offline |
+| `*`    | tutor    | set reminders                           | notify me of what is important ahead       |
+| `*`    | tutor    | edit reminders                          | modify reminders to keep it up to date     |
+| `*`    | tutor    | delete reminders                        | remove overdue reminders                   |
 
 ---
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 ### Use cases
 
@@ -727,25 +852,46 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 - 2a. No students in the list.
   - 2a1. System displays empty list.
   - Use case ends.
-1. Tutor enters `record-payment sid/1 amt/240 notes/Sep tuition`.
-2. System stores payment as **UNPAID**.
-3. Tutor later enters `pay 3`.
-4. System updates status and confirms.
-
-**Extensions**
-
-* 1a. Invalid amount format entered.
-  → System rejects input and shows correct format.
 
 ---
 
-**Use case 4: Add Homework**
+<div style="page-break-after: always;"></div>
 
-**MSS**
-1. Tutor enters `add-homework n/Marcus desc/Math Assignment 3 by/2025-11-15`.
-2. System validates the input.
-3. System adds the homework to the specified student.
-4. System displays success message:  Added homework for Marcus: Math Assignment 3 (due 2025-11-15)
+--------------------------------------------------------------------------------------------------------------------
+
+**Use case 10: Add Reminder**
+
+**MSS:**
+
+1. System displays reminder list.
+2. Tutor enters add reminder input command.
+3. System creates a reminder.
+4. System adds it to the reminder list.
+5. System displays success message.
+6. System re-displays the reminder list.
+
+Use case ends.
+
+**Extensions:**
+
+- 2a. System detects invalid date format.
+  - 2a1. System shows error message.
+  - Use case ends.
+- 2b. System detects invalid description.
+  - 2b1. System shows error message.
+  - Use case ends.
+- 2c. System detects missing add reminder prefixes.
+  - 2c1. System shows error message.
+  - Use case ends.
+- 3a. System found out duplicate reminder exists.
+  - 3a1. System shows error message.
+  - Use case ends.
+
+---
+
+**Use case 11: Edit Reminder**
+
+**Preconditions:** Target reminder exists and it is modifiable.
 
 **Extensions**
 - 2a. Input is invalid (e.g., missing or wrong prefixes).  
@@ -759,43 +905,53 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 - 2f. Due date has already passed
   → System displays success message with warning: "Due date is in the past"
 
-**Use case 5: Mark Homework as Done**
+Similar to <u>add reminder (Use Case 10)</u> except for Step 4.
 
-**MSS**
-1. Tutor enters `mark-done n/Marcus Yeoh i/1`.
-2. System validates the input.
-3. System marks the specified homework as done.
-4. System displays success message: Marked homework as done for Marcus: <description>
+4. System replaces existing reminder.
 
-**Extensions**
-- 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the correct input format.
-- 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
-- 2c. Homework index out of range.  
-  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
-- 2d. Homework is already marked as done.  
-  → System displays same success message 
+**Extensions:**
 
-**Use case 6: Mark Homework as Undone**
+Similar to <u>add reminder (Use Case 10)</u>.
 
-**MSS**
-1. Tutor enters `mark-undone n/Marcus Yeoh i/1`.
-2. System validates the input.
-3. System marks the specified homework as undone.
-4. System displays success message: Marked homework as undone for Marcus: <description>
+- 3a. System detects reminder to edit is unmodifiable.
+  - 3a1. System shows error message.
+  - Use case ends.
 
-**Extensions**
-- 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the correct input format.
-- 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
-- 2c. Homework index out of range.  
-  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
-- 2d. Homework is already marked as undone.  
-  → System displays same success message.
+---
 
+<div style="page-break-after: always;"></div>
 
+--------------------------------------------------------------------------------------------------------------------
+
+**Use case 12: Delete Reminder**
+
+**Preconditions:** Target reminder exists and it is modifiable.
+
+**MSS:**
+
+Similar to <u>add reminder (Use Case 10)</u>.
+
+**Extensions:**
+
+Similar to <u>add reminder (Use Case 10)</u>.
+
+- 2a. System detects reminder to delete is unmodifiable.
+  - 2a1. System shows error message.
+  - Use case ends.
+- 2b. System detects duplicate valid prefixes.
+  - 2b1. System shows error message.
+  - Use case ends.
+- 2c. System detects invalid index.
+  - 2c1. System shows error message.
+  - Use case ends.
+- 2d. System found no matching reminder to delete.
+  - 2d1. System shows no reminder to delete message.
+  - Use case ends.
+- 2e. System found multiple similar reminder to delete.
+  - 2e1. System shows multiple reminder found message.
+  - Use case ends.
+
+---
 
 ### Non-Functional Requirements
 
@@ -830,12 +986,18 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 
 ---
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 ### Glossary
 
 - **CLI (Command-Line Interface)**: Text-based input system for commands.
-- **Student Profile**: A record including name, contact, parent contact, level, subject, lesson time, homework, payments, and notes.
+- **OOP**: Object-Oriented Programming
+- **Student Profile**: A record including name, contact, lesson time, groups, homework, payments, and participation.
 - **Archive**: To remove a student from the active list while retaining their records for later recovery.
 - **Overdue fees**: Payments recorded but not marked as paid after the due date.
+- **Overdue reminders**: Reminders that have past the due date.
 - **Mainstream OS**: Windows, Linux, MacOS with Java 17+.
 - **Feedback**:  Either an error message or command successfully executed message
 - **Centralised** : Defined in one single place within the codebase
@@ -887,6 +1049,10 @@ Dec: ✓ Paid`
    `Student marcus ng is already marked as paid for January.`
 
 ---
+
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
 
 #### Marking as unpaid
 
@@ -965,6 +1131,10 @@ Dec: ✓ Paid`
 
 ---
 
+<div style="page-break-after: always;"></div>
+
+--------------------------------------------------------------------------------------------------------------------
+
 #### Marking homework as done
 
 1. Marking an existing homework as done
@@ -1032,6 +1202,7 @@ I was primarily responsible for implementing and testing the **Search feature** 
 
 
 ### Min-Ren Seah (miinren)
+
 I was primarily responsible for updating the delete feature and implementing the payment tracking system.
 
 - **Delete Feature**
@@ -1043,14 +1214,16 @@ I was primarily responsible for updating the delete feature and implementing the
         - `mark-unpaid` and `mark-undone` — to mark a month as unpaid for a student.
     - Extended the `Person` and `AddressBook` models to include the payment system using a `bitset` and handled data persistence through JSON storage.
     - Updated the UI (`PersonCard`) to display payment details with the month using colour coded boxes.
-    - Created `JsonAdaptedPerson` for saving of payment data 
-
+    - Created `JsonAdaptedPerson` for saving of payment data
 
 ### Teoh Hao Yi (haobuhaoo)
+
 I was primarily responsible for updating the add, edit feature and implementing the entire reminders feature.
-- Add, Edit Feature
+
+- **Add, Edit Feature**
   - Modified the `add-student` and `edit-student` command to allow of adding and editing of students.
-- Reminders Feature
+
+- **Reminders Feature**
   - Implemented all the reminder related commands and logic integration:
     - `add-reminder` adds a reminder to the list.
     - `edit-reminder` edits an existing reminder from the list.
@@ -1059,7 +1232,29 @@ I was primarily responsible for updating the add, edit feature and implementing 
   - Created `JsonAdaptedReminders` for saving of reminders data.
   - Modified the UI to show the list of reminders.
 
-
 ## Appendix: Planned Enhancements
 
+Team Size: 5
 
+1. **Improve Prefix Validation in Command Parsing**
+
+- Problem:
+  - The parser currently only recognizes prefixes explicitly registered for a command. Any unrecognized prefix is treated as part of the preceding argument’s value.
+  - This can lead to misleading errors. For example, in `edit-student i/1 -t/1000 Sun`, the invalid prefix `-t/` is absorbed into the `i/` argument value, causing the index parser to fail with the generic error: `Index is not a non-zero unsigned integer.`.
+  - Users are not informed that an invalid prefix was entered.
+  - Input containing special characters (e.g., `-` or `/`) in legitimate fields (like names) can complicate detection of invalid prefixes, increasing the likelihood of false positives.
+
+- Proposed Enhancement:
+  - Implement a prefix validation method in the parser that scans all detected prefixes after tokenization.
+  - If any unrecognized prefix is found, the parser should throw a clear and specific error message. e.g. `Invalid prefix detected: -t/`.
+  - Update the tokenizer to correctly differentiate between legitimate input values and actual prefixes, ensuring that valid text containing special characters (e.g., `/`, `+`, `-`) is not incorrectly flagged.
+
+1. **Improve the uniqueness of Students**
+
+- Problem:
+  - Currently, unmodifiable reminders' description are generated using student's name (e.g. `Alex Yeoh has yet to pay for the month of November`), and other commands also uses student's name in their parsing.
+  - If the design were to change to allow multiple students with the same name but different phone numbers, duplicate reminders would show up that results in an error, and commands that uses the student's name would only act on the first instance that the student's name matches.
+
+- Proposed Enhancement:
+  - Modify the reminder generation logic to include a unique student identifier (such as phone number or internal ID) in the reminder description or uniqueness check. e.g. `Alex Yeoh (98712356) has yet to pay for the month of November`.
+  - Modify those commands that uses student's name to use the displayed student index instead of their names to distinguish between students. e.g. `participation i/1 d/2025-10-10 s/3`.

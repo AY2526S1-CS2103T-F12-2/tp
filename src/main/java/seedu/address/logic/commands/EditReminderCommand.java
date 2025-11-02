@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.commands.AddReminderCommand.MESSAGE_OVERDUE_REMINDER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESC;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_INDEX;
@@ -62,6 +63,10 @@ public class EditReminderCommand extends Command {
         Reminder reminderToEdit = getReminder(model);
 
         Reminder editedReminder = createEditedReminder(reminderToEdit, editReminderDescriptor);
+        if (editedReminder.isOverdue()) {
+            throw new CommandException(MESSAGE_OVERDUE_REMINDER);
+        }
+
         if (!reminderToEdit.equals(editedReminder) && model.hasReminder(editedReminder)) {
             throw new CommandException(MESSAGE_DUPLICATE_REMINDER);
         }

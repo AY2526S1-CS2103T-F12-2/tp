@@ -4,7 +4,6 @@ import static seedu.address.model.reminder.UniqueReminderList.createHomeworkRemi
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,31 +55,25 @@ public class SampleDataUtil {
 
     public static Reminder[] getSampleReminders() {
         return new Reminder[]{
-            new Reminder(new DueDate("2025-11-03 1530"), new Description("Alice: Submit homework for Math")),
-            new Reminder(new DueDate("2025-11-05 1000"), new Description("Benson: Prepare for English lesson")),
-            new Reminder(new DueDate("2025-11-07"), new Description("Carl: Assignment review")),
-            new Reminder(new DueDate("2025-11-10"), new Description("Daniel: Feedback session")),
-            new Reminder(new DueDate("2025-11-12 1400"), new Description("Benson: Mock test practice")),
-            new Reminder(new DueDate("2025-11-14 1600"), new Description("Carl: Science project discussion"))
+            new Reminder(new DueDate("2025-11-11 1530"), new Description("Alice: Submit homework for Math")),
+            new Reminder(new DueDate("2025-11-12 1000"), new Description("Benson: Prepare for English lesson")),
+            new Reminder(new DueDate("2025-11-12"), new Description("Carl: Assignment review")),
+            new Reminder(new DueDate("2025-11-13"), new Description("Daniel: Feedback session")),
+            new Reminder(new DueDate("2025-11-14 1400"), new Description("Benson: Mock test practice")),
+            new Reminder(new DueDate("2025-11-15 1600"), new Description("Carl: Science project discussion"))
         };
     }
 
     public static ReadOnlyAddressBook getSampleAddressBook() {
         AddressBook sampleAb = new AddressBook();
         for (Person samplePerson : getSamplePersons()) {
-            Random random = new Random();
-            int first = random.nextInt(getSampleHomework().length);
-            int second;
-            do {
-                second = random.nextInt(getSampleHomework().length);
-            } while (second == first);
-
-            samplePerson.addHomework(getSampleHomework()[first]);
-            samplePerson.addHomework(getSampleHomework()[second]);
+            samplePerson.addHomework(getSampleHomework()[4]);
+            samplePerson.addHomework(getSampleHomework()[5]);
             samplePerson.getHomeworkList().get(1).markDone();
 
-            samplePerson.setPaymentStatus(first + 1, true);
-            samplePerson.setPaymentStatus(second + 1, true);
+            for (int i = 1; i < 11; i++) {
+                samplePerson.setPaymentStatus(i, true);
+            }
 
             sampleAb.addPerson(samplePerson);
 
