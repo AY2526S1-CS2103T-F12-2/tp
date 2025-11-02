@@ -180,6 +180,16 @@ public class EditReminderCommandTest {
     }
 
     @Test
+    public void execute_editedReminderIsOverdue_throwsCommandException() {
+        Index indexLastReminder = Index.fromOneBased(model.getFilteredReminderList().size());
+        EditReminderDescriptor descriptor = new EditReminderDescriptorBuilder()
+                .withDueDate("2020-11-11").build();
+        EditReminderCommand editCommand = new EditReminderCommand(indexLastReminder, descriptor);
+
+        assertCommandFailure(editCommand, model, AddReminderCommand.MESSAGE_OVERDUE_REMINDER);
+    }
+
+    @Test
     public void equals() {
         final EditReminderCommand standardCommand = new EditReminderCommand(INDEX_FIRST_REMINDER, DESC_REMINDER_1);
 
