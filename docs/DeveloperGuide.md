@@ -739,7 +739,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 (For all use cases below, the **System** is `ClassConnect` and the **Actor** is the `tutor`)
 
-
 **Use case 1: Mark Student as Paid**
 
 **MSS**
@@ -755,6 +754,8 @@ Payment Status:
 Jan: ✓ Paid Feb: ✗ Paid Mar: ✗ Unpaid Apr: ✗ Unpaid May: ✗ Unpaid Jun: ✗ Unpaid
 Jul: ✗ Unpaid Aug: ✗ Unpaid Sep: ✗ Unpaid Oct: ✗ Unpaid Nov: ✗ Unpaid Dec: ✗ Unpaid
 ```
+
+Use case ends.
 
 **Extensions**
 
@@ -792,6 +793,8 @@ Jan: ✗ Unpaid Feb: ✓ Paid Mar: ✓ Paid Apr: ✓ Paid May: ✓ Paid Jun: ✓
 Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ Paid
 ```
 
+Use case ends.
+
 **Extensions**
 
 - 2a. Input is invalid (e.g., missing or wrong prefixes).
@@ -820,6 +823,8 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 2. System displays payment status for each student with a 12-month visual grid.
 3. Tutor can quickly identify which students have unpaid months (red rectangles).
 
+Use case ends.
+
 **Extensions**
 
 - 2a. No students in the list.
@@ -836,17 +841,24 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 3. System adds the homework to the specified student.
 4. System displays success message:  Added homework for Marcus: Math Assignment 3 (due 2025-11-15)
 
+Use case ends.
+
 **Extensions**
 - 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the corresponding correct input format
+  - System shows an error message with the corresponding correct input format.
+  - Use case ends.
 - 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
+  - System displays "No student with given name" and aborts the operation.
+  - Use case ends.
 - 2c. Due date format is invalid.  
-  → System displays “Invalid date format!” with corresponding correct date format
+  - System displays “Invalid date format!” with corresponding correct date format.
+  - Use case ends.
 - 2d. Homework already in list
-  → System displays “This student has already been assigned this homework” and aborts operation
+  - System displays “This student has already been assigned this homework” and aborts operation.
+  - Use case ends.
 - 2f. Due date has already passed
-  → System displays success message with warning: "Due date is in the past"
+  - System displays success message with warning: "Due date is in the past"
+  - Use case ends.
 
 **Use case 5: Mark Homework as Done**
 
@@ -856,15 +868,21 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 3. System marks the specified homework as done.
 4. System displays success message: Marked homework as done for Marcus: <description>
 
+Use case ends.
+
 **Extensions**
 - 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the correct input format.
+  - System shows an error message with the correct input format.
+  - Use case ends.
 - 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
+  - System displays "No student with given name" and aborts the operation.
+  - Use case ends.
 - 2c. Homework index out of range.  
-  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
+  - System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
+  - Use case ends.
 - 2d. Homework is already marked as done.  
-  → System displays same success message
+  - System displays same success message
+  - Use case ends.
 
 **Use case 6: Mark Homework as Undone**
 
@@ -874,15 +892,21 @@ Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ P
 3. System marks the specified homework as undone.
 4. System displays success message: Marked homework as undone for Marcus: <description>
 
+Use case ends.
+
 **Extensions**
 - 2a. Input is invalid (e.g., missing or wrong prefixes).  
-  → System shows an error message with the correct input format.
+  - System shows an error message with the correct input format.
+  - Use case ends.
 - 2b. Student name not found.  
-  → System displays "No student with given name" and aborts the operation.
-- 2c. Homework index out of range.  
-  → System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
+  - System displays "No student with given name" and aborts the operation.
+  - Use case ends.
+- 2c. Homework index out of range.
+  - System displays “Invalid homework index: -1 (valid range: 1 to ?)” and aborts the operation.
+  - Use case ends.
 - 2d. Homework is already marked as undone.  
-  → System displays same success message.
+  - System displays same success message.
+  - Use case ends.
 
 <div style="page-break-after: always;"></div>
 
