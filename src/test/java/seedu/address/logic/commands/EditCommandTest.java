@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_LESSON_TIME_1;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_LESSON_TIME_2;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
@@ -58,7 +59,8 @@ public class EditCommandTest {
         Person lastPerson = model.getFilteredPersonList().get(indexLastPerson.getZeroBased());
 
         PersonBuilder personInList = new PersonBuilder(lastPerson);
-        Person editedPerson = personInList.withPhone(VALID_PHONE_BOB).withLessonTime(VALID_LESSON_TIME_2).build();
+        Person editedPerson = personInList.withPhone(VALID_PHONE_BOB).withLessonTime(VALID_LESSON_TIME_2)
+                .withParticipation("2025-11-11", 3).build();
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withPhone(VALID_PHONE_BOB)
                 .withLessonTime(VALID_LESSON_TIME_2).build();
@@ -215,5 +217,27 @@ public class EditCommandTest {
         String expectedMessage = "Could not find lesson time: 12:30 pm Sat;\n"
                 + "Edited Student: Amy Bee; Phone Number: 85355255; Lesson Time: 10:00 am Sat;";
         assertEquals(new CommandResult(expectedMessage), result);
+    }
+
+    @Test
+    public void execute_duplicateLessonTimeMerged_success() {
+        Index indexLastPerson = Index.fromOneBased(model.getFilteredPersonList().size());
+        Person lastPerson = model.getFilteredPersonList().get(indexLastPerson.getZeroBased());
+
+        PersonBuilder personInList = new PersonBuilder(lastPerson);
+        Person editedPerson = personInList.withLessonTime(VALID_LESSON_TIME_1)
+                .withLessonTime(VALID_LESSON_TIME_2).build();
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withLessonTime(VALID_LESSON_TIME_1)
+                .withLessonTime(VALID_LESSON_TIME_2).withLessonTime(VALID_LESSON_TIME_2).build();
+        EditCommand editCommand = new EditCommand(indexLastPerson, descriptor);
+
+        String expectedMessage = String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        expectedModel.setPerson(lastPerson, editedPerson);
+        expectedModel.refreshReminders();
+
+        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
     }
 }
