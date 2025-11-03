@@ -350,6 +350,40 @@ Notes:
 * Do not include any other prefixes besides `g/` in this command.
 * When a group is deleted, students in the group are not deleted.
 
+### Filtering by group (UI)
+
+Use the **Filter by group** bar (top of the window) to show only students in a specific group.  
+The dropdown always includes **(All students)** plus **every group you have created**.
+
+**Where to find it:**  
+At the top toolbar: `Filter by group: [ (All students) ▾ ]`
+
+**Mouse usage**
+1. Click the dropdown.
+2. Choose a group to filter the list.
+3. Choose **(All students)** to clear the filter.
+
+**Keyboard usage (no mouse)**
+1. Press `Tab` until the **Filter by group** box is selected (you’ll see a focus ring).
+2. Press `↓` to open the dropdown.
+3. Use `↑/↓` to move between items; press `Enter` to select.
+4. Press `Shift+Tab` to return to the command box.
+
+**Tips**
+- The dropdown is the quickest way to **see all groups currently available**. If a name appears here, that group already exists.
+- Each student card shows small **group badge(s)** next to the name, so you can visually confirm membership while filtered.
+- Deleting a group immediately removes it from this dropdown; creating a group adds it.
+
+**Notes**
+- If no groups exist yet, the dropdown only shows **(All students)**.
+- Filtering affects only the **visible list**; it does not change your data.
+
+### Viewing all groups (at a glance)
+
+There is no separate `group-list` command. Use either of these:
+- **Dropdown method (recommended):** Open the **Filter by group** dropdown — it lists **every existing group**.
+- **On cards:** Scan the **group badges** shown beside each student’s name (useful when already filtered).
+
 ### Marking paid status : `mark-paid`
 
 Marks a student's payment status for a specific month as paid.
