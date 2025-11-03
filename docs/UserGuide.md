@@ -238,6 +238,7 @@ You can delete a student in two ways:
 
 2. By `KEYWORD`
    * Deletes the student whose name or phone number matches the given `KEYWORD`.
+   * `KEYWORD` includes name, phone number, lesson time or lesson day.
    * If multiple students match the keyword, the app will list all possible matches and ask you to refine your search.
    * Matching is case-insensitive and partial matches are allowed. e.g. `marc` matches `Marcus`.
 
@@ -400,6 +401,10 @@ Payment Status:
 Jan: ✗ Unpaid Feb: ✓ Paid Mar: ✓ Paid Apr: ✓ Paid May: ✓ Paid Jun: ✓ Paid
 Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ Paid
 ```
+
+Notes:
+* Payment status for students will be automatically reset at the start of each new year.
+* Students that have yet to paid for the current month will be listed as a reminder.
 
 ### Adding homework: `add-homework`
 

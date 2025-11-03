@@ -43,6 +43,7 @@ public class ModelManager implements Model {
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         filteredReminders = new FilteredList<>(this.addressBook.getReminderList());
+        initializePaymentReset();
     }
 
     public ModelManager() {
@@ -261,5 +262,14 @@ public class ModelManager implements Model {
     public void refreshReminders() {
         addressBook.refreshUnmodifiableReminders();
         updateFilteredReminderList(PREDICATE_SHOW_ALL_REMINDERS);
+    }
+
+    /**
+     * Initializes payment reset for all students if it's a new year
+     */
+    private void initializePaymentReset() {
+        for (Person person : filteredPersons) {
+            person.resetPaymentsIfNewYear();
+        }
     }
 }

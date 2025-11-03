@@ -518,6 +518,7 @@ Key ideas
 * The command operates through the `Model` interface and updates the `Person` object in-place.
 * The UI displays payment status under each student card with color-coded rectangles (green = paid, red = unpaid). 
 * Validation prevents marking an already-paid month as paid again or an already-unpaid month as unpaid again.
+* Payment status resets at the start of each new year.
 
 <img src="diagrams/MarkPaymentUseCase.png"/>
 
@@ -525,7 +526,7 @@ The diagram above illustrates the **Payment Management** use cases in ClassConne
 
 - **Mark Student as Paid**: Updates a student's payment status to paid for a specified month.
 - **Mark Student as Unpaid**: Updates a student's payment status to unpaid for a specified month.
-- **View Payment Status**: Displays a 12-month payment grid for each student with visual indicators.
+- **View Payment Status**: Displays a 12-month payment grid for each student with visual indicators in the student's card.
 
 Each of these features interacts with the `paymentStatus` field stored within every `Person` object.
 
@@ -768,7 +769,7 @@ Use case ends.
   - Use case ends.
 
 - 2c. Month is invalid (not between 1 and 12).
-  - 2c1. System displays "Invalid month. Month must be between 1 and 12."
+  - 2c1. System displays "Month must be between 1 and 12."
   - Use case ends.
 
 - 2d. Student is already marked as paid for that month.
@@ -806,7 +807,7 @@ Use case ends.
   - Use case ends.
 
 - 2c. Month is invalid (not between 1 and 12).
-  - 2c1. System displays "Invalid month. Month must be between 1 and 12."
+  - 2c1. System displays "Month must be between 1 and 12."
   - Use case ends.
 
 - 2d. Student is already marked as unpaid for that month.
@@ -1338,7 +1339,7 @@ I was primarily responsible for implementing and testing the **Search feature** 
 I was primarily responsible for updating the delete feature and implementing the payment tracking system.
 
 - **Delete Feature**
-    - Implemented the `delete-student` command that allows tutors to delete students by name, subject, or level.
+    - Modified the `delete-student` command that allows tutors to delete students by name, subject, or level.
 
 - **Payment Tracker**
     - Designed and implemented all payment related commands:
