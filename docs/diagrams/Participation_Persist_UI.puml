@@ -1,0 +1,23 @@
+@startuml
+skinparam dpi 180
+skinparam sequence {
+  ParticipantFontSize 14
+  ArrowFontSize 13
+}
+title Persist ➜ UI refresh
+
+participant "LogicManager" as Logic
+participant "StorageManager" as Storage
+participant "JsonSerializableAddressBook" as JSAB
+participant "JsonAdaptedPerson" as JAP
+participant "UI (PersonListPanel/PersonCard)" as UI
+
+Logic -> Storage : saveAddressBook(model.getAddressBook())
+Storage -> JSAB : map AddressBook ➜ JSON
+JSAB -> JAP : map Person ➜ JSON\n(includes participation[])
+JAP --> JSAB : nodes
+Storage --> Logic : OK
+
+Logic --> UI : CommandResult
+UI -> UI : observe filtered list change\nre-render PersonCard(s)\n(show dates & scores)
+@enduml

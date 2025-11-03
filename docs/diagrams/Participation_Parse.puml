@@ -1,0 +1,27 @@
+@startuml
+skinparam dpi 180
+skinparam defaultTextAlignment center
+skinparam sequence {
+  LifeLineBorderColor #888
+  LifeLineBackgroundColor #f7f7f7
+  ParticipantFontSize 14
+  ArrowFontSize 13
+  BoxFontSize 14
+}
+
+title Parsing: "participation n/Alex Yeoh d/2025-09-19 s/3"
+
+actor User
+participant "UI.CommandBox" as UI
+participant "LogicManager" as Logic
+participant "AddressBookParser" as ABP
+participant "ParticipationCommandParser" as PCP
+participant "ParticipationCommand" as Cmd
+
+User -> UI : type command + Enter
+UI -> Logic : execute(text)
+Logic -> ABP : parseCommand(text)
+ABP -> PCP : parse(args)
+PCP --> Logic : new ParticipationCommand
+Logic --> UI : (has Cmd)
+@enduml
