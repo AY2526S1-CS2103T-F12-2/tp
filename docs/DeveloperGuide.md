@@ -1299,7 +1299,7 @@ Team Size: 5
   - If any unrecognized prefix is found, the parser should throw a clear and specific error message. e.g. `Invalid prefix detected: -t/`.
   - Update the tokenizer to correctly differentiate between legitimate input values and actual prefixes, ensuring that valid text containing special characters (e.g., `/`, `+`, `-`) is not incorrectly flagged.
 
-1. **Improve the uniqueness of Students**
+2. **Improve the uniqueness of Students**
 
 - Problem:
   - Currently, unmodifiable reminders' description are generated using student's name (e.g. `Alex Yeoh has yet to pay for the month of November`), and other commands also uses student's name in their parsing.
