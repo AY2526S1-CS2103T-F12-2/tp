@@ -133,6 +133,8 @@
         "adding-students-to-a-group-group-add": "Adding students to a group : group-add",
         "removing-students-from-a-group-group-remove": "Removing students from a group : group-remove",
         "deleting-a-group-group-delete": "Deleting a group : group-delete",
+        "filtering-by-group-ui": "Filtering by group (UI)",
+        "viewing-all-groups-at-a-glance": "Viewing all groups (at a glance)",
         "marking-paid-status-mark-paid": "Marking paid status : mark-paid",
         "marking-unpaid-status-mark-unpaid": "Marking unpaid status : mark-unpaid",
         "adding-homework-add-homework": "Adding homework: add-homework",
