@@ -518,6 +518,7 @@ Key ideas
 * The command operates through the `Model` interface and updates the `Person` object in-place.
 * The UI displays payment status under each student card with color-coded rectangles (green = paid, red = unpaid). 
 * Validation prevents marking an already-paid month as paid again or an already-unpaid month as unpaid again.
+* Payment status resets at the start of each new year.
 
 <img src="diagrams/MarkPaymentUseCase.png"/>
 
@@ -525,7 +526,7 @@ The diagram above illustrates the **Payment Management** use cases in ClassConne
 
 - **Mark Student as Paid**: Updates a student's payment status to paid for a specified month.
 - **Mark Student as Unpaid**: Updates a student's payment status to unpaid for a specified month.
-- **View Payment Status**: Displays a 12-month payment grid for each student with visual indicators.
+- **View Payment Status**: Displays a 12-month payment grid for each student with visual indicators in the student's card.
 
 Each of these features interacts with the `paymentStatus` field stored within every `Person` object.
 

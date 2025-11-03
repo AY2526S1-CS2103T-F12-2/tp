@@ -402,6 +402,10 @@ Jan: ✗ Unpaid Feb: ✓ Paid Mar: ✓ Paid Apr: ✓ Paid May: ✓ Paid Jun: ✓
 Jul: ✓ Paid Aug: ✓ Paid Sep: ✓ Paid Oct: ✓ Paid Nov: ✓ Paid Dec: ✓ Paid
 ```
 
+Notes:
+* Payment status for students will be automatically reset at the start of each new year.
+* Students that have yet to paid for the current month will be listed as a reminder.
+
 ### Adding homework: `add-homework`
 
 Adds a homework entry to the specified student.

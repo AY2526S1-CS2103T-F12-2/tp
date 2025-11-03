@@ -242,4 +242,14 @@ public class Person {
             target.participation.add(record);
         }
     }
+
+    /**
+     * Resets all payments if it's a new year
+     */
+    public void resetPaymentsIfNewYear() {
+        java.time.LocalDate now = java.time.LocalDate.now();
+        if (now.getMonthValue() == 1 && now.getDayOfMonth() == 1) {
+            this.paymentStatus = new BitSet(12);
+        }
+    }
 }
