@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -32,17 +33,18 @@ public class GroupAddCommandTest {
     @Test
     public void execute_success_addsMembers() throws Exception {
         ModelStubAccepting model = new ModelStubAccepting();
-        model.createGroup(GroupName.of("Group A"));
+        GroupName g = GroupName.of("Group A");
+        model.createGroup(g);
 
         GroupAddCommand cmd = new GroupAddCommand(
-                GroupName.of("Group A"),
+                g,
                 List.of(Index.fromOneBased(1), Index.fromOneBased(3))
         );
 
         CommandResult result = cmd.execute(model);
 
         assertEquals(
-                String.format(GroupAddCommand.MESSAGE_ADDED_FMT, 2, GroupName.of("Group A")),
+                String.format(GroupAddCommand.MESSAGE_ADDED_FMT, 2, g),
                 result.getFeedbackToUser()
         );
         // Verify membership recorded via our stub (0-based positions 0 and 2)
@@ -62,23 +64,113 @@ public class GroupAddCommandTest {
     @Test
     public void execute_indexOutOfBounds_reportsMessage() throws Exception {
         ModelStubAccepting model = new ModelStubAccepting();
-        model.createGroup(GroupName.of("Group A"));
+        GroupName g = GroupName.of("Group A");
+        model.createGroup(g);
 
         GroupAddCommand cmd = new GroupAddCommand(
-                GroupName.of("Group A"),
+                g,
                 List.of(Index.fromOneBased(5)) // out of range (only 3 people)
         );
 
         CommandResult result = cmd.execute(model);
 
         String expected = String.join("\n",
-                String.format(GroupAddCommand.MESSAGE_NO_CHANGES_FMT, GroupName.of("Group A")),
+                String.format(GroupAddCommand.MESSAGE_NO_CHANGES_FMT, g),
                 String.format(GroupAddCommand.MESSAGE_INVALID_INDICES_FMT, "i/5")
         );
 
         assertEquals(expected, result.getFeedbackToUser());
+        assertEquals(Collections.emptySet(), model.getGroupMembersIndexZero());
     }
 
+    @Test
+    public void execute_duplicatesReported_reportsMessage() throws Exception {
+        ModelStubAccepting model = new ModelStubAccepting();
+        GroupName g = GroupName.of("Dupes");
+        model.createGroup(g);
+
+        // Pre-add #2 (Bernice) so index 2 is already in the group
+        new GroupAddCommand(g, List.of(Index.fromOneBased(2))).execute(model);
+        assertEquals(Set.of(1), model.getGroupMembersIndexZero());
+
+        // Try to add [2, 2, 3]; second i/2 is a duplicate in the same command
+        GroupAddCommand cmd = new GroupAddCommand(
+                g,
+                List.of(Index.fromOneBased(2), Index.fromOneBased(2), Index.fromOneBased(3))
+        );
+
+        CommandResult result = cmd.execute(model);
+
+        String expected = String.join("\n",
+                String.format(GroupAddCommand.MESSAGE_ADDED_FMT, 1, g),
+                String.format(GroupAddCommand.MESSAGE_SKIPPED_DUPLICATE_INDICES_FMT, "i/2"),
+                String.format(GroupAddCommand.MESSAGE_ALREADY_IN_GROUP_FMT, "Bernice Yu")
+        );
+
+        assertEquals(expected, result.getFeedbackToUser());
+        assertEquals(Set.of(1, 2), model.getGroupMembersIndexZero());
+    }
+
+
+    @Test
+    public void execute_alreadyMembers_noChanges() throws Exception {
+        ModelStubAccepting model = new ModelStubAccepting();
+        GroupName g = GroupName.of("Existing");
+        model.createGroup(g);
+
+        // Pre-add #1 (Alex)
+        new GroupAddCommand(g, List.of(Index.fromOneBased(1))).execute(model);
+        assertEquals(Set.of(0), model.getGroupMembersIndexZero());
+
+        // Try to add #1 again
+        GroupAddCommand cmd = new GroupAddCommand(
+                g,
+                List.of(Index.fromOneBased(1))
+        );
+
+        CommandResult result = cmd.execute(model);
+
+        String expected = String.join("\n",
+                String.format(GroupAddCommand.MESSAGE_NO_CHANGES_FMT, g),
+                String.format(GroupAddCommand.MESSAGE_ALREADY_IN_GROUP_FMT, "Alex Yeoh")
+        );
+
+        assertEquals(expected, result.getFeedbackToUser());
+        assertEquals(Set.of(0), model.getGroupMembersIndexZero());
+    }
+
+    @Test
+    public void execute_mixed_reportsAll() throws Exception {
+        ModelStubAccepting model = new ModelStubAccepting();
+        GroupName g = GroupName.of("Mixed");
+        model.createGroup(g);
+
+        // Pre-add #2 (Bernice)
+        new GroupAddCommand(g, List.of(Index.fromOneBased(2))).execute(model);
+        assertEquals(Set.of(1), model.getGroupMembersIndexZero());
+
+        // Attempt to add: [2 (already), 2 (dup), 3 (new), 9 (invalid)]
+        GroupAddCommand cmd = new GroupAddCommand(
+                g,
+                List.of(
+                        Index.fromOneBased(2),
+                        Index.fromOneBased(2),
+                        Index.fromOneBased(3),
+                        Index.fromOneBased(9))
+        );
+
+        CommandResult result = cmd.execute(model);
+
+        String expected = String.join("\n",
+                String.format(GroupAddCommand.MESSAGE_ADDED_FMT, 1, g),
+                String.format(GroupAddCommand.MESSAGE_SKIPPED_DUPLICATE_INDICES_FMT, "i/2"),
+                String.format(GroupAddCommand.MESSAGE_ALREADY_IN_GROUP_FMT, "Bernice Yu"),
+                String.format(GroupAddCommand.MESSAGE_INVALID_INDICES_FMT, "i/9")
+        );
+
+        assertEquals(expected, result.getFeedbackToUser());
+        assertEquals(Set.of(1, 2), model.getGroupMembersIndexZero());
+    }
 
     /**
      * Minimal model stub that accepts group operations and holds a small person list.
@@ -157,7 +249,17 @@ public class GroupAddCommandTest {
 
         @Override
         public Set<GroupName> getGroupsOf(Person person) {
-            return Set.of();
+            int idx = persons.indexOf(person);
+            if (idx < 0) {
+                return Set.of();
+            }
+            Set<GroupName> res = new HashSet<>();
+            for (var e : membership.entrySet()) {
+                if (e.getValue().contains(idx)) {
+                    res.add(e.getKey());
+                }
+            }
+            return res;
         }
 
         // ----- Person list plumbing used by command -----
@@ -192,7 +294,7 @@ public class GroupAddCommandTest {
             return new AttendanceIndex();
         }
 
-        // ----- Unused Model methods (no-op) -----
+        // ----- Unused Model methods (expanded to satisfy LeftCurly) -----
         @Override
         public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
         }
