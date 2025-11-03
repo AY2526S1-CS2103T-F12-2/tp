@@ -293,7 +293,11 @@ Parser and execution mirror group-add, except the model op is removeFromGroup(..
 
 ### Participation feature
 
-<puml src="diagrams/ParticipationSequence.puml" width="720" />
+<puml src="diagrams/Participation_Parse.puml" width="760" />
+
+<puml src="diagrams/Participation_Execute_Model.puml" width="760" />
+
+<puml src="diagrams/Participation_Persist_UI.puml" width="760" />
 
 The Participation feature lets tutors record a per-class participation score for a student and shows the **last 5 classes** (chronological, oldest → newest) on each student card, with the **date above** each box and the **score inside**.
 

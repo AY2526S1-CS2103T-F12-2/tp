@@ -1,0 +1,29 @@
+@startuml
+skinparam dpi 180
+skinparam sequence {
+  ParticipantFontSize 14
+  ArrowFontSize 13
+}
+title Execute: validate ➜ find person ➜ update history
+
+participant "ParticipationCommand" as Cmd
+participant "Model" as Model
+participant "AddressBook" as AB
+participant "Person" as Person
+participant "ParticipationHistory" as PH
+participant "AttendanceIndex" as AI
+
+Cmd -> Cmd : normalizeName()\nparse date, score\n(throw if invalid)
+Cmd -> Model : getAddressBook()
+Model --> Cmd : AddressBook
+Cmd -> AB : getPersonList()
+Cmd -> Person : find by normalized full name
+Cmd -> Person : getParticipation()
+Person --> Cmd : ParticipationHistory
+
+' key behavior (small and readable)
+Cmd -> PH : addOrReplace(date, score)\n• replace same date\n• keep last 5\n• sort by date
+Cmd -> AI : setCurrentUiDate(date)
+Cmd -> Model : updateFilteredPersonList(ALL)
+Cmd --> Model : CommandResult
+@enduml
