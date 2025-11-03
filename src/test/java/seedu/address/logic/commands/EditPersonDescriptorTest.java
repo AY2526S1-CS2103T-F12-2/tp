@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_BOB;
@@ -44,6 +45,17 @@ public class EditPersonDescriptorTest {
         // different lesson time -> returns false
         editedAmy = new EditPersonDescriptorBuilder(DESC_AMY).withLessonTime(VALID_LESSON_TIME_2).build();
         assertFalse(DESC_AMY.equals(editedAmy));
+
+        // different lesson time to add -> return false
+        EditPersonDescriptor editPerson = new EditPersonDescriptorBuilder(DESC_AMY).withLessonTimeToAdd("1010 Mon")
+                .build();
+        assertNotEquals(DESC_AMY, editPerson);
+
+        // different lesson time to remove -> return false
+        EditPersonDescriptor newEditPerson = new EditPersonDescriptorBuilder(editPerson)
+                .withLessonTimeToRemove("1010 Mon").build();
+        assertNotEquals(editPerson, newEditPerson);
+
     }
 
     @Test
@@ -52,7 +64,9 @@ public class EditPersonDescriptorTest {
         String expected = EditPersonDescriptor.class.getCanonicalName() + "{name="
                 + editPersonDescriptor.getName().orElse(null) + ", phone="
                 + editPersonDescriptor.getPhone().orElse(null) + ", lesson time="
-                + editPersonDescriptor.getLessonTime().orElse(null) + "}";
+                + editPersonDescriptor.getLessonTime().orElse(null) + ", lessonTimesToAdd="
+                + editPersonDescriptor.getLessonTimesToAdd().orElse(null) + ", lessonTimesToRemove="
+                + editPersonDescriptor.getLessonTimesToRemove().orElse(null) + "}";
         assertEquals(expected, editPersonDescriptor.toString());
     }
 }

@@ -1,0 +1,45 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic for Group Remove LOGIC_COLOR_T1
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":GroupRemoveCommandParser" as GroupRemoveCommandParser LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant "<<class>>\nGroupName" as GroupName LOGIC_COLOR
+participant "remove:GroupRemoveCommand" as GroupRemoveCommand LOGIC_COLOR
+end box
+
+[-> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create GroupRemoveCommandParser
+AddressBookParser -> GroupRemoveCommandParser
+activate GroupRemoveCommandParser
+GroupRemoveCommandParser --> AddressBookParser
+deactivate GroupRemoveCommandParser
+
+AddressBookParser -> GroupRemoveCommandParser : parse(arguments)
+activate GroupRemoveCommandParser
+
+GroupRemoveCommandParser -> GroupName : of(raw)
+activate GroupName
+GroupName --> GroupRemoveCommandParser : name
+deactivate GroupName
+
+GroupRemoveCommandParser -> ParserUtil : parseIndex() * (for each i/)
+activate ParserUtil
+ParserUtil --> GroupRemoveCommandParser : indices
+deactivate ParserUtil
+
+create GroupRemoveCommand
+GroupRemoveCommandParser -> GroupRemoveCommand
+activate GroupRemoveCommand
+GroupRemoveCommand --> GroupRemoveCommandParser
+deactivate GroupRemoveCommand
+
+GroupRemoveCommandParser --> AddressBookParser : groupRemove
+deactivate GroupRemoveCommandParser
+[<-- AddressBookParser : groupRemove
+deactivate AddressBookParser
+@enduml

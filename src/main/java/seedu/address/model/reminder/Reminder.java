@@ -40,6 +40,13 @@ public class Reminder implements Comparable<Reminder> {
     }
 
     /**
+     * Returns true if {@code reminder} is a past event.
+     */
+    public boolean isOverdue() {
+        return getDueDate().isBeforeDate(LocalDateTime.now());
+    }
+
+    /**
      * Returns the number of days until this reminder is due.
      */
     public long daysUntilDueDate() {

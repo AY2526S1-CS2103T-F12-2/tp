@@ -36,6 +36,8 @@ public class AddHomeworkCommand extends Command {
     public static final String MESSAGE_SUCCESS = "Added homework for %1$s: %2$s (due %3$s)";
     public static final String MESSAGE_NO_PERSON_FOUND = "No student with given name";
     public static final String MESSAGE_DUPLICATE_HOMEWORK = "This student has already been assigned this homework";
+    public static final String MESSAGE_DESC_TOO_LONG = "Description is too long(max 50 Characters)";
+    public static final String MESSAGE_DUE_DATE_PASSED = "Warning: Deadline is before current date";
 
     private final Name studentName;
     private final Homework homework;
@@ -57,15 +59,22 @@ public class AddHomeworkCommand extends Command {
         //Able to add homework after search command
         Person target = getPerson(model);
 
-        target.addHomework(homework);
-        model.refreshReminders();
-
-        return new CommandResult(String.format(
+        String resultMessage = String.format(
                 MESSAGE_SUCCESS,
                 target.getName().fullName,
                 homework.getDescription(),
                 homework.getDeadline()
-        ));
+        );
+
+        if (homework.getDeadline().isBefore(java.time.LocalDate.now())) {
+            resultMessage += "\n⚠️ " + MESSAGE_DUE_DATE_PASSED;
+        }
+
+        target.addHomework(homework);
+        model.refreshReminders();
+
+        return new CommandResult(resultMessage);
+
     }
 
     /**

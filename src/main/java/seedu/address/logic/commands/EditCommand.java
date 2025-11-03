@@ -1,6 +1,8 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_ADD_LESSON_TIME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DELETE_LESSON_TIME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_INDEX;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_LESSON_TIME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
@@ -22,6 +24,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.LessonTime;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.ParticipationRecord;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 
@@ -44,12 +47,22 @@ public class EditCommand extends Command {
             + PREFIX_PHONE + "91234567 "
             + PREFIX_LESSON_TIME + "1330 Sat";
 
+    public static final String MESSAGE_MIXED_PREFIX = "You cannot mix " + PREFIX_LESSON_TIME
+            + " with " + PREFIX_ADD_LESSON_TIME + " or " + PREFIX_DELETE_LESSON_TIME
+            + ".\n"
+            + "Choose one mode only:\n"
+            + "1. use only prefix " + PREFIX_LESSON_TIME + " (replace all lesson time).\n"
+            + "2. use a combination of prefix " + PREFIX_ADD_LESSON_TIME + " and/or " + PREFIX_DELETE_LESSON_TIME
+            + " (incremental edits).";
+
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Student: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This student already exists in the student list.";
+    public static final String MESSAGE_NO_LESSON_TIMES = "A student must have at least one lesson time.";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
+    private String unfoundLessonTimeMessage = "";
 
     /**
      * @param index                of the person in the filtered person list to edit
@@ -75,6 +88,10 @@ public class EditCommand extends Command {
         Person personToEdit = lastShownList.get(index.getZeroBased());
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
+        if (editedPerson.getLessonTime().isEmpty()) {
+            throw new CommandException(MESSAGE_NO_LESSON_TIMES);
+        }
+
         if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
@@ -82,21 +99,52 @@ public class EditCommand extends Command {
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         model.refreshReminders();
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
+        String msg = String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+        msg = unfoundLessonTimeMessage.isEmpty() ? msg : unfoundLessonTimeMessage + "\n" + msg;
+        return new CommandResult(msg);
     }
 
     /**
      * Creates and returns a {@code Person} with the details of {@code personToEdit}
      * edited with {@code editPersonDescriptor}.
      */
-    private static Person createEditedPerson(Person personToEdit, EditPersonDescriptor editPersonDescriptor) {
+    private Person createEditedPerson(Person personToEdit, EditPersonDescriptor editPersonDescriptor) {
         assert personToEdit != null;
 
         Name updatedName = editPersonDescriptor.getName().orElse(personToEdit.getName());
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
-        Set<LessonTime> updateLessonTime = editPersonDescriptor.getLessonTime().orElse(personToEdit.getLessonTime());
 
-        return new Person(updatedName, updatedPhone, updateLessonTime);
+        Set<LessonTime> updateLessonTime = new HashSet<>(personToEdit.getLessonTime());
+        if (editPersonDescriptor.getLessonTime().isPresent()) {
+            updateLessonTime = editPersonDescriptor.getLessonTime().get();
+        } else {
+            Set<LessonTime> toRemove = editPersonDescriptor.getLessonTimesToRemove().orElse(Collections.emptySet());
+            Set<LessonTime> notFound = new HashSet<>(toRemove);
+            notFound.removeAll(updateLessonTime);
+            updateLessonTime.removeAll(toRemove);
+            editPersonDescriptor.getLessonTimesToAdd().ifPresent(updateLessonTime::addAll);
+
+            if (!notFound.isEmpty()) {
+                StringBuilder sb = new StringBuilder("Could not find lesson time: ");
+                for (LessonTime lt : notFound) {
+                    sb.append(lt.toString()).append(", ");
+                }
+                sb.deleteCharAt(sb.length() - 1).setCharAt(sb.length() - 1, ';');
+                unfoundLessonTimeMessage = sb.toString();
+            }
+        }
+
+        Person newPerson = new Person(updatedName, updatedPhone, updateLessonTime);
+        newPerson.setAllPaymentStatus(personToEdit.getPaymentStatusBitSet());
+        newPerson.setHomeworkList(personToEdit.getHomeworkList());
+        for (ParticipationRecord r : personToEdit.getParticipation().asList()) {
+            try {
+                newPerson.getParticipation().add(r);
+            } catch (Exception ignored) {
+                // skip invalid rows instead of failing whole file
+            }
+        }
+        return newPerson;
     }
 
     @Override
@@ -131,6 +179,8 @@ public class EditCommand extends Command {
         private Name name;
         private Phone phone;
         private Set<LessonTime> lessonTime;
+        private Set<LessonTime> lessonTimesToAdd;
+        private Set<LessonTime> lessonTimesToRemove;
 
         public EditPersonDescriptor() {
         }
@@ -143,13 +193,16 @@ public class EditCommand extends Command {
             setName(toCopy.name);
             setPhone(toCopy.phone);
             setLessonTime(toCopy.lessonTime);
+            setLessonTimesToAdd(toCopy.lessonTimesToAdd);
+            setLessonTimesToRemove(toCopy.lessonTimesToRemove);
         }
 
         /**
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, lessonTime);
+            return CollectionUtil.isAnyNonNull(name, phone, lessonTime,
+                    lessonTimesToAdd, lessonTimesToRemove);
         }
 
         public void setName(Name name) {
@@ -185,6 +238,44 @@ public class EditCommand extends Command {
             return (lessonTime != null) ? Optional.of(Collections.unmodifiableSet(lessonTime)) : Optional.empty();
         }
 
+        /**
+         * Sets {@code lessonTime} to this object's {@code lessonTimeToAdd}.
+         * A defensive copy of {@code lessonTimeToAdd} is used internally.
+         */
+        public void setLessonTimesToAdd(Set<LessonTime> lessonTime) {
+            this.lessonTimesToAdd = (lessonTime != null) ? new HashSet<>(lessonTime) : null;
+        }
+
+        /**
+         * Returns an unmodifiable lesson time set, which throws {@code UnsupportedOperationException}
+         * if modification is attempted.
+         * Returns {@code Optional#empty()} if {@code lessonTimeToAdd} is null.
+         */
+        public Optional<Set<LessonTime>> getLessonTimesToAdd() {
+            return (lessonTimesToAdd != null)
+                    ? Optional.of(Collections.unmodifiableSet(lessonTimesToAdd))
+                    : Optional.empty();
+        }
+
+        /**
+         * Sets {@code lessonTime} to this object's {@code lessonTimeToRemove}.
+         * A defensive copy of {@code lessonTimeToRemove} is used internally.
+         */
+        public void setLessonTimesToRemove(Set<LessonTime> lessonTime) {
+            this.lessonTimesToRemove = (lessonTime != null) ? new HashSet<>(lessonTime) : null;
+        }
+
+        /**
+         * Returns an unmodifiable lesson time set, which throws {@code UnsupportedOperationException}
+         * if modification is attempted.
+         * Returns {@code Optional#empty()} if {@code lessonTimeToRemove} is null.
+         */
+        public Optional<Set<LessonTime>> getLessonTimesToRemove() {
+            return (lessonTimesToRemove != null)
+                    ? Optional.of(Collections.unmodifiableSet(lessonTimesToRemove))
+                    : Optional.empty();
+        }
+
         @Override
         public boolean equals(Object other) {
             if (other == this) {
@@ -199,7 +290,9 @@ public class EditCommand extends Command {
             EditPersonDescriptor otherEditPersonDescriptor = (EditPersonDescriptor) other;
             return Objects.equals(name, otherEditPersonDescriptor.name)
                     && Objects.equals(phone, otherEditPersonDescriptor.phone)
-                    && Objects.equals(lessonTime, otherEditPersonDescriptor.lessonTime);
+                    && Objects.equals(lessonTime, otherEditPersonDescriptor.lessonTime)
+                    && Objects.equals(lessonTimesToAdd, otherEditPersonDescriptor.lessonTimesToAdd)
+                    && Objects.equals(lessonTimesToRemove, otherEditPersonDescriptor.lessonTimesToRemove);
         }
 
         @Override
@@ -208,6 +301,8 @@ public class EditCommand extends Command {
                     .add("name", name)
                     .add("phone", phone)
                     .add("lesson time", lessonTime)
+                    .add("lessonTimesToAdd", lessonTimesToAdd)
+                    .add("lessonTimesToRemove", lessonTimesToRemove)
                     .toString();
         }
     }

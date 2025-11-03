@@ -14,10 +14,13 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_LESSON_TIME_2;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_ADD_LESSON_TIME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DELETE_LESSON_TIME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_INDEX;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
@@ -28,6 +31,7 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.LessonTime;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
@@ -89,6 +93,7 @@ public class EditCommandParserTest {
 
     @Test
     public void parse_allFieldsSpecified_success() {
+        // l/ prefix
         Index targetIndex = INDEX_SECOND_PERSON;
         String userInput = " " + PREFIX_INDEX + targetIndex.getOneBased() + NAME_DESC_AMY + PHONE_DESC_BOB
                 + LESSON_TIME_DESC_AMY;
@@ -96,6 +101,17 @@ public class EditCommandParserTest {
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
                 .withPhone(VALID_PHONE_BOB).withLessonTime(VALID_LESSON_TIME_1, VALID_LESSON_TIME_2).build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
+
+        assertParseSuccess(parser, userInput, expectedCommand);
+
+        // combi of l+/ and l-/ prefix
+        userInput = " " + PREFIX_INDEX + targetIndex.getOneBased() + NAME_DESC_AMY + PHONE_DESC_BOB
+                + " " + PREFIX_ADD_LESSON_TIME + VALID_LESSON_TIME_1 + " " + PREFIX_DELETE_LESSON_TIME
+                + VALID_LESSON_TIME_2;
+        descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY).withPhone(VALID_PHONE_BOB)
+                .withLessonTimeToAdd(VALID_LESSON_TIME_1).withLessonTimeToRemove(VALID_LESSON_TIME_2).build();
+
+        expectedCommand = new EditCommand(targetIndex, descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);
     }
@@ -107,6 +123,19 @@ public class EditCommandParserTest {
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withPhone(VALID_PHONE_BOB)
                 .withLessonTime(VALID_LESSON_TIME_1, VALID_LESSON_TIME_2).build();
+        EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
+
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_combiOfAddRemoveLessonTime_success() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = " " + PREFIX_INDEX + targetIndex.getOneBased() + " " + PREFIX_ADD_LESSON_TIME
+                + VALID_LESSON_TIME_1 + " " + PREFIX_DELETE_LESSON_TIME + VALID_LESSON_TIME_2;
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withLessonTimeToAdd(VALID_LESSON_TIME_1)
+                .withLessonTimeToRemove(VALID_LESSON_TIME_2).build();
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);
@@ -127,9 +156,23 @@ public class EditCommandParserTest {
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
-        // lesson time
+        // lesson time to replace all
         userInput = " " + PREFIX_INDEX + targetIndex.getOneBased() + LESSON_TIME_DESC_AMY;
         descriptor = new EditPersonDescriptorBuilder().withLessonTime(VALID_LESSON_TIME_1, VALID_LESSON_TIME_2).build();
+        expectedCommand = new EditCommand(targetIndex, descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+
+        // lesson time to add
+        userInput = " " + PREFIX_INDEX + targetIndex.getOneBased() + " " + PREFIX_ADD_LESSON_TIME
+                + VALID_LESSON_TIME_1;
+        descriptor = new EditPersonDescriptorBuilder().withLessonTimeToAdd(VALID_LESSON_TIME_1).build();
+        expectedCommand = new EditCommand(targetIndex, descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+
+        // lesson time to delete
+        userInput = " " + PREFIX_INDEX + targetIndex.getOneBased() + " " + PREFIX_DELETE_LESSON_TIME
+                + VALID_LESSON_TIME_1;
+        descriptor = new EditPersonDescriptorBuilder().withLessonTimeToRemove(VALID_LESSON_TIME_1).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
@@ -163,5 +206,26 @@ public class EditCommandParserTest {
 
         assertParseFailure(parser, userInput,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE));
+    }
+
+    @Test
+    public void parse_mixedPrefixUsed_throwsParseException() {
+        // all 3 prefix used
+        String threePrefixInput = " " + PREFIX_INDEX + INDEX_FIRST_PERSON.getOneBased() + LESSON_TIME_DESC_AMY + " "
+                + PREFIX_ADD_LESSON_TIME + "1530 Fri " + PREFIX_DELETE_LESSON_TIME + "1800 Tue";
+
+        assertThrows(ParseException.class, () -> parser.parse(threePrefixInput));
+
+        // l/ together with l+/
+        String twoPrefixInput = " " + PREFIX_INDEX + INDEX_FIRST_PERSON.getOneBased() + LESSON_TIME_DESC_AMY + " "
+                + PREFIX_ADD_LESSON_TIME + "1530 Fri";
+
+        assertThrows(ParseException.class, () -> parser.parse(twoPrefixInput));
+
+        // l/ together with l-/
+        String userInput = " " + PREFIX_INDEX + INDEX_FIRST_PERSON.getOneBased() + LESSON_TIME_DESC_AMY + " "
+                + PREFIX_DELETE_LESSON_TIME + "1800 Tue";
+
+        assertThrows(ParseException.class, () -> parser.parse(userInput));
     }
 }

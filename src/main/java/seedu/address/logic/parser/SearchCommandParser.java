@@ -20,7 +20,9 @@ import seedu.address.model.person.StudentFieldsContainsKeywordsPredicate;
  */
 public class SearchCommandParser implements Parser<SearchCommand> {
     //allow all letters/numbers and other special characters
-    private static final Pattern VALID_CHARS = Pattern.compile("[\\p{L}\\p{N} .,'\\-/]+");
+    private static final Pattern VALID_CHARS = Pattern.compile("[\\p{L}\\p{N} .,'\\-/:@()]+");
+
+
 
     @Override
     public SearchCommand parse(String args) throws ParseException {

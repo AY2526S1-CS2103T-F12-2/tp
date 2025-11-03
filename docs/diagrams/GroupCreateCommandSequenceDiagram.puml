@@ -1,0 +1,32 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic for Group Create LOGIC_COLOR_T1
+participant "create:GroupCreateCommand" as GroupCreateCommand LOGIC_COLOR
+participant "result:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model for Model MODEL_COLOR_T1
+participant "model:Model" as Model MODEL_COLOR
+end box
+
+[-> GroupCreateCommand : execute(model)
+activate GroupCreateCommand
+
+alt model.hasGroup(name)
+  GroupCreateCommand --> GroupCreateCommand : throw CommandException(duplicate)
+else
+  GroupCreateCommand -> Model : createGroup(name)
+  create CommandResult
+  GroupCreateCommand -> CommandResult
+  activate CommandResult
+  CommandResult --> GroupCreateCommand
+  deactivate CommandResult
+  [<-- GroupCreateCommand : result
+end alt
+
+deactivate GroupCreateCommand
+[<-[hidden]- GroupCreateCommand
+destroy GroupCreateCommand
+@enduml

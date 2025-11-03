@@ -125,7 +125,9 @@ public class DeleteCommand extends Command {
             if (exactPhoneMatches.isEmpty()) {
                 List<Person> exactLessonMatches = matches.stream()
                         .filter(p -> p.getLessonTime() != null
-                                && p.getLessonTime().toString().trim().toLowerCase().equals(keyword))
+                                && p.getLessonTime().stream()
+                                .map(lt -> lt.toString().trim().toLowerCase())
+                                .anyMatch(t -> t.equals(keyword)))
                         .toList();
 
                 if (exactLessonMatches.size() == 1) {

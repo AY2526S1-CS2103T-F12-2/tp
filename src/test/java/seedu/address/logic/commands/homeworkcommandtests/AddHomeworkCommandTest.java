@@ -257,7 +257,7 @@ public class AddHomeworkCommandTest {
      */
     @Test
     public void execute_success_addhomework() throws Exception {
-        Homework homework = new Homework("Math WS 3", LocalDate.parse("2025-10-23"));
+        Homework homework = new Homework("Math WS 3", LocalDate.parse("2026-10-23"));
         AddHomeworkCommand command = new AddHomeworkCommand(marcusName, homework);
         Model model = new ModelStubFilteredOnly(List.of(marcus));
         CommandResult result = command.execute(model);
@@ -278,7 +278,7 @@ public class AddHomeworkCommandTest {
     @Test
     public void execute_nameNotInFilteredList() {
         Model model = new ModelStubFilteredOnly(List.of(john));
-        Homework homework = new Homework("Math WS 3", LocalDate.parse("2025-10-23"));
+        Homework homework = new Homework("Math WS 3", LocalDate.parse("2026-10-23"));
         AddHomeworkCommand command = new AddHomeworkCommand(marcusName, homework);
         CommandException exception = assertThrows(CommandException.class, () -> command.execute(model));
         assertEquals(AddHomeworkCommand.MESSAGE_NO_PERSON_FOUND, exception.getMessage());
@@ -291,7 +291,7 @@ public class AddHomeworkCommandTest {
      */
     @Test
     public void execute_duplicateHomework_throwsDuplicate() {
-        Homework homework = new Homework("Reading", LocalDate.parse("2025-12-01"));
+        Homework homework = new Homework("Reading", LocalDate.parse("2026-12-01"));
         marcus.addHomework(homework);
 
         Model model = new ModelStubFilteredOnly(List.of(marcus));
@@ -310,7 +310,7 @@ public class AddHomeworkCommandTest {
      */
     @Test
     public void execute_onlyTargetGetsHomework_whenMultipleInFilteredList() throws Exception {
-        Homework homework = new Homework("Physics WS", LocalDate.parse("2025-11-30"));
+        Homework homework = new Homework("Physics WS", LocalDate.parse("2026-11-30"));
         Model model = new ModelStubFilteredOnly(List.of(john, marcus));
 
         AddHomeworkCommand command = new AddHomeworkCommand(marcusName, homework);
@@ -326,16 +326,63 @@ public class AddHomeworkCommandTest {
         assertEquals(2, model.getFilteredReminderList().size());
     }
 
+
+    /**
+     * When deadline is in the past, command still succeeds but appends a warning.
+     */
+    @Test
+    public void execute_pastDeadline_appendsWarning() throws Exception {
+        LocalDate past = LocalDate.now().minusDays(1);
+        Homework homework = new Homework("Overdue WS", past);
+        Model model = new ModelStubFilteredOnly(List.of(marcus));
+
+        AddHomeworkCommand command = new AddHomeworkCommand(marcusName, homework);
+        CommandResult result = command.execute(model);
+
+        String expectedBase = String.format(AddHomeworkCommand.MESSAGE_SUCCESS,
+                marcus.getName().fullName, homework.getDescription(), homework.getDeadline());
+
+        assertTrue(result.getFeedbackToUser().startsWith(expectedBase),
+                "Result should start with the success message");
+        assertTrue(result.getFeedbackToUser().contains(AddHomeworkCommand.MESSAGE_DUE_DATE_PASSED),
+                "Result should include the due-date warning");
+        assertTrue(marcus.getHomeworkList().contains(homework), "Homework should still be added");
+    }
+
+    /**
+     * When deadline is today or in the future, no warning is appended.
+     */
+    @Test
+    public void execute_todayOrFutureDeadline_noWarning() throws Exception {
+
+        Homework hwToday = new Homework("Today WS", LocalDate.now());
+
+        Homework hwFuture = new Homework("Future WS", LocalDate.now().plusDays(7));
+
+        Model model = new ModelStubFilteredOnly(List.of(marcus));
+
+        CommandResult resToday = new AddHomeworkCommand(marcusName, hwToday).execute(model);
+        String expectedToday = String.format(AddHomeworkCommand.MESSAGE_SUCCESS,
+                marcus.getName().fullName, hwToday.getDescription(), hwToday.getDeadline());
+        assertEquals(expectedToday, resToday.getFeedbackToUser());
+
+        CommandResult resFuture = new AddHomeworkCommand(marcusName, hwFuture).execute(model);
+        String expectedFuture = String.format(AddHomeworkCommand.MESSAGE_SUCCESS,
+                marcus.getName().fullName, hwFuture.getDescription(), hwFuture.getDeadline());
+        assertEquals(expectedFuture, resFuture.getFeedbackToUser());
+    }
+
+
     /**
      * Tests for equality as specified under {@link AddHomeworkCommand}
      */
     @Test
     public void equals_various() {
-        Homework homework1 = new Homework("A", LocalDate.parse("2025-10-01"));
-        Homework homework2 = new Homework("B", LocalDate.parse("2025-10-02"));
+        Homework homework1 = new Homework("A", LocalDate.parse("2026-10-01"));
+        Homework homework2 = new Homework("B", LocalDate.parse("2026-10-02"));
         AddHomeworkCommand a1 = new AddHomeworkCommand(marcusName, homework1);
         AddHomeworkCommand a1copy = new AddHomeworkCommand(new Name("Marcus"),
-                new Homework("A", LocalDate.parse("2025-10-01")));
+                new Homework("A", LocalDate.parse("2026-10-01")));
         AddHomeworkCommand a2 = new AddHomeworkCommand(marcusName, homework2);
         AddHomeworkCommand b1 = new AddHomeworkCommand(johnName, homework1);
 

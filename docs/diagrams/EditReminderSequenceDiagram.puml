@@ -1,0 +1,74 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic for Edit Reminder LOGIC_COLOR_T1
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":EditReminderCommandParser" as EditReminderCommandParser LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant ":EditReminderDescriptor" as EditReminderDescriptor LOGIC_COLOR
+participant "editReminder:EditReminderCommand" as EditReminderCommand LOGIC_COLOR
+end box
+
+[-> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create EditReminderCommandParser
+AddressBookParser -> EditReminderCommandParser
+activate EditReminderCommandParser
+
+EditReminderCommandParser --> AddressBookParser
+deactivate EditReminderCommandParser
+
+AddressBookParser -> EditReminderCommandParser : parse(arguments)
+activate EditReminderCommandParser
+
+EditReminderCommandParser -> ParserUtil : parseIndex()
+activate ParserUtil
+
+ParserUtil -> EditReminderCommandParser : index
+deactivate ParserUtil
+
+create EditReminderDescriptor
+EditReminderCommandParser -> EditReminderDescriptor
+activate EditReminderDescriptor
+
+EditReminderDescriptor --> EditReminderCommandParser
+deactivate EditReminderDescriptor
+
+opt getValue(PREFIX_DATE).isPresent()
+    EditReminderCommandParser -> ParserUtil : parseDueDate()
+    activate ParserUtil
+
+    ParserUtil --> EditReminderCommandParser : dueDate
+    deactivate ParserUtil
+
+    EditReminderCommandParser -> EditReminderDescriptor : setDueDate()
+end opt
+
+opt getValue(PREFIX_DESC).isPresent()
+    EditReminderCommandParser -> ParserUtil : parseReminderDescription()
+    activate ParserUtil
+
+    ParserUtil --> EditReminderCommandParser : description
+    deactivate ParserUtil
+
+    EditReminderCommandParser -> EditReminderDescriptor : setDescription()
+end opt
+
+create EditReminderCommand
+EditReminderCommandParser -> EditReminderCommand
+activate EditReminderCommand
+
+EditReminderCommand --> EditReminderCommandParser
+deactivate EditReminderCommand
+
+EditReminderCommandParser --> AddressBookParser : editReminder
+deactivate EditReminderCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+EditReminderCommandParser -[hidden]-> AddressBookParser
+destroy EditReminderCommandParser
+
+[<-- AddressBookParser : editReminder
+deactivate AddressBookParser
+@enduml

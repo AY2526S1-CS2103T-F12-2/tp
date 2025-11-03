@@ -16,7 +16,7 @@ public class TypicalReminders {
             .withDescription("Benson: Prepare for English lesson").build();
     public static final Reminder REMINDER_3 = new ReminderBuilder().withDueDate("2025-10-25")
             .withDescription("Carl: Assignment review").build();
-    public static final Reminder REMINDER_4 = new ReminderBuilder().withDueDate("2025-11-01")
+    public static final Reminder REMINDER_4 = new ReminderBuilder().withDueDate("2026-11-01")
             .withDescription("Daniel: Feedback session").build();
 
     private TypicalReminders() {

@@ -48,7 +48,7 @@ public class CommandTestUtil {
     public static final String INVALID_LESSON_TIME_DESC = " " + PREFIX_LESSON_TIME + "02:00am"; // not in 24-hour format
 
     public static final String VALID_DUEDATE_1 = "2025-11-03 1400";
-    public static final String VALID_DUEDATE_2 = "2025-11-05";
+    public static final String VALID_DUEDATE_2 = "2026-11-05";
     public static final String VALID_DESCRIPTION_1 = "Benson: Mock test practice";
     public static final String VALID_DESCRIPTION_2 = "Payment overdue";
 

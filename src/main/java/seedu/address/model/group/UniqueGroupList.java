@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +31,18 @@ public final class UniqueGroupList implements Iterable<Group> {
      */
     public boolean contains(GroupName name) {
         requireNonNull(name);
-        return internalList.stream().anyMatch(g -> g.getName().equals(name));
+        return getByName(name).isPresent();
+    }
+
+    /**
+     * Returns the group with the given {@code name}.
+     *
+     * @param name group name to get (non-null)
+     * @return group with the given name, wrapped in an {@link Optional}, or empty if not found
+     */
+    public Optional<Group> getByName(GroupName name) {
+        requireNonNull(name);
+        return internalList.stream().filter(g -> g.getName().equals(name)).findFirst();
     }
 
     /**

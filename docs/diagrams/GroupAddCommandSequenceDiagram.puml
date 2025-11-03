@@ -1,0 +1,36 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic for Group Add LOGIC_COLOR_T1
+participant "add:GroupAddCommand" as GroupAddCommand LOGIC_COLOR
+participant "result:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model for Model MODEL_COLOR_T1
+participant "model:Model" as Model MODEL_COLOR
+end box
+
+[-> GroupAddCommand : execute(model)
+activate GroupAddCommand
+
+alt !model.hasGroup(name)
+  GroupAddCommand --> GroupAddCommand : throw CommandException(group not found)
+else
+  GroupAddCommand -> Model : getFilteredPersonList()
+  GroupAddCommand -> GroupAddCommand : resolveMembers(indices)
+  GroupAddCommand -> Model : addToGroup(name, members)
+
+  create CommandResult
+  GroupAddCommand -> CommandResult
+  activate CommandResult
+  CommandResult --> GroupAddCommand
+  deactivate CommandResult
+
+  [<-- GroupAddCommand : result
+end alt
+
+deactivate GroupAddCommand
+[<-[hidden]- GroupAddCommand
+destroy GroupAddCommand
+@enduml

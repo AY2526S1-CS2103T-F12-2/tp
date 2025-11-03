@@ -69,7 +69,7 @@ public class PersonCard extends UiPart<Region> {
         name.setText(person.getName().fullName);
         phone.setText(person.getPhone().value);
         person.getLessonTime().stream()
-                .sorted(Comparator.comparing(LessonTime::toString))
+                .sorted(Comparator.comparing((LessonTime lt) -> lt.day).thenComparing(lt -> lt.time))
                 .forEach(lt -> lessonTime.getChildren().add(new Label(lt.toString())));
         HomeworkListPanel panel = new HomeworkListPanel(person.getHomeworkList());
         homeworkPlaceholder.getChildren().setAll(panel.getRoot());
