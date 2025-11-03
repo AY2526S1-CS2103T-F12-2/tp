@@ -8,6 +8,7 @@ import java.util.Set;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -19,6 +20,7 @@ import javafx.scene.text.Text;
 import seedu.address.model.group.GroupName;
 import seedu.address.model.person.LessonTime;
 import seedu.address.model.person.ParticipationHistory;
+import seedu.address.model.person.ParticipationRecord;
 import seedu.address.model.person.Person;
 
 /**
@@ -96,22 +98,32 @@ public class PersonCard extends UiPart<Region> {
 
     private void renderParticipation(ParticipationHistory history) {
         if (boxes == null || dateRow == null || history == null) {
-            return;
+            return; // FXML fields not present or no history yet
         }
 
         boxes.getChildren().clear();
         dateRow.getChildren().clear();
 
-        List<ParticipationViewModel.Slot> slots = ParticipationViewModel.computeSlots(history);
+        // Oldest -> newest, padded to 5 (nulls for missing oldest entries)
+        List<ParticipationRecord> five = history.asListPaddedToFive();
 
-        for (ParticipationViewModel.Slot s : slots) {
+        // Build the label strings (pure logic, unit-testable)
+        List<String> labels = ParticipationLabelUtil.formatLabels(five);
+
+        for (int i = 0; i < five.size(); i++) {
+            ParticipationRecord r = five.get(i);
+
             // ----- date label (top row) -----
-            Label d = new Label(s.dateLabel);
+            Label d = new Label(labels.get(i));
             d.getStyleClass().add("date-mini");
             d.setMinWidth(44);
             d.setPrefWidth(44);
             d.setMaxWidth(Region.USE_PREF_SIZE);
             d.setAlignment(Pos.CENTER);
+            d.setWrapText(true);
+            if (r != null) {
+                Tooltip.install(d, new Tooltip(r.getDate().toString())); // ISO tooltip
+            }
             dateRow.getChildren().add(d);
 
             // ----- score box (bottom row) -----
@@ -124,11 +136,11 @@ public class PersonCard extends UiPart<Region> {
             Rectangle rect = new Rectangle(24, 24);
             rect.getStyleClass().add("participation-box");
 
-            Text t = new Text(s.scoreText);
-
+            Text t = new Text(r == null ? "" : Integer.toString(r.getScore()));
             cell.getChildren().addAll(rect, t);
             boxes.getChildren().add(cell);
         }
+
     }
 
     /**

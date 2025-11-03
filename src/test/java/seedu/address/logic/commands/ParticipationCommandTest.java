@@ -191,6 +191,30 @@ public class ParticipationCommandTest {
         assertEquals("Invalid student name: name cannot be empty.", ex.getMessage());
     }
 
+    @Test
+    public void execute_futureDate_throws() {
+        Model model = new ParticipationCommandTest.ModelStubWithPerson("Alex Yeoh");
+        String future = LocalDate.now().plusDays(1).toString();
+        ParticipationCommand cmd = new ParticipationCommand("Alex Yeoh", future, "3");
+        CommandException ex = assertThrows(CommandException.class, () -> cmd.execute(model));
+        assertEquals("Invalid date. Participation date cannot be in the future.", ex.getMessage());
+    }
+
+    @Test
+    public void execute_today_ok() throws Exception {
+        ModelStubWithPerson model = new ParticipationCommandTest.ModelStubWithPerson("Alex Yeoh");
+        String today = LocalDate.now().toString();
+        ParticipationCommand cmd = new ParticipationCommand("Alex Yeoh", today, "2");
+
+        CommandResult result = cmd.execute(model);
+        assertEquals("Success: Participation recorded: Alex Yeoh, " + today + ", score=2.",
+                result.getFeedbackToUser());
+
+        ParticipationRecord recent = model.person.getParticipation().mostRecent();
+        assertEquals(LocalDate.parse(today), recent.getDate());
+        assertEquals(2, recent.getScore());
+    }
+
     /**
      * Minimal model stub supporting hasPersonName() and AttendanceIndex.
      * Model stub that:
