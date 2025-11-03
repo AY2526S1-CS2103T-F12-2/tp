@@ -14,6 +14,9 @@ import static seedu.address.testutil.TypicalAddressBook.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_REMINDER;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_REMINDER;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.junit.jupiter.api.Test;
 
 import javafx.collections.ObservableList;
@@ -60,10 +63,11 @@ public class EditReminderCommandTest {
         Reminder lastReminder = model.getFilteredReminderList().get(indexLastReminder.getZeroBased());
 
         ReminderBuilder reminderInList = new ReminderBuilder(lastReminder);
-        Reminder editedReminder = reminderInList.withDueDate(VALID_DUEDATE_1).build();
+        String tmr = LocalDateTime.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        Reminder editedReminder = reminderInList.withDueDate(tmr).build();
 
         EditReminderDescriptor descriptor = new EditReminderDescriptorBuilder()
-                .withDueDate(VALID_DUEDATE_1).build();
+                .withDueDate(tmr).build();
         EditReminderCommand editCommand = new EditReminderCommand(indexLastReminder, descriptor);
 
         String expectedMessage = String.format(EditReminderCommand.MESSAGE_EDIT_REMINDER_SUCCESS,
