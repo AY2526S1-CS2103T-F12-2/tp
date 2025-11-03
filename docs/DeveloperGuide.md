@@ -856,9 +856,12 @@ Use case ends.
 - 2d. Homework already in list
   - System displays “This student has already been assigned this homework” and aborts operation.
   - Use case ends.
+- 2e. Homework description is too long
+  - System displays "Description is too long(max 50 Characters)"
+  - Use case ends
 - 2f. Due date has already passed
-  - System displays success message with warning: "Due date is in the past"
-  - Use case ends.
+  - System displays success message with warning: "⚠️ Warning: Deadline is before current date"
+  - Resumes from step 3
 
 **Use case 5: Mark Homework as Done**
 
@@ -1147,8 +1150,10 @@ Dec: ✓ Paid`
 1. Adding a homework to an existing student
 
   1. Prerequisites:
-    - Ensure at least one student (e.g., Marcus) is in the list using `list`.
+    - Ensure at least one student (e.g., Marcus) is in the displayed list.
     - The student has no existing homework with the same description and due date.
+    - Date input is either current date or in the future
+
 
   1. Test case:  
      `add-homework n/Marcus desc/Math Assignment 3 by/2025-11-15`  
@@ -1181,7 +1186,7 @@ Dec: ✓ Paid`
 1. Marking an existing homework as done
 
   1. Prerequisites:
-    - At least one student (e.g., Marcus) has at least one homework entry.
+    - At least one student (e.g., Marcus) has at least one homework entry shown in displayed list
     - Homework is currently *undone* (not marked as done).
 
   1. Test case:  
@@ -1194,6 +1199,11 @@ Dec: ✓ Paid`
      Expected: Error message displayed:  
      `Invalid homework index: 99 (valid range: 1 to [number of homeworks])`
 
+  1. Test case:
+     `mark-done n/marcus i/-1`
+     Expected: Error message displayed:
+     `Index is not a non-zero unsigned integer.`
+
   1. Test case:  
      Run `mark-done` again for the same homework.  
      Expected: System displays same success message (no state change).
@@ -1205,7 +1215,7 @@ Dec: ✓ Paid`
 1. Marking a completed homework as undone
 
   1. Prerequisites:
-    - At least one student (e.g., Marcus) has at least one **done** homework entry.
+    - At least one student (e.g., Marcus) has at least one **done** homework entry shown in displayed list
 
   1. Test case:  
      `mark-undone n/Marcus Yeoh i/1`  
@@ -1216,6 +1226,11 @@ Dec: ✓ Paid`
      `mark-undone n/Marcus Yeoh i/99`  
      Expected: Error message displayed:  
      `Invalid homework index: 99 (valid range: 1 to [number of homeworks])`
+
+  1. Test case:
+     `mark-undone n/marcus i/-1`
+     Expected: Error message displayed:
+     `Index is not a non-zero unsigned integer.`
 
   1. Test case:  
      Run `mark-undone` again for the same undone homework.  

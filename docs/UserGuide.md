@@ -413,6 +413,7 @@ Format: `add-homework n/NAME desc/DESCRIPTION by/DEADLINE`
 * `DESCRIPTION` refers to the details of the homework (Maximum of 50 Characters)
 * `DEADLINE` refers to the due date of the homework. It is in the `YYYY-MM-DD` format.
 * If `DEADLINE` is before current date, a warning message: `⚠️ Warning: Deadline is before current date` will be shown below success message with homework still being successfully added to list
+* * **⚠️ Warning:** This command will not work if the student is not visible in the current list view.
 
 Examples:
 * `add-homework n/Marcus desc/Math Worksheet 1 by/2025-10-27` Assigns the homework `Math Worksheet 1` and its due date `2025-10-27` to the student `Marcus`.
