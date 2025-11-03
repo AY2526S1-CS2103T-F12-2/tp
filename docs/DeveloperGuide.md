@@ -1323,7 +1323,7 @@ I was primarily responsible for implementing and testing the **Search feature** 
 I was primarily responsible for updating the delete feature and implementing the payment tracking system.
 
 - **Delete Feature**
-    - Implemented the `delete-student` command that allows tutors to delete students by name, subject, or level.
+    - Modified the `delete-student` command that allows tutors to delete students by name, subject, or level.
 
 - **Payment Tracker**
     - Designed and implemented all payment related commands:
