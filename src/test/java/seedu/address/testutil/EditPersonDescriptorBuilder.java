@@ -60,6 +60,26 @@ public class EditPersonDescriptorBuilder {
         return this;
     }
 
+    /**
+     * Parses the {@code lessonTime} into a {@code Set<LessonTime>} and set it to the {@code EditPersonDescriptor}
+     * that we are building.
+     */
+    public EditPersonDescriptorBuilder withLessonTimeToAdd(String... lessonTime) {
+        Set<LessonTime> lessonTimeSet = Stream.of(lessonTime).map(LessonTime::new).collect(Collectors.toSet());
+        descriptor.setLessonTimesToAdd(lessonTimeSet);
+        return this;
+    }
+
+    /**
+     * Parses the {@code lessonTime} into a {@code Set<LessonTime>} and set it to the {@code EditPersonDescriptor}
+     * that we are building.
+     */
+    public EditPersonDescriptorBuilder withLessonTimeToRemove(String... lessonTime) {
+        Set<LessonTime> lessonTimeSet = Stream.of(lessonTime).map(LessonTime::new).collect(Collectors.toSet());
+        descriptor.setLessonTimesToRemove(lessonTimeSet);
+        return this;
+    }
+
     public EditPersonDescriptor build() {
         return descriptor;
     }

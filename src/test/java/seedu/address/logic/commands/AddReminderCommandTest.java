@@ -61,6 +61,15 @@ public class AddReminderCommandTest {
     }
 
     @Test
+    public void execute_addOverdueReminder_throwsCommandException() {
+        ModelStubAcceptingReminderAdded modelStub = new ModelStubAcceptingReminderAdded();
+        Reminder reminder = new ReminderBuilder().withDueDate("2020-11-11").build();
+        AddReminderCommand addCommand = new AddReminderCommand(reminder);
+        assertThrows(CommandException.class, AddReminderCommand.MESSAGE_OVERDUE_REMINDER, ()
+                -> addCommand.execute(modelStub));
+    }
+
+    @Test
     public void equals() {
         Reminder r1 = new ReminderBuilder().build();
         Reminder r2 = new ReminderBuilder().withDueDate(VALID_DUEDATE_1).build();

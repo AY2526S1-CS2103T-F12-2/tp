@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_REMINDER_DISPLAYED_INDEX;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_INDEX;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_KEYWORD;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_REMINDERS;
 
 import java.util.List;
 import java.util.Optional;
@@ -101,6 +102,7 @@ public class DeleteReminderCommand extends Command {
         if (exactDueDateMatches.size() == 1) {
             Reminder reminderToDelete = isModifiableReminder(exactDueDateMatches.get(0));
             model.deleteReminder(reminderToDelete);
+            model.updateFilteredReminderList(PREDICATE_SHOW_ALL_REMINDERS);
             return new CommandResult(String.format(MESSAGE_DELETE_REMINDER_SUCCESS, Messages.format(reminderToDelete)));
         }
 
@@ -115,6 +117,7 @@ public class DeleteReminderCommand extends Command {
             if (exactDescriptionMatches.size() == 1) {
                 Reminder reminderToDelete = isModifiableReminder(exactDescriptionMatches.get(0));
                 model.deleteReminder(reminderToDelete);
+                model.updateFilteredReminderList(PREDICATE_SHOW_ALL_REMINDERS);
                 return new CommandResult(String.format(MESSAGE_DELETE_REMINDER_SUCCESS,
                         Messages.format(reminderToDelete)));
             } else {

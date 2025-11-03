@@ -1,0 +1,17 @@
+@startuml
+Package Reminder as ReminderPackage <<Rectangle>> {
+Class Reminder
+Class "{abstract}\nUnmodifiableReminder" as UnmodifiableReminder extends Reminder
+Class UnmodifiablePaymentReminder extends UnmodifiableReminder
+Class UnmodifiableHwReminder extends UnmodifiableReminder
+Class DueDate
+Class Description
+}
+
+Reminder -l- "1" DueDate
+Reminder -r- "1" Description
+
+hide circle
+hide members
+hide footbox
+@enduml

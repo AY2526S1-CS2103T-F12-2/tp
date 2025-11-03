@@ -16,10 +16,14 @@ Class UniquePersonList
 Class UniqueReminderList
 Class Person
 Class Reminder
+Class "{abstract}\nUnmodifiableReminder" as UnmodifiableReminder
+Class UnmodifiablePaymentReminder
+Class UnmodifiableHwReminder
 Class Name
 Class Phone
 Class LessonTime
 Class PaymentStatus
+Class HomeworkList
 Class Participation
 Class DueDate
 Class Description
@@ -45,12 +49,17 @@ Person *--> "1" Name
 Person *--> "1" Phone
 Person *--> "1..*" LessonTime
 Person *--> PaymentStatus
+Person *--> HomeworkList
 Person *--> Participation
 
 AddressBook *--> "1" UniqueReminderList
 UniqueReminderList --> "~* all" Reminder
 Reminder *--> "1" DueDate
 Reminder *--> "1" Description
+
+UnmodifiableReminder -up-|> Reminder
+UnmodifiablePaymentReminder -up-|> UnmodifiableReminder
+UnmodifiableHwReminder -up-|> UnmodifiableReminder
 
 Person -[hidden]left--> Reminder
 Reminder -[hidden]up--> I
@@ -60,7 +69,8 @@ UniqueReminderList -[hidden]right-> I
 Name -[hidden]right-> Phone
 Phone -[hidden]right-> LessonTime
 LessonTime -[hidden]right-> PaymentStatus
-PaymentStatus -[hidden]right-> Participation
+PaymentStatus -[hidden]right-> HomeworkList
+HomeworkList -[hidden]right-> Participation
 
 DueDate -[hidden]right-> Description
 

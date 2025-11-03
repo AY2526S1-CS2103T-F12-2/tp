@@ -7,6 +7,7 @@ skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
 hide stereotypes
 hide fields
+hide circle
 show methods
 left to right direction
 

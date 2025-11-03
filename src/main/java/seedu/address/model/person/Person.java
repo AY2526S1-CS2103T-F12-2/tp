@@ -164,6 +164,13 @@ public class Person {
     }
 
     /**
+     * Replaces the current {@code paymentStatus} with the given {@code status}.
+     */
+    public void setAllPaymentStatus(BitSet status) {
+        this.paymentStatus = status;
+    }
+
+    /**
      * Updates the payment status for a specific month.
      * Modifies the current person object instead of creating a new one.
      */
@@ -233,6 +240,16 @@ public class Person {
     private void copyParticipationHistory(Person source, Person target) {
         for (ParticipationRecord record : source.participation.asList()) {
             target.participation.add(record);
+        }
+    }
+
+    /**
+     * Resets all payments if it's a new year
+     */
+    public void resetPaymentsIfNewYear() {
+        java.time.LocalDate now = java.time.LocalDate.now();
+        if (now.getMonthValue() == 1 && now.getDayOfMonth() == 1) {
+            this.paymentStatus = new BitSet(12);
         }
     }
 }

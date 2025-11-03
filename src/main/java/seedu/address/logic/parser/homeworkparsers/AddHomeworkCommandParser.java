@@ -54,6 +54,9 @@ public class AddHomeworkCommandParser implements Parser<AddHomeworkCommand> {
         String description = ParserUtil.parseDescription(argMultimap.getValue(PREFIX_DESC).get());
         LocalDate deadline = ParserUtil.parseDate(argMultimap.getValue(PREFIX_DEADLINE).get());
 
+        if (description.length() > 50) {
+            throw new ParseException(AddHomeworkCommand.MESSAGE_DESC_TOO_LONG);
+        }
 
         Homework hw = new Homework(description, deadline);
         return new AddHomeworkCommand(name, hw);

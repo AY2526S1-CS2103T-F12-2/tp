@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.model.group.Group;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.reminder.Reminder;
@@ -128,8 +129,10 @@ public class AddressBookTest {
     public void toStringMethod() {
         String expected = AddressBook.class.getCanonicalName()
                 + "{persons=" + addressBook.getPersonList() + ", "
+                + "groups=" + addressBook.getGroups() + ", "
                 + "reminders=" + addressBook.getReminderList() + "}";
-        assertEquals(expected, addressBook.toString());
+        assertEquals(expected, addressBook.toString(), () ->
+                "Diff:\nEXPECTED:\n" + expected + "\n\nACTUAL:\n" + addressBook.toString());
     }
 
     /**
@@ -137,6 +140,7 @@ public class AddressBookTest {
      */
     private static class AddressBookStub implements ReadOnlyAddressBook {
         private final ObservableList<Person> persons = FXCollections.observableArrayList();
+        private final ObservableList<Group> groups = FXCollections.observableArrayList();
         private final ObservableList<Reminder> reminders = FXCollections.observableArrayList();
 
         AddressBookStub(Collection<Person> persons, Collection<Reminder> reminders) {
@@ -147,6 +151,11 @@ public class AddressBookTest {
         @Override
         public ObservableList<Person> getPersonList() {
             return persons;
+        }
+
+        @Override
+        public ObservableList<Group> getGroups() {
+            return groups;
         }
 
         @Override

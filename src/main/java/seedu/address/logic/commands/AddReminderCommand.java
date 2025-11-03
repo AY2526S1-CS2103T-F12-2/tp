@@ -28,6 +28,7 @@ public class AddReminderCommand extends Command {
 
     public static final String MESSAGE_SUCCESS = "Reminder added. %1$s";
     public static final String MESSAGE_DUPLICATE_REMINDER = "This reminder already exists in the reminder list";
+    public static final String MESSAGE_OVERDUE_REMINDER = "Reminders must be set for a future date or time";
 
     private final Reminder toAdd;
 
@@ -42,6 +43,10 @@ public class AddReminderCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+
+        if (toAdd.isOverdue()) {
+            throw new CommandException(MESSAGE_OVERDUE_REMINDER);
+        }
 
         if (model.hasReminder(toAdd)) {
             throw new CommandException(MESSAGE_DUPLICATE_REMINDER);

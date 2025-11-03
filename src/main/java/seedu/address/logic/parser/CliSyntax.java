@@ -16,4 +16,6 @@ public class CliSyntax {
     public static final Prefix PREFIX_DESC = new Prefix("desc/");
     public static final Prefix PREFIX_DEADLINE = new Prefix("by/");
     public static final Prefix PREFIX_GROUP = new Prefix("g/");
+    public static final Prefix PREFIX_ADD_LESSON_TIME = new Prefix("t+/");
+    public static final Prefix PREFIX_DELETE_LESSON_TIME = new Prefix("t-/");
 }

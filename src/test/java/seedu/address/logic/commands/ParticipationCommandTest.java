@@ -231,6 +231,11 @@ public class ParticipationCommandTest {
                 }
 
                 @Override
+                public ObservableList<Group> getGroups() {
+                    return FXCollections.observableArrayList();
+                }
+
+                @Override
                 public ObservableList<Reminder> getReminderList() {
                     return null;
                 }

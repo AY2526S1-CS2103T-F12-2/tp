@@ -2,6 +2,8 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_ADD_LESSON_TIME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DELETE_LESSON_TIME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_INDEX;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_LESSON_TIME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
@@ -25,7 +27,12 @@ import seedu.address.model.person.LessonTime;
  * This parser expects an index and at least 1 other prefix to be provided in the argument in the form:
  * {@code edit-student i/INDEX [n/NAME] [p/PHONE_NUMBER] [t/LESSON_TIME]...}, where {@code INDEX} refers to the
  * position of the student in the displayed list that is to be edited, and {@code NAME}, {@code PHONE_NUMBER},
- * and {@code LESSON_TIME} refer to the new values of the respective fields to be updated.
+ * and {@code LESSON_TIME} refer to the new values of the respective fields to be updated. Prefix {@code t/} will
+ * replace existing set of lesson time to the new input {@code LESSON_TIME}.
+ * <p>
+ * Another form is {@code edit-student i/INDEX [n/NAME] [p/PHONE_NUMBER] [t+/LESSON_TIME]... [t-/LESSON_TIME]...}
+ * where prefix {@code t+/} and {@code t-/} represents lesson time to add onto and remove from existing set of
+ * lesson times respectively.
  */
 public class EditCommandParser implements Parser<EditCommand> {
     /**
@@ -37,7 +44,8 @@ public class EditCommandParser implements Parser<EditCommand> {
     public EditCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_INDEX, PREFIX_NAME, PREFIX_PHONE, PREFIX_LESSON_TIME);
+                ArgumentTokenizer.tokenize(args, PREFIX_INDEX, PREFIX_NAME, PREFIX_PHONE, PREFIX_LESSON_TIME,
+                        PREFIX_ADD_LESSON_TIME, PREFIX_DELETE_LESSON_TIME);
 
         if (!arePrefixesPresent(argMultimap, PREFIX_INDEX)
                 || !argMultimap.getPreamble().isEmpty()) {
@@ -56,8 +64,29 @@ public class EditCommandParser implements Parser<EditCommand> {
         if (argMultimap.getValue(PREFIX_PHONE).isPresent()) {
             editPersonDescriptor.setPhone(ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get()));
         }
-        parseLessonTimeForEdit(argMultimap.getAllValues(PREFIX_LESSON_TIME))
-                .ifPresent(editPersonDescriptor::setLessonTime);
+
+        boolean hasReplace = !argMultimap.getAllValues(PREFIX_LESSON_TIME).isEmpty();
+        boolean hasAdd = !argMultimap.getAllValues(PREFIX_ADD_LESSON_TIME).isEmpty();
+        boolean hasDelete = !argMultimap.getAllValues(PREFIX_DELETE_LESSON_TIME).isEmpty();
+
+        if (hasReplace && (hasAdd || hasDelete)) {
+            throw new ParseException(EditCommand.MESSAGE_MIXED_PREFIX);
+        }
+
+        if (hasReplace) {
+            parseLessonTimeForEdit(argMultimap.getAllValues(PREFIX_LESSON_TIME))
+                    .ifPresent(editPersonDescriptor::setLessonTime);
+        }
+
+        if (hasAdd) {
+            parseLessonTimeForEdit(argMultimap.getAllValues(PREFIX_ADD_LESSON_TIME))
+                    .ifPresent(editPersonDescriptor::setLessonTimesToAdd);
+        }
+
+        if (hasDelete) {
+            parseLessonTimeForEdit(argMultimap.getAllValues(PREFIX_DELETE_LESSON_TIME))
+                    .ifPresent(editPersonDescriptor::setLessonTimesToRemove);
+        }
 
         if (!editPersonDescriptor.isAnyFieldEdited()) {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
@@ -81,7 +110,7 @@ public class EditCommandParser implements Parser<EditCommand> {
     /**
      * Parses {@code Collection<String> lessonTime} into a {@code Set<LessonTime>} if {@code lessonTime} is non-empty.
      * If {@code lessonTime} contain only one element which is an empty string, it will be parsed into a
-     * {@code Set<LessonTime>} containing zero tags.
+     * {@code Set<LessonTime>} containing zero lesson time.
      */
     private Optional<Set<LessonTime>> parseLessonTimeForEdit(Collection<String> lessonTime) throws ParseException {
         assert lessonTime != null;

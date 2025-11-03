@@ -63,6 +63,11 @@ public class ParticipationCommandPersistenceTest {
                 }
 
                 @Override
+                public ObservableList<Group> getGroups() {
+                    return FXCollections.observableArrayList(); // no groups needed for this test
+                }
+
+                @Override
                 public ObservableList<Reminder> getReminderList() {
                     return FXCollections.observableArrayList();
                 }

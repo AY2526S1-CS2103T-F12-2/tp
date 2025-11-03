@@ -29,10 +29,8 @@ import seedu.address.model.reminder.UnmodifiablePaymentReminder;
  */
 public class AddressBook implements ReadOnlyAddressBook {
     private final UniquePersonList persons;
-    private final UniqueReminderList reminders;
-
-    // NEW: first-class groups + membership relation
     private final UniqueGroupList groups;
+    private final UniqueReminderList reminders;
     private final MembershipIndex memberships;
 
     /*
@@ -45,7 +43,6 @@ public class AddressBook implements ReadOnlyAddressBook {
     {
         persons = new UniquePersonList();
         reminders = new UniqueReminderList();
-        // NEW: init group structures
         groups = new UniqueGroupList();
         memberships = new MembershipIndex();
     }
@@ -252,6 +249,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     public String toString() { // keep concise; groups/memberships omitted to avoid noisy logs
         return new ToStringBuilder(this)
                 .add("persons", persons)
+                .add("groups", getGroups())
                 .add("reminders", reminders)
                 .toString();
     }
@@ -259,6 +257,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     @Override
     public ObservableList<Person> getPersonList() {
         return persons.asUnmodifiableObservableList();
+    }
+
+    @Override
+    public ObservableList<Group> getGroups() {
+        return groups.asUnmodifiableObservableList();
     }
 
     @Override
