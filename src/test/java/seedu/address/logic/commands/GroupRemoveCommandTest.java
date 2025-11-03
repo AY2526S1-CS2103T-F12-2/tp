@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -32,27 +33,75 @@ public class GroupRemoveCommandTest {
     @Test
     public void execute_success_removesMembers() throws Exception {
         ModelStubAccepting model = new ModelStubAccepting();
-        model.createGroup(GroupName.of("Group A"));
+        GroupName g = GroupName.of("Group A");
+        model.createGroup(g);
 
         // Seed membership 1 and 3 first via add
         new GroupAddCommand(
-                GroupName.of("Group A"),
+                g,
                 List.of(Index.fromOneBased(1), Index.fromOneBased(3))
         ).execute(model);
         assertEquals(Set.of(0, 2), model.getGroupMembersIndexZero());
 
         GroupRemoveCommand cmd = new GroupRemoveCommand(
-                GroupName.of("Group A"),
+                g,
                 List.of(Index.fromOneBased(3))
         );
 
         CommandResult result = cmd.execute(model);
         assertEquals(
-                String.format(GroupRemoveCommand.MESSAGE_SUCCESS, 1, GroupName.of("Group A")),
+                String.format(GroupRemoveCommand.MESSAGE_REMOVED_FMT, 1, g),
                 result.getFeedbackToUser()
         );
         // After removal of index 3 (zero-based 2), only index 0 should remain
         assertEquals(Set.of(0), model.getGroupMembersIndexZero());
+    }
+
+    @Test
+    public void execute_noChanges_reportsMessage() throws Exception {
+        ModelStubAccepting model = new ModelStubAccepting();
+        GroupName g = GroupName.of("-");
+        model.createGroup(g);
+        // Group is empty; try remove index 3 (Charlotte)
+        GroupRemoveCommand cmd = new GroupRemoveCommand(
+                g,
+                List.of(Index.fromOneBased(3))
+        );
+
+        CommandResult result = cmd.execute(model);
+
+        String expected = String.join("\n",
+                String.format(GroupRemoveCommand.MESSAGE_NO_CHANGES_FMT, g),
+                String.format(GroupRemoveCommand.MESSAGE_NOT_IN_GROUP_FMT, "Charlotte Oliveiro")
+        );
+        assertEquals(expected, result.getFeedbackToUser());
+        assertEquals(Collections.emptySet(), model.getGroupMembersIndexZero());
+    }
+
+    @Test
+    public void execute_duplicatesReported_removedOnce() throws Exception {
+        ModelStubAccepting model = new ModelStubAccepting();
+        GroupName g = GroupName.of("Dupes");
+        model.createGroup(g);
+
+        // Seed: add person #2 only (Bernice, zero-based 1)
+        new GroupAddCommand(g, List.of(Index.fromOneBased(2))).execute(model);
+        assertEquals(Set.of(1), model.getGroupMembersIndexZero());
+
+        // Try to remove indices [2, 2, 2] (duplicate tokens should be reported once)
+        GroupRemoveCommand cmd = new GroupRemoveCommand(
+                g,
+                List.of(Index.fromOneBased(2), Index.fromOneBased(2), Index.fromOneBased(2))
+        );
+
+        CommandResult result = cmd.execute(model);
+
+        String expected = String.join("\n",
+                String.format(GroupRemoveCommand.MESSAGE_REMOVED_FMT, 1, g),
+                String.format(GroupRemoveCommand.MESSAGE_SKIPPED_DUPLICATE_INDICES_FMT, "i/2, i/2")
+        );
+        assertEquals(expected, result.getFeedbackToUser());
+        assertEquals(Collections.emptySet(), model.getGroupMembersIndexZero());
     }
 
     @Test
@@ -68,15 +117,19 @@ public class GroupRemoveCommandTest {
     @Test
     public void execute_indexOutOfBounds_throws() {
         ModelStubAccepting model = new ModelStubAccepting();
-        model.createGroup(GroupName.of("Group A"));
+        GroupName g = GroupName.of("Group A");
+        model.createGroup(g);
 
         GroupRemoveCommand cmd = new GroupRemoveCommand(
-                GroupName.of("Group A"),
+                g,
                 List.of(Index.fromOneBased(9))
         );
         assertThrows(CommandException.class, () -> cmd.execute(model));
     }
 
+    /**
+     * Minimal model stub that supports groups, membership, and lookups.
+     */
     private static class ModelStubAccepting implements Model {
 
         private final List<Person> persons = List.of(
@@ -149,7 +202,17 @@ public class GroupRemoveCommandTest {
 
         @Override
         public java.util.Set<GroupName> getGroupsOf(Person person) {
-            return Set.of();
+            int idx = persons.indexOf(person);
+            if (idx < 0) {
+                return Set.of();
+            }
+            Set<GroupName> res = new HashSet<>();
+            for (var e : membership.entrySet()) {
+                if (e.getValue().contains(idx)) {
+                    res.add(e.getKey());
+                }
+            }
+            return res;
         }
 
         @Override
