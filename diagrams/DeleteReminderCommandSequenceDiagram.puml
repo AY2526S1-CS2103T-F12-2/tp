@@ -2,7 +2,7 @@
 !include style.puml
 skinparam ArrowFontStyle plain
 
-box Logic for Delete Reminder LOGIC_COLOR_T1
+box Logic for Delete Reminder Command LOGIC_COLOR_T1
 participant "deleteReminder:DeleteReminderCommand" as DeleteReminderCommand LOGIC_COLOR
 participant "result:CommandResult" as CommandResult LOGIC_COLOR
 end box

@@ -22,6 +22,10 @@ User -> UI : type command + Enter
 UI -> Logic : execute(text)
 Logic -> ABP : parseCommand(text)
 ABP -> PCP : parse(args)
+PCP -> Cmd
+Cmd --> PCP : new ParticipationCommand
 PCP --> Logic : new ParticipationCommand
 Logic --> UI : (has Cmd)
+
+hide footbox
 @enduml
