@@ -266,7 +266,7 @@ At the top toolbar: `Filter by group: [ (All students) ▾ ]`
 3. Choose **(All students)** to clear the filter.
 
 **Keyboard usage (no mouse)**
-1. Press `Tab` until focus is on **Filter by group** (you’ll see a focus ring).
+1. Press `Tab` until the **Filter by group** box is selected (you’ll see a focus ring).
 2. Press `↓` to open the dropdown.
 3. Use `↑/↓` to move between items; press `Enter` to select.
 4. Press `Shift+Tab` to return to the command box.
