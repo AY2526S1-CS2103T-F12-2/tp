@@ -1,62 +1,46 @@
 package seedu.address.model.person;
 
 import java.time.LocalDate;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 /**
- * Stores up to 5 most recent participation records (oldest -> newest order).
+ * Stores up to 5 most recent participation records (chronological by date, oldest -> newest).
+ * For a given date, only one record is kept; adding the same date replaces the score.
  */
 public class ParticipationHistory {
     private static final int MAX = 5;
-    private final Deque<ParticipationRecord> deque = new ArrayDeque<>();
+
+    // Sorted by date; unique key per day.
+    private final NavigableMap<LocalDate, ParticipationRecord> byDate = new TreeMap<>();
 
     public ParticipationHistory() {}
 
     /**
      * Creates a participation history pre-populated with the given records.
-     * <p>
-     * Records are added in iteration order using {@link #add(ParticipationRecord)},
-     * which enforces the maximum capacity (5). If {@code records} contains more
-     * than 5 items, only the 5 most-recent (i.e., the last five encountered) are kept.
-     *
-     * @param records records to seed this history (may be {@code null}); each element must be non-{@code null}
-     * @throws NullPointerException if any element in {@code records} is {@code null}
+     * If more than 5 unique dates are given, only the 5 most recent dates are kept.
+     * If there are multiple records with the same date, the last one seen wins.
      */
     public ParticipationHistory(List<ParticipationRecord> records) {
         if (records != null) {
             for (ParticipationRecord r : records) {
-                if (r != null) { // tolerate legacy/null entries from storage
-                    add(r);
-                }
+                add(r);
             }
         }
     }
 
-    /** Adds a new record, keeping only the 5 most recent by insertion order. */
+    /** Adds/replaces by date, keeping only the 5 most recent dates. */
     public void add(ParticipationRecord record) {
         if (record == null) {
-            return; // ignore silently to avoid crashing UI on legacy/null data
+            return; // ignore nulls to match existing test expectations
         }
-
-        // Remove any existing record for the same date (compare by date only)
-        for (var it = deque.iterator(); it.hasNext(); ) {
-            ParticipationRecord existing = it.next();
-            if (existing != null && existing.getDate().equals(record.getDate())) {
-                it.remove();
-                break; // keep at most one per date
-            }
-        }
-
-        // Add as the newest record
-        deque.addLast(record);
-
-        // Enforce max size
-        while (deque.size() > MAX) {
-            deque.removeFirst();
+        byDate.put(record.getDate(), record); // replace if same date
+        // cap to last 5 dates (most recent = greatest key)
+        while (byDate.size() > MAX) {
+            byDate.pollFirstEntry(); // drop oldest date
         }
     }
 
@@ -64,16 +48,16 @@ public class ParticipationHistory {
         add(new ParticipationRecord(date, score));
     }
 
-    /** Returns an immutable list (oldest -> newest). */
+    /** Oldest -> newest, immutable list. */
     public List<ParticipationRecord> asList() {
-        return Collections.unmodifiableList(new ArrayList<>(deque));
+        return Collections.unmodifiableList(new ArrayList<>(byDate.values()));
     }
 
-    /** Returns a list padded to 5 entries, with nulls for the missing oldest entries. */
+    /** Oldest -> newest, padded to 5 with nulls at the oldest side. */
     public List<ParticipationRecord> asListPaddedToFive() {
-        List<ParticipationRecord> raw = new ArrayList<>(deque);
+        List<ParticipationRecord> raw = new ArrayList<>(byDate.values()); // oldest -> newest
         int missing = MAX - raw.size();
-        List<ParticipationRecord> padded = new ArrayList<>(missing + raw.size());
+        List<ParticipationRecord> padded = new ArrayList<>(MAX);
         for (int i = 0; i < missing; i++) {
             padded.add(null);
         }
@@ -82,10 +66,11 @@ public class ParticipationHistory {
     }
 
     public int size() {
-        return deque.size();
+        return byDate.size();
     }
 
+    /** Most recent (newest date), or {@code null} if empty. */
     public ParticipationRecord mostRecent() {
-        return deque.peekLast();
+        return byDate.isEmpty() ? null : byDate.lastEntry().getValue();
     }
 }
