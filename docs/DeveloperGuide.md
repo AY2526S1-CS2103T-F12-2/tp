@@ -488,7 +488,7 @@ Key ideas
 * Validation prevents marking an already-paid month as paid again or an already-unpaid month as unpaid again.
 * Payment status resets at the start of each new year.
 
-<img src="diagrams/MarkPaymentUseCase.png"/>
+<puml src="diagrams/MarkPaymentUseCase.puml"/>
 
 The diagram above illustrates the **Payment Management** use cases in ClassConnect. Tutors can **mark students as paid or unpaid** for specific months and **view payment status** for all students.
 
@@ -519,7 +519,7 @@ Each homework entry contains a **description**, **due date**, and completion sta
 - The command operates through the `Model` interface and updates storage via the `AddressBook`.
 - The UI displays homework items under each student card, showing description, due date, and status badges.
 
-<img src="diagrams/HomeworkUseCase.png" />
+<puml src="diagrams/HomeworkUseCase.puml" />
 
   The diagram above illustrates the **Homework Management** use cases in ClassConnect.  
   Tutors can **add**, **view**, **delete**, and **mark homework as done or undone** for each student.
