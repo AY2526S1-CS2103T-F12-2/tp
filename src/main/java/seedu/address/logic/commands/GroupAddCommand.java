@@ -3,7 +3,11 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
@@ -27,8 +31,12 @@ public class GroupAddCommand extends Command {
             + "Parameters: g/GROUP i/INDEX...\n"
             + "Example: " + COMMAND_WORD + " g/Group A i/1 i/3 i/4";
 
-    /** Success message template. */
-    public static final String MESSAGE_SUCCESS = "Added %1$d student(s) to group: %2$s";
+    /** Summary message templates. */
+    public static final String MESSAGE_ADDED_FMT = "Added %d student(s) to %s";
+    public static final String MESSAGE_NO_CHANGES_FMT = "No changes: no new members were added to %s.";
+    public static final String MESSAGE_SKIPPED_DUPLICATE_INDICES_FMT = "Skipped duplicate indices: %s";
+    public static final String MESSAGE_ALREADY_IN_GROUP_FMT = "Already in group (unchanged): %s";
+    public static final String MESSAGE_INVALID_INDICES_FMT = "Invalid indices (out of range): %s";
 
     /** Error shown when the referenced group does not exist. */
     public static final String MESSAGE_GROUP_NOT_FOUND = "Group \"%1$s\" not found.";
@@ -47,13 +55,6 @@ public class GroupAddCommand extends Command {
         this.targetIndices = List.copyOf(requireNonNull(targetIndices));
     }
 
-    /**
-     * Executes the command to add the specified displayed-list indices to the target group.
-     *
-     * @param model backing model (non-null)
-     * @return command result with a summary message
-     * @throws CommandException if the group does not exist or any index is invalid
-     */
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
@@ -62,35 +63,81 @@ public class GroupAddCommand extends Command {
             throw new CommandException(String.format(MESSAGE_GROUP_NOT_FOUND, groupName));
         }
 
-        var shown = model.getFilteredPersonList();
+        final List<Person> shown = model.getFilteredPersonList();
         if (shown.isEmpty()) {
             throw new CommandException(Messages.MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX);
         }
 
-        List<Person> members = new ArrayList<>();
+        // Track duplicates/invalids while preserving first-seen order
+        final Set<Integer> seenZeroBased = new LinkedHashSet<>();
+        final List<String> duplicateTokens = new ArrayList<>();
+        final List<String> invalidTokens = new ArrayList<>();
+        final List<Person> uniqueTargets = new LinkedList<>();
+
         for (Index idx : targetIndices) {
-            int zero = idx.getZeroBased();
-            if (zero < 0 || zero >= shown.size()) {
-                throw new CommandException(Messages.MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX);
+            int z = idx.getZeroBased();
+            // duplicated in the same command
+            if (!seenZeroBased.add(z)) {
+                duplicateTokens.add("i/" + idx.getOneBased());
+                continue;
             }
-            members.add(shown.get(zero));
+            // invalid/out of range
+            if (z < 0 || z >= shown.size()) {
+                invalidTokens.add("i/" + idx.getOneBased());
+                continue;
+            }
+            uniqueTargets.add(shown.get(z));
         }
 
-        model.addToGroup(groupName, members);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, members.size(), groupName));
+        // Separate into those already in group vs those to add
+        final List<Person> alreadyMembers = new ArrayList<>();
+        final List<Person> toAdd = new ArrayList<>();
+        for (Person p : uniqueTargets) {
+            // Assumes Model#getGroupsOf(Person) exists and returns Set<GroupName>
+            if (model.getGroupsOf(p).contains(groupName)) {
+                alreadyMembers.add(p);
+            } else {
+                toAdd.add(p);
+            }
+        }
+
+        if (!toAdd.isEmpty()) {
+            model.addToGroup(groupName, toAdd);
+        }
+
+        // Build truthful multi-line result message
+        List<String> lines = new ArrayList<>();
+        if (!toAdd.isEmpty()) {
+            lines.add(String.format(MESSAGE_ADDED_FMT, toAdd.size(), groupName,
+                    toAdd.stream().map(x -> x.getName().fullName).collect(Collectors.joining(", "))));
+        } else {
+            lines.add(String.format(MESSAGE_NO_CHANGES_FMT, groupName));
+        }
+
+        if (!duplicateTokens.isEmpty()) {
+            lines.add(String.format(MESSAGE_SKIPPED_DUPLICATE_INDICES_FMT, String.join(", ", duplicateTokens)));
+        }
+        if (!alreadyMembers.isEmpty()) {
+            lines.add(String.format(MESSAGE_ALREADY_IN_GROUP_FMT,
+                    alreadyMembers.stream().map(x -> x.getName().fullName).collect(Collectors.joining(", "))));
+        }
+        if (!invalidTokens.isEmpty()) {
+            lines.add(String.format(MESSAGE_INVALID_INDICES_FMT, String.join(", ", invalidTokens)));
+        }
+
+        return new CommandResult(String.join("\n", lines));
     }
 
-    /**
-     * Returns true if both commands target the same group and indices.
-     *
-     * @param other other object
-     * @return equality as per group name and indices
-     */
     @Override
     public boolean equals(Object other) {
         return other == this
                 || (other instanceof GroupAddCommand)
                 && groupName.equals(((GroupAddCommand) other).groupName)
                 && targetIndices.equals(((GroupAddCommand) other).targetIndices);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getCanonicalName() + "{group=" + groupName + ", indices=" + targetIndices + "}";
     }
 }

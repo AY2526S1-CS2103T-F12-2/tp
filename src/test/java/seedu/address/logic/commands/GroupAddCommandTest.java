@@ -42,7 +42,7 @@ public class GroupAddCommandTest {
         CommandResult result = cmd.execute(model);
 
         assertEquals(
-                String.format(GroupAddCommand.MESSAGE_SUCCESS, 2, GroupName.of("Group A")),
+                String.format(GroupAddCommand.MESSAGE_ADDED_FMT, 2, GroupName.of("Group A")),
                 result.getFeedbackToUser()
         );
         // Verify membership recorded via our stub (0-based positions 0 and 2)
@@ -60,17 +60,25 @@ public class GroupAddCommandTest {
     }
 
     @Test
-    public void execute_indexOutOfBounds_throws() {
+    public void execute_indexOutOfBounds_reportsMessage() throws Exception {
         ModelStubAccepting model = new ModelStubAccepting();
         model.createGroup(GroupName.of("Group A"));
 
         GroupAddCommand cmd = new GroupAddCommand(
                 GroupName.of("Group A"),
-                List.of(Index.fromOneBased(5))
+                List.of(Index.fromOneBased(5)) // out of range (only 3 people)
         );
 
-        assertThrows(CommandException.class, () -> cmd.execute(model));
+        CommandResult result = cmd.execute(model);
+
+        String expected = String.join("\n",
+                String.format(GroupAddCommand.MESSAGE_NO_CHANGES_FMT, GroupName.of("Group A")),
+                String.format(GroupAddCommand.MESSAGE_INVALID_INDICES_FMT, "i/5")
+        );
+
+        assertEquals(expected, result.getFeedbackToUser());
     }
+
 
     /**
      * Minimal model stub that accepts group operations and holds a small person list.

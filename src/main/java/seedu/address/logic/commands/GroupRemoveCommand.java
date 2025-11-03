@@ -2,7 +2,6 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import seedu.address.commons.core.index.Index;
@@ -27,9 +26,11 @@ public class GroupRemoveCommand extends Command {
             + "Parameters: g/GROUP i/INDEX...\n"
             + "Example: " + COMMAND_WORD + " g/Group A i/2 i/3";
 
-    /** Success message template. */
-    public static final String MESSAGE_SUCCESS = "Removed %1$d student(s) from group: %2$s";
-
+    /** Success and info message templates. */
+    public static final String MESSAGE_REMOVED_FMT = "Removed %1$d student(s) from %2$s";
+    public static final String MESSAGE_NO_CHANGES_FMT = "No changes: no members were removed from %s.";
+    public static final String MESSAGE_NOT_IN_GROUP_FMT = "Not in group (skipped): %s";
+    public static final String MESSAGE_SKIPPED_DUPLICATE_INDICES_FMT = "Skipped duplicate indices: %s";
     /** Error shown when the referenced group does not exist. */
     public static final String MESSAGE_GROUP_NOT_FOUND = "Group \"%1$s\" not found.";
 
@@ -67,17 +68,58 @@ public class GroupRemoveCommand extends Command {
             throw new CommandException(Messages.MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX);
         }
 
-        List<Person> members = new ArrayList<>();
+        // De-duplicate indices, validate bounds, and build unique target list
+        java.util.Set<Integer> seenZero = new java.util.LinkedHashSet<>();
+        java.util.List<String> duplicateTokens = new java.util.ArrayList<>();
+        java.util.List<Person> uniqueTargets = new java.util.ArrayList<>();
+
         for (Index idx : targetIndices) {
-            int zero = idx.getZeroBased();
-            if (zero < 0 || zero >= shown.size()) {
+            int z = idx.getZeroBased();
+            if (z < 0 || z >= shown.size()) {
                 throw new CommandException(Messages.MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX);
             }
-            members.add(shown.get(zero));
+            if (!seenZero.add(z)) {
+                duplicateTokens.add("i/" + idx.getOneBased());
+                continue;
+            }
+            uniqueTargets.add(shown.get(z));
         }
 
-        model.removeFromGroup(groupName, members);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, members.size(), groupName));
+        // Split into (in group) vs (not in group)
+        var inGroup = new java.util.ArrayList<Person>();
+        var notInGroup = new java.util.ArrayList<Person>();
+        for (Person p : uniqueTargets) {
+            if (model.getGroupsOf(p).contains(groupName)) {
+                inGroup.add(p);
+            } else {
+                notInGroup.add(p);
+            }
+        }
+
+        // Apply removal only for those who are actually members
+        if (!inGroup.isEmpty()) {
+            model.removeFromGroup(groupName, inGroup);
+        }
+
+        // Build truthful feedback
+        var lines = new java.util.ArrayList<String>();
+        if (!inGroup.isEmpty()) {
+            lines.add(String.format(MESSAGE_REMOVED_FMT, inGroup.size(), groupName));
+        } else {
+            lines.add(String.format(MESSAGE_NO_CHANGES_FMT, groupName));
+        }
+        if (!duplicateTokens.isEmpty()) {
+            lines.add(String.format(MESSAGE_SKIPPED_DUPLICATE_INDICES_FMT, String.join(", ", duplicateTokens)));
+        }
+        if (!notInGroup.isEmpty()) {
+            lines.add(String.format(
+                    MESSAGE_NOT_IN_GROUP_FMT,
+                    notInGroup.stream().map(x -> x.getName().fullName).collect(
+                        java.util.stream.Collectors.joining(", ")))
+            );
+        }
+
+        return new CommandResult(String.join("\n", lines));
     }
 
     /**
