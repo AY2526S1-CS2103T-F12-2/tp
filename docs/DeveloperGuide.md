@@ -769,7 +769,7 @@ Use case ends.
   - Use case ends.
 
 - 2c. Month is invalid (not between 1 and 12).
-  - 2c1. System displays "Invalid month. Month must be between 1 and 12."
+  - 2c1. System displays "Month must be between 1 and 12."
   - Use case ends.
 
 - 2d. Student is already marked as paid for that month.
@@ -807,7 +807,7 @@ Use case ends.
   - Use case ends.
 
 - 2c. Month is invalid (not between 1 and 12).
-  - 2c1. System displays "Invalid month. Month must be between 1 and 12."
+  - 2c1. System displays "Month must be between 1 and 12."
   - Use case ends.
 
 - 2d. Student is already marked as unpaid for that month.
