@@ -20,4 +20,6 @@ Storage --> Logic : OK
 
 Logic --> UI : CommandResult
 UI -> UI : observe filtered list change\nre-render PersonCard(s)\n(show dates & scores)
+
+hide footbox
 @enduml

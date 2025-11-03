@@ -2,7 +2,7 @@
 !include style.puml
 skinparam ArrowFontStyle plain
 
-box Logic for Add Reminder LOGIC_COLOR_T1
+box Logic for Add Reminder Command LOGIC_COLOR_T1
 participant "addReminder:AddReminderCommand" as AddReminderCommand LOGIC_COLOR
 participant "result:CommandResult" as CommandResult LOGIC_COLOR
 end box

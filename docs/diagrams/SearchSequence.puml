@@ -14,4 +14,6 @@ Model --> List : filtered persons
 Model --> Cmd : getFilteredPersonList()
 Cmd --> UI : CommandResult\n"Found N students" / "No students match…"
 UI --> Tutor : show results in list panel
+
+hide footbox
 @enduml
