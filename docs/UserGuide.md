@@ -603,7 +603,7 @@ Format: `add-reminder d/DUE_DATE desc/DESCRIPTION`
 
 <box type="important" seamless>
 
-**Note:**<br> `DUE_DATE` must be set for a future date or time.
+**Note:** `DUE_DATE` must be set for a future date or time.
 
 </box>
 
