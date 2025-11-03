@@ -22,10 +22,6 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 --------------------------------------------------------------------------------------------------------------------
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 ## **Design**
 
 ### Architecture
@@ -51,10 +47,6 @@ The bulk of the app's work is done by the following four components:
 
 [**`Commons`**](#common-classes) represents a collection of classes used by multiple other components.
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 **How the architecture components interact with each other**
 
 The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete-student i/1`.
@@ -64,17 +56,13 @@ The *Sequence Diagram* below shows how the components interact with each other f
 Each of the four main components (also shown in the diagram above),
 
 * defines its *API* in an `interface` with the same name as the Component.
-* implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point.
+* implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point).
 
 For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
 
 <puml src="diagrams/ComponentManagers.puml" width="300" />
 
 The sections below give more details of each component.
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 ### UI component
 
@@ -84,7 +72,7 @@ The **API** of this component is specified in [`Ui.java`](https://github.com/AY2
 
 The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S1-CS2103T-F12-2/tp/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S1-CS2103T-F12-2/tp/tree/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S1-CS2103T-F12-2/tp/blob/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S1-CS2103T-F12-2/tp/blob/master/src/main/resources/view/MainWindow.fxml)
 
 The `UI` component,
 
@@ -98,10 +86,6 @@ The `UI` component,
 - Dates are shown on the top row (`MM-dd`), scores inside the boxes on the bottom row.
 - When a date appears multiple times in history, only the latest score is displayed.
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 ### Logic component
 
 **API** : [`Logic.java`](https://github.com/AY2526S1-CS2103T-F12-2/tp/blob/master/src/main/java/seedu/address/logic/Logic.java)
@@ -113,10 +97,6 @@ Here's a (partial) class diagram of the `Logic` component:
 The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete-student i/1")` API call as an example.
 
 <puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete-student i/1` Command" />
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 <box type="info" seamless>
 
@@ -145,12 +125,8 @@ How the parsing works:
   calls `model.setPerson(person, person)` to trigger persistence, updates `AttendanceIndex`,
   and returns a success message.
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 ### Model component
-**API** : [`Model.java`](https://github.com/AY2526S1-CS2103T-F12-2/tp/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** : [`Model.java`](https://github.com/AY2526S1-CS2103T-F12-2/tp/blob/master/src/main/java/seedu/address/model/Model.java)
 
 <puml src="diagrams/ModelClassDiagram.puml" />
 
@@ -170,13 +146,9 @@ The `Model` component,
 
 </box>
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/AY2526S1-CS2103T-F12-2/tp/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/AY2526S1-CS2103T-F12-2/tp/blob/master/src/main/java/seedu/address/storage/Storage.java)
 
 <puml src="diagrams/StorageClassDiagram.puml" />
 
@@ -196,10 +168,6 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 --------------------------------------------------------------------------------------------------------------------
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 ## **Implementation**
 
 This section describes some noteworthy details on how certain features are implemented.
@@ -210,94 +178,74 @@ The grouping feature lets you organize students into named groups and manage mem
 
 Key ideas
 
-* A Group has a GroupName and a set of Person members.
+* A Group has a `GroupName` and a set of `Person` members.
 
-* Commands operate through the Model interface; storage lives in the AddressBook via a UniqueGroupList.
+* Commands operate through the `Model` interface; storage lives in the `AddressBook` via a `UniqueGroupList`.
 
-* UI reads memberships via a small bridge (UiGroupAccess) to render badges next to each name.
+* UI reads memberships via a small bridge (`UiGroupAccess`) to render badges next to each name.
 
-* UniqueGroupList ensures group name uniqueness and provides lookup/removal by GroupName.
+* `UniqueGroupList` ensures group name uniqueness and provides lookup/removal by `GroupName`.
 
-* AddressBook owns both the UniqueGroupList and the group memberships (i.e., the set of members for each group). It exposes high-level operations: createGroup, deleteGroup, addMembers, removeMembers, getGroupsOf(Person), etc.
+* `AddressBook` owns both the `UniqueGroupList` and the group memberships (i.e., the set of members for each group). It exposes high-level operations: `createGroup`, `deleteGroup`, `addMembers`, `removeMembers`, `getGroupsOf(Person)`, etc.
 
-* Model defines the API used by commands; ModelManager delegates to AddressBook.
+* `Model` defines the API used by commands; `ModelManager` delegates to `AddressBook`.
 
 <puml src="diagrams/Grouping.puml" alt="Class Diagram for Grouping" />
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 ### Grouping Command Behaviour
 #### Create group 
 
-* Step 1. User enters: group-create g/Group A. AddressBookParser#parseCommand() instantiates GroupCreateCommandParser and calls parse(...).
+* Step 1. User enters: `group-create g/Group A`. `AddressBookParser#parseCommand()` instantiates `GroupCreateCommandParser` and calls `parse(...)`.
 
-* Step 2. GroupCreateCommandParser#parse() validates the presence/uniqueness of g/, normalizes the raw name via GroupName.of(...), and returns a GroupCreateCommand.
+* Step 2. `GroupCreateCommandParser#parse()` validates the presence/uniqueness of `g/`, normalizes the raw name via `GroupName.of(...)`, and returns a `GroupCreateCommand`.
 
 <puml src="diagrams/GroupCreateSequenceDiagram.puml" />
 
-* Step 3. GroupCreateCommand#execute(model) calls model.createGroup(name). If a duplicate exists, a CommandException is thrown. Otherwise a success CommandResult is returned.
+* Step 3. `GroupCreateCommand#execute(model)` calls `model.createGroup(name)`. If a duplicate exists, a `CommandException` is thrown. Otherwise, a success `CommandResult` is returned.
 
 <puml src="diagrams/GroupCreateCommandSequenceDiagram.puml" />
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 #### Add members to group
 
-* Step 1. User enters: group-add g/Group A i/1 i/3. AddressBookParser invokes GroupAddCommandParser#parse(...).
+* Step 1. User enters: `group-add g/Group A i/1 i/3`. `AddressBookParser` invokes `GroupAddCommandParser#parse(...)`.
 
-* Step 2. Parser ensures exactly one g/ and ≥1 i/. It builds GroupName, parses Index list, and returns a GroupAddCommand.
+* Step 2. Parser ensures exactly one `g/` and ≥1 `i/`. It builds `GroupName`, parses `Index` list, and returns a `GroupAddCommand`.
 
 <puml src="diagrams/GroupAddSequenceDiagram.puml" />
 
-* Step 3. GroupAddCommand#execute(model) resolves the displayed persons by indices, validates that the group exists, and then calls model.addToGroup(name, members). If any index is invalid, a CommandException is thrown. On success, the filtered person list is refreshed (if needed) and a success CommandResult is returned.
+* Step 3. `GroupAddCommand#execute(model)` resolves the displayed persons by indices, validates that the group exists, and then calls `model.addToGroup(name, members)`. If any index is invalid, a `CommandException` is thrown. On success, the filtered person list is refreshed (if needed) and a success `CommandResult` is returned.
 
 <puml src="diagrams/GroupAddCommandSequenceDiagram.puml" />
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 #### Remove members from group
 
-Parser and execution mirror group-add, except the model op is removeFromGroup(...). The command succeeds for valid indices; persons not in the group are skipped.
+Parser and execution mirror group-add, except the model op is `removeFromGroup(...)`. The command succeeds for valid indices; persons not in the group are skipped.
 
 <puml src="diagrams/GroupRemoveSequenceDiagram.puml" /> <puml src="diagrams/GroupRemoveCommandSequenceDiagram.puml" />
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 #### Delete group
 
-* Step 1. User enters: group-delete g/Group A. GroupDeleteCommandParser returns a GroupDeleteCommand with the parsed name.
+* Step 1. User enters: `group-delete g/Group A`. `GroupDeleteCommandParser` returns a `GroupDeleteCommand` with the parsed name.
 
-* Step 2. GroupDeleteCommand#execute(model) calls model.deleteGroup(name), which also clears its memberships. If group is missing, a CommandException is thrown. Returns success CommandResult.
+* Step 2. `GroupDeleteCommand#execute(model)` calls `model.deleteGroup(name)`, which also clears its memberships. If group is missing, a `CommandException` is thrown. Returns success `CommandResult`.
 
 <puml src="diagrams/GroupDeleteSequenceDiagram.puml" /> <puml src="diagrams/GroupDeleteCommandSequenceDiagram.puml" />
 
 #### Notes
 
-- Normalization. GroupName.of(String) handles trimming, case-insensitivity, allowed characters, and collapsing whitespace so that logical duplicates are rejected.
+- Normalization. `GroupName.of(String)` handles trimming, case-insensitivity, allowed characters, and collapsing whitespace so that logical duplicates are rejected.
 
-- Persistence. JsonSerializableAddressBook reads/writes both the group list and memberships. JsonAdaptedGroup serializes { "name": "...", "members": [ ... ] }.
+- Persistence. `JsonSerializableAddressBook` reads/writes both the group list and memberships. `JsonAdaptedGroup` serializes `{ "name": "...", "members": [ ... ] }`.
 
-- UI badges. UiGroupAccess is installed by MainWindow#fillInnerParts() and maps Person → Set<GroupName> to render chips in PersonCard.
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
+- UI badges. `UiGroupAccess` is installed by `MainWindow#fillInnerParts()` and maps `Person` → `Set<GroupName>` to render chips in `PersonCard`.
 
 ### Participation feature
 
-<puml src="diagrams/Participation_Parse.puml" width="760" />
+<puml src="diagrams/Participation_Parse.puml" />
 
-<puml src="diagrams/Participation_Execute_Model.puml" width="760" />
+<puml src="diagrams/Participation_Execute_Model.puml" />
 
-<puml src="diagrams/Participation_Persist_UI.puml" width="760" />
+<puml src="diagrams/Participation_Persist_UI.puml" />
 
 The Participation feature lets tutors record a per-class participation score for a student and shows the **last 5 classes** (chronological, oldest → newest) on each student card, with the **date above** each box and the **score inside**.
 
@@ -327,10 +275,6 @@ The Participation feature lets tutors record a per-class participation score for
   - Returns exactly 5 slots (oldest → newest), padded at the front when fewer than 5 exist.
   - If multiple records share the **same date**, only the **latest** score is shown.
 - Styling comes from `participation.css` (e.g., `.participation-box`, `.date-mini`).
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 #### Storage
 - `JsonAdaptedPerson` persists a `participation` array:
@@ -372,10 +316,6 @@ There are 2 types of reminders: `Reminder` and `UnmodfiableReminder`.
 
 <puml src="diagrams/ReminderClassDiagram.puml" width="550"/>
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 #### Command Behaviour
 
 ##### Add reminder
@@ -402,10 +342,6 @@ Step 3: `AddReminderCommand#execute()` is called, and adds the reminder to the r
 
 <puml src="diagrams/AddReminderCommandSequenceDiagram.puml" />
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 <box type="info" seamless>
 
 **Note:** The lifeline for `AddReminderCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
@@ -428,10 +364,6 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 * In Step 3, the reminder to edit is copied and injected with the new fields. This new reminder is then set to replace the old reminder in the reminder list. After a successful edit, the reminder is list is updated to show all reminders and a success message is also returned via an instance of `CommandResult`.
 
 <box type="warning" seamless>
@@ -452,10 +384,6 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 ##### Delete reminder
 
 Similar to add reminder command as above, except the following:
@@ -471,10 +399,6 @@ Similar to add reminder command as above, except the following:
 **Note:** The lifeline for `DeleteReminderCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
 
 </box>
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 * In Step 3, if the deletion is by keyword, `DeleteReminderCommand#execute()` will search for all reminders in the list and successfully deletes if only one reminder is found. If no or multiple reminders are found, the command will still succeed but without any deletion. A message is returned via an instance of `CommandResult` indicating if no or multiple reminders are found.
 
@@ -496,21 +420,61 @@ Similar to add reminder command as above, except the following:
 
 </box>
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
+The sequence diagram below shows the 2 scenarios where the deletion is done (by index or by keyword).
 
 <puml src="diagrams/DeleteReminderReferenceSequenceDiagram.puml"/>
 
+### Add student feature
+
+This feature adds a student from the students list. This feature is facilitated by the `LogicManger`, `AddressBookParser`, `AddCommandParser`, `AddCommand`, `CommandResult` and `Model` classes.
+
+The `AddCommandParser#parse()` method verifies that required prefixes are present and ensures no duplicates are present. Otherwise, it throws a `ParseException`. 
+
+It calls `ParserUtil#parseXYZ()` method (XYZ refers to `Name`, `Phone` or `LessonTime`) to convert raw string values into domain objects (`Name`, `Phone`, `Set<LessonTime>`). It then constructs a `Person` object and returns `new AddCommand(person)`.
+
+The `AddCommand#execute()` method checks if a duplicate `Person` exists in the student list via `Model#hasPerson()`. It throws a `CommandException` on duplicate. Otherwise, it calls `Model#addPerson()` and `Model#refreshReminders()`, and returns a `CommandResult` with a success message.
+
+The sequence diagram below shows a high level overview of how a student is being added into the student list.
+
+<puml src="diagrams/AddSequenceDiagram.puml" />
+
+<box type="info" seamless>
+
+**Note:** The lifeline for `AddCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+
+</box>
+
+### Edit student feature
+
+This feature edits a student's information that exists in the students list. This feature is facilitated by the `LogicManger`, `AddressBookParser`, `EditCommandParser`, `EditCommand`, `CommandResult` and `Model` classes.
+
+The `EditCommandParser#parse()` method verifies that the `i/` prefix is present and no duplicates is present too. It also verifies for at least one of the optional fields to be present. Otherwise, it throws a `ParseException`.
+
+It calls the `ParserUtil#parseIndex()` method (XYZ refers to `Index`, `Name`, `Phone` or `LessonTime`) to convert raw string values into domain objects (`Index`, `Name`, `Phone`, `Set<LessonTime>`). It builds a `EditPersonDescriptor` that contains fields specified by the user to edit. If no field are being specified, a `ParseException` is being thrown. Otherwise, it then returns `new EditCommand(index, descriptor)`.
+
+The `EditCommand#execute()` builds a new `Person` object with the new field values and any unchanged values. It checks if the new `Person` is the same as the `Person` to be edited and is already present in the student list via `Model#hasPerson()`. If either returns true, a `CommandException` is thrown. Otherwise, it calls `Model#setPerson()` to replace the old `Person` to the new `Person`, and calls `Model#refreshReminders()` and `Model#updateFilteredPersonList()` to update and refresh the student list. It then returns a `CommandResult` with a success message.
+
+The sequence diagram below shows a high level overview of how a student is being edited in the student list.
+
+<puml src="diagrams/EditSequenceDiagram.puml" />
+
+<box type="info" seamless>
+
+**Note:** The lifeline for `EditCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+
+</box>
+
 ### Delete student feature
 
-This features deletes a student form the students list. This feature is facilitated by the `LogicManger`, `AddressBookParser`, `DeleteCommandParser`, `DeleteCommand`, `CommandResult` and `Model` classes. Given below is a high level overview of how a student is being deleted from the students list.
+This features deletes a student from the students list. This feature is facilitated by the `LogicManger`, `AddressBookParser`, `DeleteCommandParser`, `DeleteCommand`, `CommandResult` and `Model` classes. Given below is a high level overview of how a student is being deleted from the students list.
 
 <puml src="diagrams/DeleteSequenceDiagram.puml" />
 
-<div style="page-break-after: always;"></div>
+<box type="info" seamless>
 
---------------------------------------------------------------------------------------------------------------------
+**Note:** The lifeline for `DeleteCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+
+</box>
 
 ### Mark payment feature
 
@@ -524,7 +488,7 @@ Key ideas
 * Validation prevents marking an already-paid month as paid again or an already-unpaid month as unpaid again.
 * Payment status resets at the start of each new year.
 
-<img src="diagrams/MarkPaymentUseCase.png"/>
+<puml src="diagrams/MarkPaymentUseCase.png"/>
 
 The diagram above illustrates the **Payment Management** use cases in ClassConnect. Tutors can **mark students as paid or unpaid** for specific months and **view payment status** for all students.
 
@@ -534,24 +498,15 @@ The diagram above illustrates the **Payment Management** use cases in ClassConne
 
 Each of these features interacts with the `paymentStatus` field stored within every `Person` object.
 
+### Search student feature
 
-<div style="page-break-after: always;"></div>
-
-
-
---------------------------------------------------------------------------------------------------------------------
-
-### Search
 <puml src="diagrams/SearchSequence.puml"/>
-
 
 * The activity diagram above illustrates the flow of the search-student command.
 * When the tutor enters a search query (e.g., `search-student k/10:00`), the command parser extracts the keyword and creates a predicate that checks whether any student’s fields (such as name, phone number, lesson time, or subject) contain the keyword.
 * The model then updates its filtered student list based on this predicate.
 * If one or more matches are found, the system displays a success message showing the number of students found; otherwise, it shows a message indicating that no students match the search keyword.
   this the text
-
-
 
 ### Homework Feature
 
@@ -564,8 +519,7 @@ Each homework entry contains a **description**, **due date**, and completion sta
 - The command operates through the `Model` interface and updates storage via the `AddressBook`.
 - The UI displays homework items under each student card, showing description, due date, and status badges.
 
-  <img src="diagrams/HomeworkUseCase.png"/>
-  
+<puml src="diagrams/HomeworkUseCase.png" />
 
   The diagram above illustrates the **Homework Management** use cases in ClassConnect.  
   Tutors can **add**, **view**, **delete**, and **mark homework as done or undone** for each student.
@@ -574,7 +528,6 @@ Each homework entry contains a **description**, **due date**, and completion sta
 - **Mark Homework as Done / Undone**: Updates the completion status of an existing homework task, helping tutors keep track of student progress.
 - **View Homework List**: Displays all homework items for each student, including their deadlines and status badges.
   Each of these features interacts with the same underlying `Homework` model and `HomeworkList` stored within every `Person` object.
-
 
 ### [Proposed] Undo/redo feature
 
@@ -593,10 +546,6 @@ Given below is an example usage scenario and how the undo/redo mechanism behaves
 Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial ClassConnect state, and the `currentStatePointer` pointing to that single ClassConnect state.
 
 <puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 Step 2. The user executes `delete 5` command to delete the 5th person in the student list. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of ClassConnect after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted ClassConnect state.
 
@@ -621,10 +570,6 @@ Step 4. The user now decides that adding the person was a mistake, and decides t
 **Note:** If the `currentStatePointer` is at index 0, pointing to the initial ClassConnect state, then there are no previous ClassConnect states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the undo.
 
 </box>
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 The following sequence diagram shows how an undo operation goes through the `Logic` component:
 
@@ -652,10 +597,6 @@ Step 5. The user then decides to execute the command `list`. Commands that do no
 
 <puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all ClassConnect states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
 
 <puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
@@ -682,10 +623,6 @@ The following activity diagram summarizes what happens when a user executes a ne
 *{more aspects and alternatives to be added}*
 
 ---
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
 
@@ -735,10 +672,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`    | tutor    | delete reminders                        | remove overdue reminders                   |
 
 ---
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 ### Use cases
 
@@ -916,10 +849,6 @@ Use case ends.
   - System displays same success message.
   - Use case ends.
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 **Use case 7: Add Reminder**
 
 **MSS:**
@@ -954,13 +883,13 @@ Use case ends.
 
 **Preconditions:** Target reminder exists and it is modifiable.
 
-Similar to <u>add reminder (Use Case 10)</u> except for Step 4.
+Similar to <u>add reminder (Use Case 7)</u> except for Step 4.
 
 4. System replaces existing reminder.
 
 **Extensions:**
 
-Similar to <u>add reminder (Use Case 10)</u>.
+Similar to <u>add reminder (Use Case 7)</u>.
 
 - 3a. System detects reminder to edit is unmodifiable.
   - 3a1. System shows error message.
@@ -968,21 +897,17 @@ Similar to <u>add reminder (Use Case 10)</u>.
 
 ---
 
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
-
 **Use case 9: Delete Reminder**
 
 **Preconditions:** Target reminder exists and it is modifiable.
 
 **MSS:**
 
-Similar to <u>add reminder (Use Case 10)</u>.
+Similar to <u>add reminder (Use Case 7)</u>.
 
 **Extensions:**
 
-Similar to <u>add reminder (Use Case 10)</u>.
+Similar to <u>add reminder (Use Case 7)</u>.
 
 - 2a. System detects reminder to delete is unmodifiable.
   - 2a1. System shows error message.
@@ -1034,10 +959,6 @@ Similar to <u>add reminder (Use Case 10)</u>.
 * Error messages and command validation logic should be centralized to avoid inconsistency across commands.
 
 ---
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 ### Glossary
 
@@ -1098,10 +1019,6 @@ Dec: ✓ Paid`
    `Student marcus ng is already marked as paid for January.`
 
 ---
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 #### Marking as unpaid
 
@@ -1181,10 +1098,6 @@ Dec: ✓ Paid`
      `This student has already been assigned this homework.`
 
 ---
-
-<div style="page-break-after: always;"></div>
-
---------------------------------------------------------------------------------------------------------------------
 
 #### Marking homework as done
 

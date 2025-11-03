@@ -26,4 +26,6 @@ Cmd -> PH : addOrReplace(date, score)\n• replace same date\n• keep last 5\n�
 Cmd -> AI : setCurrentUiDate(date)
 Cmd -> Model : updateFilteredPersonList(ALL)
 Cmd --> Model : CommandResult
+
+hide footbox
 @enduml
