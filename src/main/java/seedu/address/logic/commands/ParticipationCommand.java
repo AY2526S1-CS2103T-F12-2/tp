@@ -63,6 +63,10 @@ public class ParticipationCommand extends Command {
             throw new CommandException("Invalid date. The format must be YYYY-MM-DD.");
         }
 
+        if (date.isAfter(LocalDate.now())) {
+            throw new CommandException("Invalid date. Participation date cannot be in the future.");
+        }
+
         // --- validate score
         final int score;
         try {
